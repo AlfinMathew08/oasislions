@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard Overview — Dubai Oasis Lions Club</title>
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-header">
+        <!-- Dual Logos in Sidebar -->
+        <img src="../assets/logos/lions-international.png" alt="Lions Intl" style="height:36px; width:auto;">
+        <div>
+          <div style="font-size:0.85rem; font-weight:800; color:var(--color-primary); line-height:1.1;">DUBAI OASIS LIONS</div>
+          <div style="font-size:0.7rem; color:var(--color-accent-dark); font-weight:700;">ADMIN 2026–27</div>
+        </div>
+      </div>
+
+      <nav class="admin-sidebar-nav">
+        <a href="index.html" class="admin-nav-item active">📊 Dashboard Overview</a>
+        <a href="projects.html" class="admin-nav-item">🤝 Service Projects</a>
+        <a href="leadership.html" class="admin-nav-item">🦁 Leadership 2026–27</a>
+        <a href="members.html" class="admin-nav-item">👥 Member Directory</a>
+        <a href="news.html" class="admin-nav-item">📰 News & Articles</a>
+        <a href="events.html" class="admin-nav-item">📅 Upcoming Events</a>
+        <a href="media.html" class="admin-nav-item">🖼️ Media Library</a>
+        <a href="enquiries.html" class="admin-nav-item">📬 Contact Enquiries</a>
+        <a href="pages.html" class="admin-nav-item">📄 Website Content</a>
+        <a href="settings.html" class="admin-nav-item">⚙️ Settings & Impact</a>
+        <a href="users.html" class="admin-nav-item">🔒 Authorized Users</a>
+      </nav>
+
+      <div style="padding:16px; border-top:1px solid var(--color-border);">
+        <button id="admin-logout-btn" class="btn btn-secondary btn-sm" style="width:100%;">Sign Out</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div style="font-weight:700; color:var(--color-text); font-size:1.1rem;">Overview & Activity</div>
+        <div style="display:flex; align-items:center; gap:16px;">
+          <a href="../index.html" target="_blank" class="btn btn-outline btn-sm">Preview Live Site &nearr;</a>
+          <div id="admin-user-badge" class="badge badge-primary">Administrator</div>
+        </div>
+      </header>
+
+      <div class="admin-content">
+        <!-- Stat KPI Cards -->
+        <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 32px;">
+          <div class="admin-card">
+            <div style="color:var(--color-text-muted); font-size:0.85rem; font-weight:600;">ACTIVE PROJECTS</div>
+            <div style="font-size:2.2rem; font-weight:800; color:var(--color-primary); margin-top:4px;" id="count-projects">3</div>
+            <div style="font-size:0.8rem; color:var(--color-success); margin-top:4px;">Published to Public</div>
+          </div>
+          <div class="admin-card">
+            <div style="color:var(--color-text-muted); font-size:0.85rem; font-weight:600;">ACTIVE MEMBERS</div>
+            <div style="font-size:2.2rem; font-weight:800; color:var(--color-primary); margin-top:4px;" id="count-members">2</div>
+            <div style="font-size:0.8rem; color:var(--color-success); margin-top:4px;">Approved Profiles</div>
+          </div>
+          <div class="admin-card">
+            <div style="color:var(--color-text-muted); font-size:0.85rem; font-weight:600;">NEWS ARTICLES</div>
+            <div style="font-size:2.2rem; font-weight:800; color:var(--color-primary); margin-top:4px;" id="count-news">3</div>
+            <div style="font-size:0.8rem; color:var(--color-info); margin-top:4px;">Published Bulletins</div>
+          </div>
+          <div class="admin-card">
+            <div style="color:var(--color-text-muted); font-size:0.85rem; font-weight:600;">PENDING ENQUIRIES</div>
+            <div style="font-size:2.2rem; font-weight:800; color:var(--color-accent-dark); margin-top:4px;" id="count-enquiries">1</div>
+            <div style="font-size:0.8rem; color:var(--color-warning); margin-top:4px;">Inbox Awaiting Review</div>
+          </div>
+        </div>
+
+        <!-- Quick Actions & Publishing Workflow -->
+        <div class="admin-card">
+          <h2 style="font-size:1.25rem; font-weight:700; margin-bottom:16px;">Publishing Workflow & Quick Actions</h2>
+          <div style="display:flex; gap:12px; flex-wrap:wrap;">
+            <a href="projects.html?action=new" class="btn btn-primary btn-sm">+ New Project</a>
+            <a href="news.html?action=new" class="btn btn-primary btn-sm">+ Publish News Article</a>
+            <a href="events.html?action=new" class="btn btn-primary btn-sm">+ Schedule Event</a>
+            <a href="members.html?action=new" class="btn btn-secondary btn-sm">+ Add Member Profile</a>
+            <a href="media.html" class="btn btn-outline btn-sm">Upload Photos to Storage</a>
+          </div>
+        </div>
+
+        <!-- Recent Enquiries Table -->
+        <div class="admin-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h2 style="font-size:1.25rem; font-weight:700;">Recent Public Enquiries</h2>
+            <a href="enquiries.html" style="font-size:0.88rem; color:var(--color-primary); font-weight:600;">View All &rarr;</a>
+          </div>
+
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Sender Name</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="dashboard-enquiries-table">
+              <tr>
+                <td><span class="badge badge-primary">Membership</span></td>
+                <td>Alfin Mathew</td>
+                <td>alfin@example.com</td>
+                <td><span class="admin-badge badge-published">New</span></td>
+                <td><a href="enquiries.html" class="btn btn-sm btn-outline">Review</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { checkAdminSession, logoutAdmin } from '../js/admin/auth.js';
+    import { getSupabase, isSupabaseConfigured } from '../js/supabase.js';
+
+    async function init() {
+      const session = await checkAdminSession();
+      if (!session) return;
+
+      document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
+
+      // Populate live Supabase stats if available
+      const supabase = getSupabase();
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          const { count: pCount } = await supabase.from('projects').select('*', { count: 'exact', head: true });
+          if (pCount !== null) document.getElementById('count-projects').textContent = pCount;
+
+          const { count: mCount } = await supabase.from('members').select('*', { count: 'exact', head: true });
+          if (mCount !== null) document.getElementById('count-members').textContent = mCount;
+
+          const { count: nCount } = await supabase.from('news_articles').select('*', { count: 'exact', head: true });
+          if (nCount !== null) document.getElementById('count-news').textContent = nCount;
+
+          const { count: eCount } = await supabase.from('contact_enquiries').select('*', { count: 'exact', head: true }).eq('status', 'new');
+          if (eCount !== null) document.getElementById('count-enquiries').textContent = eCount;
+        } catch(e) {
+          console.warn('Using local stats preview:', e);
+        }
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

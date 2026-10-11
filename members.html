@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meet Our Members — Dubai Oasis Lions Club | Member Directory</title>
+  <meta name="description" content="Searchable member directory of Dubai Oasis Lions Club. Connecting professionals and humanitarians serving Dubai and the UAE.">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <!-- REFINED APPLE-GRADE GLOBAL HEADER -->
+    <!-- SLIM, ELEGANT APPLE-INSPIRED GLOBAL HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-pair" aria-label="Dubai Oasis Lions Club Home">
+        <img src="assets/logos/lions-international.png" alt="Lions Clubs International Emblem" class="logo-lions-intl" width="40" height="40">
+        <div class="brand-rule"></div>
+        <div class="brand-titles">
+          <span class="brand-club-name">DUBAI OASIS LIONS CLUB</span>
+          <span class="brand-year">United Arab Emirates</span>
+        </div>
+      </a>
+
+      <nav class="nav-central" aria-label="Primary Navigation">
+        <div class="nav-item">
+          <a href="index.html" class="nav-link">Home</a>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" tabindex="0">Our Club <span class="caret"></span></span>
+          <div class="dropdown-pane">
+            <a href="about.html" class="dropdown-link">About Us<span class="dropdown-link-desc">Our mission, vision & global affiliation</span></a>
+            <a href="leadership.html" class="dropdown-link">Leadership<span class="dropdown-link-desc">Office bearers & club governance</span></a>
+            <a href="members.html" class="dropdown-link">Meet Our Members<span class="dropdown-link-desc">Searchable public member directory</span></a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" tabindex="0">Our Impact <span class="caret"></span></span>
+          <div class="dropdown-pane">
+            <a href="projects.html" class="dropdown-link">Service Projects<span class="dropdown-link-desc">Humanitarian initiatives across Dubai</span></a>
+            <a href="events.html" class="dropdown-link">Upcoming Events<span class="dropdown-link-desc">Community calendar & activities</span></a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" tabindex="0">Stories <span class="caret"></span></span>
+          <div class="dropdown-pane">
+            <a href="news.html" class="dropdown-link">News & Announcements<span class="dropdown-link-desc">Official club updates & press</span></a>
+            <a href="gallery.html" class="dropdown-link">Photo Gallery<span class="dropdown-link-desc">Moments of community service</span></a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <a href="contact.html" class="nav-link">Contact</a>
+        </div>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="contact.html" class="btn-header-cta">Get Involved</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero-section" style="padding: 80px 0 60px 0;">
+      <div class="container hero-content">
+        <span class="badge badge-gold" style="margin-bottom: 16px;">Club Fellowship</span>
+        <h1 class="hero-title">Meet Our Members</h1>
+        <p class="hero-subtitle">Our members are the driving force of Dubai Oasis Lions Club, bringing diverse skills and unwavering dedication to humanitarian service.</p>
+      </div>
+    </section>
+
+    <section style="padding: 40px 0 80px 0;">
+      <div class="container">
+        <!-- Directory Filter Bar -->
+        <div style="display: flex; gap: 16px; margin-bottom: 40px; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+          <input type="text" id="member-search" class="form-control" placeholder="Search members by name, committee or interest..." style="max-width: 400px;">
+          <div style="font-size: 0.9rem; color: var(--color-text-muted);">
+            Displaying approved active member profiles
+          </div>
+        </div>
+
+        <div class="profile-grid" id="full-members-mount">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+    <!-- REFINED FOOTER -->
+    <!-- SECTION 11 — FOOTER -->
+  <footer class="site-footer-editorial">
+    <div class="container">
+      <div class="footer-columns-grid">
+        <div>
+          <div class="brand-pair" style="margin-bottom:20px;">
+            <img src="assets/logos/lions-international.png" alt="Lions Clubs International" style="height:42px; width:auto;">
+            <div class="brand-rule" style="background:rgba(255,255,255,0.18);"></div>
+            <div>
+              <div style="color:#FFFFFF; font-weight:800; font-size:0.92rem;">DUBAI OASIS LIONS CLUB</div>
+              <div style="color:var(--color-accent); font-size:0.68rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;">Together We Can</div>
+            </div>
+          </div>
+          <p style="font-size:0.9rem; line-height:1.65; max-width:340px; color:#94A3B8;">
+            A chartered service club of Lions Clubs International committed to humanitarian assistance, sight conservation, and civic fellowship in Dubai, UAE.
+          </p>
+        </div>
+        <div class="footer-nav-col">
+          <h5>Our Club</h5>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="leadership.html">Leadership</a></li>
+            <li><a href="members.html">Meet Our Members</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <h5>Our Impact</h5>
+          <ul>
+            <li><a href="projects.html">Service Projects</a></li>
+            <li><a href="events.html">Upcoming Events</a></li>
+            <li><a href="news.html">News & Announcements</a></li>
+            <li><a href="gallery.html">Photo Gallery</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <h5>Get Involved</h5>
+          <ul>
+            <li><a href="contact.html">Volunteer & Enquire</a></li>
+            <li><a href="admin/login.html" style="color:var(--color-accent); font-weight:600;">Admin Portal &rarr;</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-base-row">
+        <div>&copy; Dubai Oasis Lions Club. All rights reserved.</div>
+        <div>Lions Year 2026–2027 &bull; Together We Can.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { getSupabase, isSupabaseConfigured } from './js/supabase.js';
+    import { DEFAULT_PUBLIC_DATA } from './js/public-data.js';
+    import { sanitize } from './js/utils.js';
+
+    let membersList = DEFAULT_PUBLIC_DATA.members;
+
+    async function loadMembers() {
+      const supabase = getSupabase();
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          const { data } = await supabase.from('members')
+            .select('*')
+            .eq('is_public', true)
+            .order('display_order');
+          if (data && data.length) {
+            membersList = data.map(m => ({
+              id: m.id,
+              name: `${m.first_name} ${m.last_name}`,
+              role: m.public_role || 'Club Member',
+              committee: m.committee,
+              interests: m.service_interests || [],
+              bio: m.biography,
+              avatar: m.avatar_url
+            }));
+          }
+        } catch (e) {
+          console.warn('Using starter members dataset:', e);
+        }
+      }
+      render(membersList);
+    }
+
+    function render(list) {
+      const mount = document.getElementById('full-members-mount');
+      if (!list.length) {
+        mount.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><p class="empty-state-title">No members found</p><p class="empty-state-desc">Try adjusting your search criteria.</p></div>';
+        return;
+      }
+
+      mount.innerHTML = list.map(m => `
+        <div class="profile-card">
+          <div class="profile-img-wrap" style="display:flex; align-items:center; justify-content:center; background:#F5F7FA;">
+            <span style="font-size: 3rem; color: var(--color-accent-dark);">✨</span>
+          </div>
+          <div class="profile-info">
+            <h3 class="profile-name">
+              <a href="member-profile.html?id=${encodeURIComponent(m.id)}" style="color:var(--color-text);">${sanitize(m.name)}</a>
+            </h3>
+            <div class="profile-role">${sanitize(m.role)}</div>
+            ${m.committee ? `<div style="font-size: 0.8rem; color: var(--color-text-subtle); margin-bottom: 8px;">Committee: ${sanitize(m.committee)}</div>` : ''}
+            <div style="margin-bottom: 12px;">
+              ${(m.interests || []).map(i => `<span class="badge badge-gold" style="font-size: 0.72rem; margin: 2px;">${sanitize(i)}</span>`).join('')}
+            </div>
+            <a href="member-profile.html?id=${encodeURIComponent(m.id)}" class="btn btn-outline btn-sm" style="width: 100%; margin-top: 8px;">View Public Profile</a>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('member-search').addEventListener('input', (e) => {
+      const q = e.target.value.toLowerCase();
+      const filtered = membersList.filter(m => 
+        m.name.toLowerCase().includes(q) || 
+        (m.role && m.role.toLowerCase().includes(q)) ||
+        (m.committee && m.committee.toLowerCase().includes(q)) ||
+        (m.interests && m.interests.some(i => i.toLowerCase().includes(q)))
+      );
+      render(filtered);
+    });
+
+    loadMembers();
+  </script>
+</body>
+</html>

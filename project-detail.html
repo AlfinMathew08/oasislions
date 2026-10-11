@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Details — Dubai Oasis Lions Club | Together We Can</title>
+  <meta name="description" content="Detailed overview of Dubai Oasis Lions Club humanitarian service project, objectives, verified outcomes, and community impact.">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+    <!-- REFINED APPLE-GRADE GLOBAL HEADER -->
+    <!-- SLIM, ELEGANT APPLE-INSPIRED GLOBAL HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-pair" aria-label="Dubai Oasis Lions Club Home">
+        <img src="assets/logos/lions-international.png" alt="Lions Clubs International Emblem" class="logo-lions-intl" width="40" height="40">
+        <div class="brand-rule"></div>
+        <div class="brand-titles">
+          <span class="brand-club-name">DUBAI OASIS LIONS CLUB</span>
+          <span class="brand-year">United Arab Emirates</span>
+        </div>
+      </a>
+
+      <nav class="nav-central" aria-label="Primary Navigation">
+        <div class="nav-item">
+          <a href="index.html" class="nav-link">Home</a>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" tabindex="0">Our Club <span class="caret"></span></span>
+          <div class="dropdown-pane">
+            <a href="about.html" class="dropdown-link">About Us<span class="dropdown-link-desc">Our mission, vision & global affiliation</span></a>
+            <a href="leadership.html" class="dropdown-link">Leadership<span class="dropdown-link-desc">Office bearers & club governance</span></a>
+            <a href="members.html" class="dropdown-link">Meet Our Members<span class="dropdown-link-desc">Searchable public member directory</span></a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" tabindex="0">Our Impact <span class="caret"></span></span>
+          <div class="dropdown-pane">
+            <a href="projects.html" class="dropdown-link">Service Projects<span class="dropdown-link-desc">Humanitarian initiatives across Dubai</span></a>
+            <a href="events.html" class="dropdown-link">Upcoming Events<span class="dropdown-link-desc">Community calendar & activities</span></a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" tabindex="0">Stories <span class="caret"></span></span>
+          <div class="dropdown-pane">
+            <a href="news.html" class="dropdown-link">News & Announcements<span class="dropdown-link-desc">Official club updates & press</span></a>
+            <a href="gallery.html" class="dropdown-link">Photo Gallery<span class="dropdown-link-desc">Moments of community service</span></a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <a href="contact.html" class="nav-link">Contact</a>
+        </div>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="contact.html" class="btn-header-cta">Get Involved</a>
+      </div>
+    </div>
+  </header>
+
+  <main style="padding: 60px 0 100px 0;">
+    <div class="container" style="max-width: 860px;" id="project-detail-mount">
+      <div style="text-align: center; padding: 60px 0;">
+        <p>Loading project details...</p>
+      </div>
+    </div>
+  </main>
+
+    <!-- REFINED FOOTER -->
+    <!-- SECTION 11 — FOOTER -->
+  <footer class="site-footer-editorial">
+    <div class="container">
+      <div class="footer-columns-grid">
+        <div>
+          <div class="brand-pair" style="margin-bottom:20px;">
+            <img src="assets/logos/lions-international.png" alt="Lions Clubs International" style="height:42px; width:auto;">
+            <div class="brand-rule" style="background:rgba(255,255,255,0.18);"></div>
+            <div>
+              <div style="color:#FFFFFF; font-weight:800; font-size:0.92rem;">DUBAI OASIS LIONS CLUB</div>
+              <div style="color:var(--color-accent); font-size:0.68rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;">Together We Can</div>
+            </div>
+          </div>
+          <p style="font-size:0.9rem; line-height:1.65; max-width:340px; color:#94A3B8;">
+            A chartered service club of Lions Clubs International committed to humanitarian assistance, sight conservation, and civic fellowship in Dubai, UAE.
+          </p>
+        </div>
+        <div class="footer-nav-col">
+          <h5>Our Club</h5>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="leadership.html">Leadership</a></li>
+            <li><a href="members.html">Meet Our Members</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <h5>Our Impact</h5>
+          <ul>
+            <li><a href="projects.html">Service Projects</a></li>
+            <li><a href="events.html">Upcoming Events</a></li>
+            <li><a href="news.html">News & Announcements</a></li>
+            <li><a href="gallery.html">Photo Gallery</a></li>
+          </ul>
+        </div>
+        <div class="footer-nav-col">
+          <h5>Get Involved</h5>
+          <ul>
+            <li><a href="contact.html">Volunteer & Enquire</a></li>
+            <li><a href="admin/login.html" style="color:var(--color-accent); font-weight:600;">Admin Portal &rarr;</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-base-row">
+        <div>&copy; Dubai Oasis Lions Club. All rights reserved.</div>
+        <div>Lions Year 2026–2027 &bull; Together We Can.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { getSupabase, isSupabaseConfigured } from './js/supabase.js';
+    import { DEFAULT_PUBLIC_DATA } from './js/public-data.js';
+    import { sanitize, formatDate } from './js/utils.js';
+
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get('slug');
+
+    async function loadDetail() {
+      const mount = document.getElementById('project-detail-mount');
+      let project = DEFAULT_PUBLIC_DATA.projects.find(p => p.slug === slug);
+
+      const supabase = getSupabase();
+      if (isSupabaseConfigured() && supabase && slug) {
+        try {
+          const { data } = await supabase.from('projects').select('*').eq('slug', slug).single();
+          if (data) project = data;
+        } catch(e) {
+          console.warn('Fallback detail used:', e);
+        }
+      }
+
+      if (!project) {
+        mount.innerHTML = `
+          <div class="empty-state">
+            <h2 class="empty-state-title">Project Not Found</h2>
+            <p class="empty-state-desc">The requested service initiative could not be located or may have been archived.</p>
+            <a href="projects.html" class="btn btn-primary" style="margin-top: 20px;">&larr; Back to Service Projects</a>
+          </div>
+        `;
+        return;
+      }
+
+      mount.innerHTML = `
+        <a href="projects.html" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600; color: var(--color-primary); margin-bottom: 24px;">&larr; Back to All Projects</a>
+        <div style="margin-bottom: 24px;">
+          <span class="badge badge-primary" style="margin-bottom: 12px;">${sanitize(project.category)}</span>
+          <h1 style="font-size: 2.8rem; font-weight: 800; line-height: 1.15; color: var(--color-text); margin-bottom: 16px;">${sanitize(project.title)}</h1>
+          <div style="display: flex; gap: 20px; color: var(--color-text-muted); font-size: 0.95rem;">
+            <span>📍 ${sanitize(project.location || 'Dubai, UAE')}</span>
+            <span>📅 ${formatDate(project.project_date)}</span>
+          </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, rgba(28,80,156,0.1), rgba(252,203,4,0.15)); border-radius: var(--radius-large); height: 360px; display: flex; align-items: center; justify-content: center; margin-bottom: 40px;">
+          <span style="font-size: 4rem;">🦁</span>
+        </div>
+
+        <div style="font-size: 1.15rem; line-height: 1.8; color: var(--color-text); margin-bottom: 40px;">
+          <p style="font-weight: 600; color: var(--color-primary); margin-bottom: 20px;">${sanitize(project.summary)}</p>
+          <p>${sanitize(project.full_content || project.summary)}</p>
+        </div>
+
+        <div class="glass-panel" style="padding: 32px; background: var(--color-surface); margin-bottom: 40px;">
+          <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 12px;">Want to support or volunteer for this initiative?</h3>
+          <p style="color: var(--color-text-muted); margin-bottom: 20px;">Dubai Oasis Lions Club welcomes community volunteers and organizational partners to help make a tangible humanitarian difference.</p>
+          <a href="contact.html" class="btn btn-accent">Register Volunteer Interest &rarr;</a>
+        </div>
+      `;
+    }
+
+    loadDetail();
+  </script>
+</body>
+</html>

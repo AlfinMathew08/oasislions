@@ -1,0 +1,166 @@
+/* Responsive Editorial Breakpoints — Desktop, Tablet & Mobile */
+
+@media (max-width: 1120px) {
+  .apple-carousel-slide {
+    flex: 0 0 80vw;
+    height: 480px;
+  }
+  .apple-slide-caption {
+    padding: 36px 40px;
+  }
+  .events-showcase-grid,
+  .welcome-asymmetric-grid,
+  .project-lead-feature,
+  .closing-cta-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .impact-metrics-row {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 36px;
+  }
+  .footer-columns-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+}
+
+@media (max-width: 900px) {
+  .nav-central {
+    display: none;
+  }
+  .mobile-toggle {
+    display: flex;
+  }
+  .apple-carousel-slide {
+    flex: 0 0 84vw;
+    height: 440px;
+  }
+  .apple-slide-caption {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 28px 32px;
+  }
+  .projects-secondary-row,
+  .members-portrait-grid,
+  .moments-editorial-mosaic {
+    grid-template-columns: 1fr;
+  }
+  .moment-card.large {
+    height: 360px;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .header-inner {
+    height: 62px;
+  }
+  .logo-lions-intl {
+    height: 34px;
+  }
+  .brand-club-name {
+    font-size: 0.82rem;
+  }
+  .hero-cinematic {
+    min-height: 78vh;
+  }
+  .hero-content-wrap {
+    padding: 88px 0 64px 0;
+  }
+  .apple-carousel-track {
+    gap: 14px;
+  }
+  .apple-carousel-slide {
+    flex: 0 0 88vw;
+    height: 400px;
+  }
+  .apple-slide-caption {
+    padding: 24px;
+  }
+  .member-editorial-card {
+    grid-template-columns: 1fr;
+  }
+  .member-photo-box {
+    height: 220px;
+  }
+  .impact-metrics-row,
+  .footer-columns-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .footer-base-row {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+  .closing-form-panel {
+    padding: 28px 20px;
+  }
+}
+
+/* Responsive Rules for Compact Leadership, Leader Profile Modal & About Split Hero */
+@media (max-width: 1120px) {
+  .leadership-split-stage {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+  .leadership-intro-col {
+    position: static;
+    max-width: 620px;
+  }
+  .leadership-portraits-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+  .about-brand-split {
+    grid-template-columns: 1fr;
+    gap: 48px;
+  }
+}
+
+@media (max-width: 820px) {
+  .leadership-portraits-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .leader-modal-dialog {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+    max-height: 88vh;
+    overflow-y: auto;
+  }
+  .leader-modal-portrait-col {
+    min-height: 280px;
+    max-height: 320px;
+  }
+  .leader-modal-details-col {
+    padding: 32px 28px;
+  }
+}
+
+@media (max-width: 520px) {
+  .section-leadership-compact {
+    padding: 72px 0;
+  }
+  .leadership-portraits-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .leader-modal-backdrop {
+    padding: 14px;
+  }
+  .leader-modal-details-col {
+    padding: 24px 20px;
+  }
+  .about-logo-stage {
+    padding: 36px 24px;
+  }
+  .about-logo-frame img {
+    height: 76px;
+  }
+}

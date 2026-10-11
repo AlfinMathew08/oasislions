@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Events — Admin | Dubai Oasis Lions Club</title>
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-header">
+        <img src="../assets/logos/lions-international.png" alt="Lions Intl" style="height:36px; width:auto;">
+        <div>
+          <div style="font-size:0.85rem; font-weight:800; color:var(--color-primary);">DUBAI OASIS LIONS</div>
+          <div style="font-size:0.7rem; color:var(--color-accent-dark); font-weight:700;">ADMIN 2026–27</div>
+        </div>
+      </div>
+      <nav class="admin-sidebar-nav">
+        <a href="index.html" class="admin-nav-item">📊 Dashboard Overview</a>
+        <a href="projects.html" class="admin-nav-item">🤝 Service Projects</a>
+        <a href="leadership.html" class="admin-nav-item">🦁 Leadership 2026–27</a>
+        <a href="members.html" class="admin-nav-item">👥 Member Directory</a>
+        <a href="news.html" class="admin-nav-item">📰 News & Articles</a>
+        <a href="events.html" class="admin-nav-item active">📅 Upcoming Events</a>
+        <a href="media.html" class="admin-nav-item">🖼️ Media Library</a>
+        <a href="enquiries.html" class="admin-nav-item">📬 Contact Enquiries</a>
+        <a href="pages.html" class="admin-nav-item">📄 Website Content</a>
+        <a href="settings.html" class="admin-nav-item">⚙️ Settings & Impact</a>
+        <a href="users.html" class="admin-nav-item">🔒 Authorized Users</a>
+      </nav>
+      <div style="padding:16px; border-top:1px solid var(--color-border);">
+        <button id="admin-logout-btn" class="btn btn-secondary btn-sm" style="width:100%;">Sign Out</button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div style="font-weight:700; color:var(--color-text); font-size:1.1rem;">Calendar & Events Management (GST)</div>
+      </header>
+
+      <div class="admin-content">
+        <div class="admin-card">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Event Title</th>
+                <th>Location</th>
+                <th>Start Date & Time (GST)</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Annual Community Vision Care Drive</strong></td>
+                <td>Al Quoz Community Center, Dubai</td>
+                <td>15 Nov 2026, 09:00</td>
+                <td><span class="admin-badge badge-published">Published</span></td>
+              </tr>
+              <tr>
+                <td><strong>Dubai Oasis Environmental Clean-up</strong></td>
+                <td>Al Qudra Lakes, Dubai</td>
+                <td>05 Dec 2026, 08:00</td>
+                <td><span class="admin-badge badge-published">Published</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { checkAdminSession, logoutAdmin } from '../js/admin/auth.js';
+    checkAdminSession();
+    document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
+  </script>
+</body>
+</html>

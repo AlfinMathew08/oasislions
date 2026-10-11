@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Projects — Admin | Dubai Oasis Lions Club</title>
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-header">
+        <img src="../assets/logos/lions-international.png" alt="Lions Intl" style="height:36px; width:auto;">
+        <div>
+          <div style="font-size:0.85rem; font-weight:800; color:var(--color-primary);">DUBAI OASIS LIONS</div>
+          <div style="font-size:0.7rem; color:var(--color-accent-dark); font-weight:700;">ADMIN 2026–27</div>
+        </div>
+      </div>
+      <nav class="admin-sidebar-nav">
+        <a href="index.html" class="admin-nav-item">📊 Dashboard Overview</a>
+        <a href="projects.html" class="admin-nav-item active">🤝 Service Projects</a>
+        <a href="leadership.html" class="admin-nav-item">🦁 Leadership 2026–27</a>
+        <a href="members.html" class="admin-nav-item">👥 Member Directory</a>
+        <a href="news.html" class="admin-nav-item">📰 News & Articles</a>
+        <a href="events.html" class="admin-nav-item">📅 Upcoming Events</a>
+        <a href="media.html" class="admin-nav-item">🖼️ Media Library</a>
+        <a href="enquiries.html" class="admin-nav-item">📬 Contact Enquiries</a>
+        <a href="pages.html" class="admin-nav-item">📄 Website Content</a>
+        <a href="settings.html" class="admin-nav-item">⚙️ Settings & Impact</a>
+        <a href="users.html" class="admin-nav-item">🔒 Authorized Users</a>
+      </nav>
+      <div style="padding:16px; border-top:1px solid var(--color-border);">
+        <button id="admin-logout-btn" class="btn btn-secondary btn-sm" style="width:100%;">Sign Out</button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div style="font-weight:700; color:var(--color-text); font-size:1.1rem;">Service Projects Management</div>
+        <button id="btn-create-project" class="btn btn-primary btn-sm">+ Create New Project</button>
+      </header>
+
+      <div class="admin-content">
+        <!-- New Project Form Modal / Drawer -->
+        <div id="project-form-container" class="admin-card" style="display:none;">
+          <h2 style="font-size:1.25rem; font-weight:700; margin-bottom:16px;" id="form-heading">Create Project</h2>
+          <form id="admin-project-form">
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+              <div class="form-group">
+                <label class="form-label" for="proj-title">Project Title *</label>
+                <input type="text" class="form-control" id="proj-title" required placeholder="e.g. Dubai Vision Care Campaign">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="proj-slug">Slug *</label>
+                <input type="text" class="form-control" id="proj-slug" required placeholder="dubai-vision-care-campaign">
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:16px;">
+              <div class="form-group">
+                <label class="form-label" for="proj-cat">Category *</label>
+                <select class="form-control" id="proj-cat">
+                  <option value="Vision">Vision</option>
+                  <option value="Hunger Relief">Hunger Relief</option>
+                  <option value="Diabetes Awareness">Diabetes Awareness</option>
+                  <option value="Environment">Environment</option>
+                  <option value="Youth Support">Youth Support</option>
+                  <option value="Community Wellness">Community Wellness</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="proj-loc">Location</label>
+                <input type="text" class="form-control" id="proj-loc" placeholder="Dubai, UAE">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="proj-status">Status *</label>
+                <select class="form-control" id="proj-status">
+                  <option value="draft">Draft (Private)</option>
+                  <option value="published">Published</option>
+                  <option value="archived">Archived</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="proj-summary">Short Summary *</label>
+              <textarea class="form-control" id="proj-summary" rows="2" required placeholder="A brief public summary of the project..."></textarea>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="proj-full">Full Narrative Content</label>
+              <textarea class="form-control" id="proj-full" rows="4" placeholder="Detailed objectives, team, outcomes..."></textarea>
+            </div>
+            <div style="display:flex; gap:12px;">
+              <button type="submit" class="btn btn-primary">Save Project</button>
+              <button type="button" class="btn btn-secondary" id="btn-cancel-project">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Project List Table -->
+        <div class="admin-card">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Category</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="projects-table-body">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { checkAdminSession, logoutAdmin } from '../js/admin/auth.js';
+    import { getSupabase, isSupabaseConfigured } from '../js/supabase.js';
+    import { DEFAULT_PUBLIC_DATA } from '../js/public-data.js';
+    import { showToast, sanitize } from '../js/utils.js';
+
+    let projects = DEFAULT_PUBLIC_DATA.projects;
+
+    async function init() {
+      await checkAdminSession();
+      document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
+      
+      const formContainer = document.getElementById('project-form-container');
+      document.getElementById('btn-create-project').addEventListener('click', () => {
+        formContainer.style.display = 'block';
+      });
+      document.getElementById('btn-cancel-project').addEventListener('click', () => {
+        formContainer.style.display = 'none';
+      });
+
+      const supabase = getSupabase();
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          const { data } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
+          if (data && data.length) projects = data;
+        } catch(e) {
+          console.warn('Fallback projects:', e);
+        }
+      }
+      render();
+
+      document.getElementById('admin-project-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+          title: document.getElementById('proj-title').value,
+          slug: document.getElementById('proj-slug').value,
+          category: document.getElementById('proj-cat').value,
+          location: document.getElementById('proj-loc').value,
+          status: document.getElementById('proj-status').value,
+          summary: document.getElementById('proj-summary').value,
+          full_content: document.getElementById('proj-full').value
+        };
+
+        if (isSupabaseConfigured() && supabase) {
+          try {
+            const { error } = await supabase.from('projects').insert([payload]);
+            if (error) throw error;
+            showToast('Project saved to Supabase successfully!', 'success');
+          } catch(err) {
+            showToast(err.message, 'error');
+            return;
+          }
+        } else {
+          projects.unshift({ id: 'p-' + Date.now(), ...payload });
+          showToast('Project added in Local Preview mode', 'info');
+        }
+
+        formContainer.style.display = 'none';
+        render();
+      });
+    }
+
+    function render() {
+      const tbody = document.getElementById('projects-table-body');
+      tbody.innerHTML = projects.map(p => `
+        <tr>
+          <td><strong>${sanitize(p.title)}</strong></td>
+          <td><span class="badge badge-primary">${sanitize(p.category)}</span></td>
+          <td>${sanitize(p.location || 'Dubai, UAE')}</td>
+          <td><span class="admin-badge badge-${p.status === 'published' ? 'published' : 'draft'}">${p.status || 'published'}</span></td>
+          <td>
+            <a href="../project-detail.html?slug=${encodeURIComponent(p.slug)}" target="_blank" class="btn btn-sm btn-outline">Preview</a>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    init();
+  </script>
+</body>
+</html>

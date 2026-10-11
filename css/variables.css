@@ -1,0 +1,92 @@
+/* Dubai Oasis Lions Club — Lions Year 2026–2027
+   Theme: "Together We Can"
+   Apple-Caliber Editorial Design System & Tokens
+*/
+:root {
+  /* Brand Palette (Refined Lions Blue & Gold) */
+  --color-primary: #1C509C;
+  --color-primary-dark: #163E78;
+  --color-primary-deep: #0D264D;
+  --color-primary-light: #EBF3FC;
+  --color-primary-subtle: rgba(28, 80, 156, 0.06);
+
+  --color-accent: #FCCB04;
+  --color-accent-dark: #D9AC00;
+  --color-accent-light: #FFF9E0;
+  --color-accent-subtle: rgba(252, 203, 4, 0.12);
+
+  /* Apple-standard neutrals */
+  --color-background: #FFFFFF;
+  --color-surface: #F5F7FA;
+  --color-surface-soft: #F9FAFB;
+  --color-surface-elevated: #FFFFFF;
+  --color-surface-dark: #0A111C;
+  --color-surface-dark-card: #141F30;
+
+  /* Typography Colors */
+  --color-text: #1D2433;
+  --color-text-secondary: #475467;
+  --color-text-muted: #64748B;
+  --color-text-subtle: #94A3B8;
+  --color-text-light: #F8FAFC;
+  --color-text-light-muted: #94A3B8;
+
+  /* Structural Borders & Dividers */
+  --color-border: #E4E8EE;
+  --color-border-subtle: #EEF2F6;
+  --color-border-dark: #22324A;
+  --color-border-accent: rgba(252, 203, 4, 0.4);
+
+  /* Functional */
+  --color-success: #027A48;
+  --color-success-light: #ECFDF3;
+  --color-error: #B42318;
+  --color-error-light: #FEF3F2;
+
+  /* Typography Hierarchy (Apple SF Pro Style) */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-serif: "New York", -apple-system-ui-serif, Georgia, Cambria, serif;
+  --font-mono: "SF Mono", Menlo, Monaco, Consolas, monospace;
+
+  /* Container & Layout Constraints */
+  --container-width: 1240px;
+  --container-narrow: 860px;
+  --container-wide: 1400px;
+  --section-padding: 120px;
+  --section-padding-sm: 80px;
+
+  /* Geometry & Corners (Intentional, restrained radii) */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 32px;
+  --radius-pill: 9999px;
+
+  /* Apple-inspired Elevation & Lighting */
+  --shadow-subtle: 0 1px 3px rgba(16, 24, 40, 0.05), 0 1px 2px rgba(16, 24, 40, 0.03);
+  --shadow-card: 0 4px 20px -2px rgba(16, 24, 40, 0.06), 0 2px 6px -1px rgba(16, 24, 40, 0.03);
+  --shadow-elevated: 0 20px 48px -12px rgba(16, 24, 40, 0.12), 0 8px 16px -4px rgba(16, 24, 40, 0.04);
+  --shadow-dropdown: 0 24px 48px -12px rgba(16, 24, 40, 0.18), 0 8px 24px -4px rgba(16, 24, 40, 0.06);
+
+  /* Glassmorphism */
+  --glass-nav-bg: rgba(255, 255, 255, 0.82);
+  --glass-nav-border: rgba(228, 232, 238, 0.7);
+  --glass-blur: blur(20px);
+  --glass-dark-bg: rgba(10, 17, 28, 0.85);
+
+  /* Timing Functions */
+  --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-fast: 160ms var(--ease-apple);
+  --transition-smooth: 320ms var(--ease-apple);
+  --transition-slow: 600ms var(--ease-apple);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

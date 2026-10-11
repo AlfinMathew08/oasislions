@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login — Dubai Oasis Lions Club | Lions Year 2026–2027</title>
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body style="background: #F1F5F9; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;">
+
+  <div class="glass-panel" style="max-width: 440px; width: 100%; padding: 48px 36px; background: #FFFFFF;">
+    <!-- Mandatory Two Logos: Lions Intl Left, Dubai Oasis Right -->
+    <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 28px;">
+      <img src="../assets/logos/lions-international.png" alt="Lions International Emblem" style="height: 52px; width: auto;">
+      <div style="width: 1.5px; height: 32px; background: var(--color-border);"></div>
+      <div>
+        <div style="font-weight: 800; color: var(--color-primary); font-size: 1.05rem; line-height: 1.1;">DUBAI OASIS LIONS CLUB</div>
+        <div style="font-size: 0.75rem; color: var(--color-accent-dark); font-weight: 700; text-transform: uppercase;">Admin Portal 2026–27</div>
+      </div>
+    </div>
+
+    <h1 style="font-size: 1.5rem; font-weight: 800; text-align: center; color: var(--color-text); margin-bottom: 8px;">Authorized Access</h1>
+    <p style="text-align: center; color: var(--color-text-muted); font-size: 0.88rem; margin-bottom: 28px;">Sign in with your verified club credentials to manage content and enquiries.</p>
+
+    <form id="admin-login-form">
+      <div class="form-group">
+        <label class="form-label" for="login-email">Official Email</label>
+        <input type="email" class="form-control" id="login-email" required placeholder="admin@dubaioasislions.org">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="login-password">Password</label>
+        <input type="password" class="form-control" id="login-password" required placeholder="••••••••••••">
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 12px;">Sign In to Dashboard</button>
+    </form>
+
+    <div style="margin-top: 24px; text-align: center;">
+      <a href="../index.html" style="font-size: 0.85rem; color: var(--color-primary); font-weight: 500;">&larr; Return to Public Website</a>
+    </div>
+  </div>
+
+  <script type="module">
+    import { loginAdmin } from '../js/admin/auth.js';
+    import { showToast } from '../js/utils.js';
+
+    document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('login-email').value;
+      const pass = document.getElementById('login-password').value;
+      try {
+        await loginAdmin(email, pass);
+      } catch (err) {
+        showToast('Login failed: ' + (err.message || 'Invalid credentials'), 'error');
+      }
+    });
+  </script>
+</body>
+</html>

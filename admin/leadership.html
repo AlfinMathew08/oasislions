@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Leadership 2026–27 — Admin | Dubai Oasis Lions Club</title>
+  <link rel="stylesheet" href="../css/reset.css">
+  <link rel="stylesheet" href="../css/variables.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="admin-sidebar">
+      <div class="admin-sidebar-header">
+        <img src="../assets/logos/lions-international.png" alt="Lions Intl" style="height:36px; width:auto;">
+        <div>
+          <div style="font-size:0.85rem; font-weight:800; color:var(--color-primary);">DUBAI OASIS LIONS</div>
+          <div style="font-size:0.7rem; color:var(--color-accent-dark); font-weight:700;">ADMIN 2026–27</div>
+        </div>
+      </div>
+      <nav class="admin-sidebar-nav">
+        <a href="index.html" class="admin-nav-item">📊 Dashboard Overview</a>
+        <a href="projects.html" class="admin-nav-item">🤝 Service Projects</a>
+        <a href="leadership.html" class="admin-nav-item active">🦁 Leadership 2026–27</a>
+        <a href="members.html" class="admin-nav-item">👥 Member Directory</a>
+        <a href="news.html" class="admin-nav-item">📰 News & Articles</a>
+        <a href="events.html" class="admin-nav-item">📅 Upcoming Events</a>
+        <a href="media.html" class="admin-nav-item">🖼️ Media Library</a>
+        <a href="enquiries.html" class="admin-nav-item">📬 Contact Enquiries</a>
+        <a href="pages.html" class="admin-nav-item">📄 Website Content</a>
+        <a href="settings.html" class="admin-nav-item">⚙️ Settings & Impact</a>
+        <a href="users.html" class="admin-nav-item">🔒 Authorized Users</a>
+      </nav>
+      <div style="padding:16px; border-top:1px solid var(--color-border);">
+        <button id="admin-logout-btn" class="btn btn-secondary btn-sm" style="width:100%;">Sign Out</button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div style="font-weight:700; color:var(--color-text); font-size:1.1rem;">Leadership Assignments (Lions Year 2026–2027)</div>
+      </header>
+
+      <div class="admin-content">
+        <div class="admin-card">
+          <p style="color:var(--color-text-muted); font-size:0.92rem; margin-bottom:20px;">
+            Office bearers are assigned specifically per Lions Year (2026–2027). This allows annual leadership rotation without rewriting member biographies or rebuilding the public site.
+          </p>
+
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Lions Year</th>
+                <th>Position Title</th>
+                <th>Assigned Leader</th>
+                <th>Priority Order</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="leadership-table-body">
+              <tr>
+                <td><strong>2026–2027</strong></td>
+                <td>Club President</td>
+                <td>Charter Leadership</td>
+                <td>1</td>
+                <td><span class="admin-badge badge-published">Active</span></td>
+              </tr>
+              <tr>
+                <td><strong>2026–2027</strong></td>
+                <td>Honorary Secretary</td>
+                <td>Club Secretary</td>
+                <td>2</td>
+                <td><span class="admin-badge badge-published">Active</span></td>
+              </tr>
+              <tr>
+                <td><strong>2026–2027</strong></td>
+                <td>Finance & Accounts Chair</td>
+                <td>Club Treasurer</td>
+                <td>3</td>
+                <td><span class="admin-badge badge-published">Active</span></td>
+              </tr>
+              <tr>
+                <td><strong>2026–2027</strong></td>
+                <td>Technology & Communications Chair</td>
+                <td>Alfin Mathew</td>
+                <td>4</td>
+                <td><span class="admin-badge badge-published">Active</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script type="module">
+    import { checkAdminSession, logoutAdmin } from '../js/admin/auth.js';
+    checkAdminSession();
+    document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
+  </script>
+</body>
+</html>

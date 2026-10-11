@@ -1,0 +1,23 @@
+{
+  "name": "dubai-oasis-lions-club",
+  "version": "1.0.0",
+  "description": "Production-oriented website for Dubai Oasis Lions Club — Lions Year 2026–2027. Theme: Together We Can.",
+  "main": "index.html",
+  "type": "module",
+  "scripts": {
+    "start": "npx serve -l 3000 .",
+    "dev": "npx serve -l 3000 .",
+    "test": "node tests/verify-site.js"
+  },
+  "keywords": [
+    "lions-club",
+    "dubai",
+    "humanitarian",
+    "together-we-can"
+  ],
+  "author": "Dubai Oasis Lions Club",
+  "license": "ISC",
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}
