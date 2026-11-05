@@ -1,12 +1,12 @@
 # Dubai Oasis Lions Club — Lions Year 2026–2027
-### Theme: Together We Can.
+### Motto: We Serve.
 
 A production-oriented, Apple-inspired website and administrative management portal built for **Dubai Oasis Lions Club**.
 
 ---
 
 ## 1. Project Overview & Architecture
-- **Theme**: *Together We Can.*
+- **Motto**: *We Serve.*
 - **Lions Year**: 2026–2027
 - **Aesthetic**: Premium Apple-inspired refinement, glassmorphism, refined typography, and the official Lions International Blue and Gold color palette.
 - **Dual Logo Mandate**:
@@ -122,3 +122,4 @@ Use the **Live Server** extension to preview.
 
 ## 6. Lions Year 2026–2027 Governance
 Leadership assignments are decoupled from the general member directory. This allows office bearers to rotate annually (e.g., 2026–27 to 2027–28) without modifying member biographies or disrupting historical records.
+# oasislions
