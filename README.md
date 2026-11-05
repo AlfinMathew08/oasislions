@@ -123,3 +123,4 @@ Use the **Live Server** extension to preview.
 ## 6. Lions Year 2026–2027 Governance
 Leadership assignments are decoupled from the general member directory. This allows office bearers to rotate annually (e.g., 2026–27 to 2027–28) without modifying member biographies or disrupting historical records.
 # oasislions
+# oasislions
