@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Details — Dubai Oasis Lions Club | We Serve</title>
+  <meta name="description" content="Community service gathering and humanitarian initiative details from Dubai Oasis Lions Club. Displayed in UAE GST timezone.">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- PRIVATE MEMBERS PORTAL SESSION GUARD (Mockup Phase) -->
+  <script>
+    (function() {
+      try {
+        const isAuthed = sessionStorage.getItem("dolc_member_active") === "true";
+        if (!isAuthed) {
+          window.location.replace("login.html");
+        }
+      } catch (e) {}
+    })();
+  </script>
+  <style>
+    .event-detail-container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 56px 20px 96px 20px;
+    }
+    .event-detail-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: var(--color-accent, #FCCB04);
+      text-decoration: none;
+      margin-bottom: 28px;
+      transition: transform 180ms ease, color 180ms ease;
+    }
+    .event-detail-back:hover {
+      transform: translateX(-3px);
+      color: #FFFFFF;
+    }
+    .event-detail-header {
+      margin-bottom: 32px;
+    }
+    .event-detail-category {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--color-accent, #FCCB04);
+      background: rgba(252, 203, 4, 0.12);
+      border: 1px solid rgba(252, 203, 4, 0.25);
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+    }
+    .event-detail-title {
+      font-size: 2.6rem;
+      font-weight: 800;
+      line-height: 1.2;
+      color: #FFFFFF;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+    .event-detail-meta-strip {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 12px;
+      color: #E5EDF8;
+      font-size: 0.92rem;
+    }
+    .event-detail-meta-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .event-detail-meta-item svg {
+      color: var(--color-accent, #FCCB04);
+      flex-shrink: 0;
+    }
+    .event-detail-photo-frame {
+      width: 100%;
+      height: 420px;
+      border-radius: 18px;
+      overflow: hidden;
+      margin: 32px 0 40px 0;
+      background: #0F172A;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
+    }
+    .event-detail-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .event-detail-body-grid {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: 48px;
+      align-items: start;
+    }
+    .event-detail-summary-callout {
+      background: rgba(255, 255, 255, 0.08);
+      border-left: 4px solid var(--color-accent, #FCCB04);
+      padding: 22px 24px;
+      border-radius: 0 12px 12px 0;
+      font-size: 1.15rem;
+      line-height: 1.7;
+      color: #E5EDF8;
+      font-weight: 500;
+      margin-bottom: 28px;
+    }
+    .event-detail-description {
+      font-size: 1.05rem;
+      line-height: 1.85;
+      color: #E5EDF8;
+    }
+    .event-detail-description p {
+      margin-bottom: 20px;
+    }
+    .event-detail-sidebar-card {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border, #E2E8F0);
+      border-radius: 16px;
+      padding: 28px;
+      box-shadow: 0 4px 18px rgba(15, 23, 42, 0.04);
+    }
+    .event-sidebar-title {
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #163E78 !important;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--color-border-subtle, #E2E8F0);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .event-sidebar-field {
+      margin-bottom: 18px;
+    }
+    .event-sidebar-label {
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #475569 !important;
+      margin-bottom: 4px;
+    }
+    .event-sidebar-value {
+      font-size: 0.94rem;
+      font-weight: 700;
+      color: #163E78 !important;
+      line-height: 1.45;
+    }
+    .btn-event-register-primary {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background: var(--color-primary, #1C509C);
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 0.96rem;
+      padding: 13px 20px;
+      border-radius: 10px;
+      text-decoration: none;
+      transition: all 180ms ease;
+      margin-top: 24px;
+      box-shadow: 0 4px 14px rgba(28, 80, 156, 0.22);
+    }
+    .btn-event-register-primary:hover {
+      background: var(--color-primary-dark, #163E78);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(28, 80, 156, 0.32);
+    }
+    @media (max-width: 820px) {
+      .event-detail-title {
+        font-size: 2.1rem;
+      }
+      .event-detail-photo-frame {
+        height: 280px;
+      }
+      .event-detail-body-grid {
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+    }
+  </style>
+  <script>
+    (function() {
+      try {
+        const hasSession = sessionStorage.getItem("dolc_member_active") ||
+                           Object.keys(localStorage).some(k => k.includes("-auth-token"));
+        if (!hasSession) {
+          document.documentElement.classList.add("auth-pending");
+        }
+      } catch (e) {}
+    })();
+  </script>
+</head>
+<body>
+  <!-- Persistent Stationary Background Canvas: Fixed Watermark Crest & Ambient Lighting -->
+  <div class=site-fixed-background aria-hidden=true>
+    <div class=site-bg-ambient-mesh></div>
+    <div class=site-bg-crest-stage>
+      <img src="assets/logos/dubai-oasis-lions-club.png" alt="" class="site-bg-crest-watermark" width="640" height="832">
+    </div>
+  </div>
+
+
+  <!-- SLIM, ELEGANT APPLE-INSPIRED GLOBAL HEADER -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-pair" aria-label="Dubai Oasis Lions Club Home">
+        <img src="assets/logos/dubai-oasis-lions-club.png" alt="Dubai Oasis Lions Club Official Crest" class="logo-club-crest" width="38" height="49">
+        <div class="brand-titles">
+          <span class="brand-club-name">DUBAI OASIS LIONS CLUB</span>
+          <span class="brand-year">United Arab Emirates</span>
+        </div>
+      </a>
+
+      <nav class="nav-central" aria-label="Primary Navigation">
+        <div class="nav-item"><a href="index.html" class="nav-link">Home</a></div>
+        <div class="nav-item">
+          <span class="nav-link" tabindex="0">Our Club <span class="caret"></span></span>
+          <div class="dropdown-pane">
+            <a href="about.html" class="dropdown-link">About Us<span class="dropdown-link-desc">Our mission, vision & global affiliation</span></a>
+            <a href="leadership.html" class="dropdown-link">Leadership<span class="dropdown-link-desc">Office bearers & club governance</span></a>
+            <a href="members.html" class="dropdown-link">Meet Our Members<span class="dropdown-link-desc">Searchable public member directory</span></a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" tabindex="0">Our Impact <span class="caret"></span></span>
+          <div class="dropdown-pane">
+            <a href="projects.html" class="dropdown-link">Service Projects<span class="dropdown-link-desc">Humanitarian initiatives across Dubai</span></a>
+            <a href="events.html" class="dropdown-link">Upcoming Events<span class="dropdown-link-desc">Community calendar & activities</span></a>
+          </div>
+        </div>
+        <div class="nav-item">
+          <span class="nav-link" tabindex="0">Stories <span class="caret"></span></span>
+          <div class="dropdown-pane">
+            <a href="news.html" class="dropdown-link">News & Announcements<span class="dropdown-link-desc">Official club updates & press</span></a>
+            <a href="gallery.html" class="dropdown-link">Photo Gallery<span class="dropdown-link-desc">Moments of community service</span></a>
+          </div>
+        </div>
+        <div class="nav-item"><a href="contact.html" class="nav-link">Contact</a></div>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="member-identity-badge" title="Authenticated Member Session">
+          <span class="member-badge-dot" aria-hidden="true"></span>
+          <span class="member-badge-text">Lion Member</span>
+        </div>
+        <a href="login.html" class="btn-header-login btn-header-logout" id="btn-portal-logout" aria-label="Sign Out of Members Portal">Logout</a>
+        <button class="mobile-toggle" aria-label="Open Navigation Menu">
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Slide-Over Navigation Drawer -->
+  <div class="mobile-drawer-overlay"></div>
+  <aside class="mobile-drawer" aria-label="Mobile Navigation">
+    <div class="mobile-drawer-header">
+      <div class="mobile-drawer-brand">
+        <img src="assets/logos/dubai-oasis-lions-club.png" alt="Dubai Oasis Lions Club Official Crest" class="drawer-club-crest" width="30" height="38">
+        <div class="drawer-brand-titles">
+          <span class="brand-club-name">DUBAI OASIS LIONS CLUB</span>
+          <span class="brand-year">United Arab Emirates</span>
+        </div>
+      </div>
+      <button class="drawer-close-btn" aria-label="Close Menu">&times;</button>
+    </div>
+    <nav class="mobile-drawer-nav">
+      <a href="index.html" class="drawer-nav-link${activePage === "home" ? " active" : ""}">Home</a>
+      
+      <div class="drawer-nav-section-title">Our Club</div>
+      <a href="about.html" class="drawer-nav-link${activePage === "about" ? " active" : ""}">About Us</a>
+      <a href="leadership.html" class="drawer-nav-link${activePage === "leadership" ? " active" : ""}">Leadership</a>
+      <a href="members.html" class="drawer-nav-link${activePage === "members" ? " active" : ""}">Meet Our Members</a>
+      
+      <div class="drawer-nav-section-title">Our Impact</div>
+      <a href="projects.html" class="drawer-nav-link${activePage === "projects" ? " active" : ""}">Service Projects</a>
+      <a href="events.html" class="drawer-nav-link${activePage === "events" ? " active" : ""}">Upcoming Events</a>
+      
+      <div class="drawer-nav-section-title">Stories</div>
+      <a href="news.html" class="drawer-nav-link${activePage === "news" ? " active" : ""}">News & Announcements</a>
+      <a href="gallery.html" class="drawer-nav-link${activePage === "gallery" ? " active" : ""}">Photo Gallery</a>
+      <a href="contact.html" class="drawer-nav-link${activePage === "contact" ? " active" : ""}">Contact</a>
+    </nav>
+    <div class="mobile-drawer-footer">
+      <a href="login.html" class="btn-drawer-logout" id="drawer-portal-logout" aria-label="Sign Out of Members Portal">Logout of Portal</a>
+    </div>
+  </aside>
+
+  <main>
+    <div class="event-detail-container" id="event-detail-mount">
+      <div style="text-align:center; padding: 60px 0; color: var(--color-text-secondary);">
+        Loading event details...
+      </div>
+    </div>
+  </main>
+
+  <!-- FOOTER (Three Official Logos: Lions International -> Dubai Oasis Lions Club -> Who We Are logo) -->
+  <footer class="site-footer-editorial">
+    <div class="container">
+      <div class="footer-columns-grid">
+        <div>
+          <div class="footer-brand-composition">
+            <div class="footer-brand-trio">
+              <img src="assets/logos/lions-international.png" alt="Lions Clubs International" class="footer-logo-lions" width="44" height="41">
+              <img src="assets/logos/dubai-oasis-lions-club.png" alt="Dubai Oasis Lions Club Official Crest" class="footer-logo-club" width="42" height="55">
+              <img src="assets/logos/who-we-are-logo.png" alt="Dubai Oasis Lions Club — Who We Are Unity Emblem" class="footer-logo-whoweare" data-src-unprocessed="assets/logos/who we are logo.jpg" width="44" height="44">
+            </div>
+            <div class="footer-brand-text">
+              <div class="footer-brand-name">DUBAI OASIS LIONS CLUB</div>
+              <div class="footer-brand-tagline">WE SERVE</div>
+            </div>
+          </div>
+          <p style="font-size:0.9rem; line-height:1.65; max-width:340px; color:#94A3B8;">
+            A chartered service club of Lions Clubs International committed to humanitarian assistance, sight conservation, and civic fellowship in Dubai, UAE.
+          </p>
+        </div>
+
+        <div class="footer-nav-col">
+          <h5>Our Club</h5>
+          <ul>
+            <li><a href="about.html">About Us</a></li>
+            <li><a href="leadership.html">Leadership</a></li>
+            <li><a href="members.html">Meet Our Members</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav-col">
+          <h5>Our Impact</h5>
+          <ul>
+            <li><a href="projects.html">Service Projects</a></li>
+            <li><a href="events.html">Upcoming Events</a></li>
+            <li><a href="news.html">News & Announcements</a></li>
+            <li><a href="gallery.html">Photo Gallery</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav-col">
+          <h5>Get Involved</h5>
+          <ul>
+            <li><a href="contact.html">Volunteer & Enquire</a></li>
+            <li><a href="admin/login.html" style="color:var(--color-accent); font-weight:600;">Admin Portal &rarr;</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-base-row">
+        <div>&copy; Dubai Oasis Lions Club. All rights reserved.</div>
+        <div>Lions Year 2026–2027 &bull; We Serve.</div>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { getSupabase, isSupabaseConfigured } from './js/supabase.js';
+    import { DEFAULT_PUBLIC_DATA } from './js/public-data.js';
+    import { sanitize, formatUAEEventDate, formatUAEDate, formatUAETime } from './js/utils.js';
+
+    const params = new URLSearchParams(window.location.search);
+    const identifier = params.get('slug') || params.get('id');
+
+    async function loadEventDetail() {
+      const mount = document.getElementById('event-detail-mount');
+      let event = null;
+
+      // Query Supabase
+      const supabase = getSupabase();
+      if (isSupabaseConfigured() && supabase && identifier) {
+        try {
+          let query = supabase.from('events').select('*');
+          if (identifier.includes('-') && identifier.length === 36 && !identifier.includes(' ')) {
+            query = query.or(`slug.eq.${identifier},id.eq.${identifier}`);
+          } else {
+            query = query.eq('slug', identifier);
+          }
+          const { data, error } = await query.maybeSingle();
+          if (data && !error) {
+            event = data;
+          }
+        } catch (err) {
+          console.warn('Error loading event detail:', err);
+        }
+      }
+
+      if (!event) {
+        mount.innerHTML = `
+          <div class="empty-state-box">
+            <div class="empty-state-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <h2 class="empty-state-title">Event Not Located</h2>
+            <p class="empty-state-desc">
+              The event initiative you requested may have concluded, been rescheduled, or is currently unlisted.
+            </p>
+            <a href="events.html" class="btn btn-primary" style="margin-top:16px;">&larr; Return to Upcoming Events</a>
+          </div>
+        `;
+        return;
+      }
+
+      // Update page title dynamically
+      document.title = `${event.title} — Dubai Oasis Lions Club`;
+
+      const coverUrl = event.cover_image_url || 'assets/icons/image-placeholder.svg';
+      const category = event.category || 'Community Service';
+      const venue = event.venue_name || event.location || 'Dubai, UAE';
+      const locationFull = event.location || event.venue_name || 'Dubai, United Arab Emirates';
+      const summary = event.short_summary || '';
+      const description = event.description || summary || 'Humanitarian community initiative hosted by Dubai Oasis Lions Club.';
+      const startTimeFormatted = formatUAEEventDate(event.start_time);
+      const endTimeFormatted = event.end_time ? formatUAETime(event.end_time) : null;
+      const contact = event.contact_info || null;
+
+      mount.innerHTML = `
+        <a href="index.html#section-upcoming-events" class="event-detail-back" id="btn-back-events">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+          Back to Upcoming Events
+        </a>
+
+        <article>
+          <header class="event-detail-header">
+            <span class="event-detail-category">${sanitize(category)}</span>
+            <h1 class="event-detail-title">${sanitize(event.title)}</h1>
+
+            <div class="event-detail-meta-strip">
+              <div class="event-detail-meta-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>${sanitize(startTimeFormatted)}${endTimeFormatted ? ' &ndash; ' + sanitize(endTimeFormatted) : ''}</span>
+              </div>
+
+              <div class="event-detail-meta-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span>${sanitize(venue)}</span>
+              </div>
+            </div>
+          </header>
+
+          <div class="event-detail-photo-frame">
+            <img src="${sanitize(coverUrl)}" alt="${sanitize(event.title)}" class="event-detail-photo" onerror="this.src='assets/icons/image-placeholder.svg'">
+          </div>
+
+          <div class="event-detail-body-grid">
+            <div class="event-detail-main-column">
+              ${summary ? `
+                <div class="event-detail-summary-callout">
+                  ${sanitize(summary)}
+                </div>
+              ` : ''}
+
+              <div class="event-detail-description">
+                <h3 style="font-size:1.3rem; font-weight:800; color:#FFFFFF; margin-bottom:16px;">Initiative Overview</h3>
+                <p>${sanitize(description).replace(/\n\n+/g, '</p><p>')}</p>
+              </div>
+            </div>
+
+            <aside class="event-detail-sidebar">
+              <div class="event-detail-sidebar-card">
+                <div class="event-sidebar-title">Event Information</div>
+
+                <div class="event-sidebar-field">
+                  <div class="event-sidebar-label">Date & Timing</div>
+                  <div class="event-sidebar-value">${sanitize(startTimeFormatted)}</div>
+                  ${endTimeFormatted ? `<div style="font-size:0.84rem; color:#475569; margin-top:2px;">Concludes at ${sanitize(endTimeFormatted)}</div>` : ''}
+                </div>
+
+                <div class="event-sidebar-field">
+                  <div class="event-sidebar-label">Venue & Location</div>
+                  <div class="event-sidebar-value">${sanitize(venue)}</div>
+                  <div style="font-size:0.84rem; color:#475569; margin-top:2px;">${sanitize(locationFull)}</div>
+                </div>
+
+                <div class="event-sidebar-field">
+                  <div class="event-sidebar-label">Focus Area</div>
+                  <div class="event-sidebar-value">${sanitize(category)}</div>
+                </div>
+
+                ${contact ? `
+                  <div class="event-sidebar-field">
+                    <div class="event-sidebar-label">Community Inquiries</div>
+                    <div class="event-sidebar-value">
+                      <a href="mailto:${sanitize(contact)}" style="color:var(--color-primary, #1C509C); font-weight:600;">${sanitize(contact)}</a>
+                    </div>
+                  </div>
+                ` : ''}
+
+                <a href="contact.html?subject=${encodeURIComponent('Enquiry for Event: ' + event.title)}" class="btn-event-register-primary" style="background:#163E78; color:#FFFFFF; border:none; box-shadow:0 4px 14px rgba(22, 62, 120, 0.25);">
+                  Contact Club Regarding This Event &rarr;
+                </a>
+              </div>
+            </aside>
+          </div>
+        </article>
+      `;
+    }
+
+    loadEventDetail();
+  </script>
+  <script type="module" src="js/auth-guard.js"></script>
+</body>
+</html>

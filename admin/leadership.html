@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Leadership 2026–27 — Admin | Dubai Oasis Lions Club</title>
+  <title>Manage Leadership — Admin | Dubai Oasis Lions Club</title>
   <link rel="stylesheet" href="../css/reset.css">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/components.css">
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/responsive.css">
   <link rel="stylesheet" href="../css/admin.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
@@ -15,16 +16,16 @@
   <div class="admin-layout">
     <aside class="admin-sidebar">
       <div class="admin-sidebar-header">
-        <img src="../assets/logos/lions-international.png" alt="Lions Intl" style="height:36px; width:auto;">
+        <img src="../assets/logos/dubai-oasis-lions-club.png" alt="Dubai Oasis Lions Club" style="height:38px; width:auto;">
         <div>
           <div style="font-size:0.85rem; font-weight:800; color:var(--color-primary);">DUBAI OASIS LIONS</div>
-          <div style="font-size:0.7rem; color:var(--color-accent-dark); font-weight:700;">ADMIN 2026–27</div>
+          <div style="font-size:0.7rem; color:var(--color-accent-dark); font-weight:700;">ADMIN PORTAL</div>
         </div>
       </div>
       <nav class="admin-sidebar-nav">
         <a href="index.html" class="admin-nav-item">📊 Dashboard Overview</a>
         <a href="projects.html" class="admin-nav-item">🤝 Service Projects</a>
-        <a href="leadership.html" class="admin-nav-item active">🦁 Leadership 2026–27</a>
+        <a href="leadership.html" class="admin-nav-item active">🏛️ Leadership Management</a>
         <a href="members.html" class="admin-nav-item">👥 Member Directory</a>
         <a href="news.html" class="admin-nav-item">📰 News & Articles</a>
         <a href="events.html" class="admin-nav-item">📅 Upcoming Events</a>
@@ -41,56 +42,169 @@
 
     <main class="admin-main">
       <header class="admin-topbar">
-        <div style="font-weight:700; color:var(--color-text); font-size:1.1rem;">Leadership Assignments (Lions Year 2026–2027)</div>
+        <div>
+          <div style="font-weight:800; color:var(--color-text); font-size:1.15rem;">Leadership & Office-Bearers Management</div>
+          <div style="font-size:0.8rem; color:var(--color-text-muted);">Manage executive trio (President, Secretary, Treasurer), secondary carousel roster, and interactive profile modals</div>
+        </div>
+        <div style="display:flex; gap:12px; align-items:center;">
+          <a href="../index.html#section-leadership" target="_blank" class="btn btn-secondary btn-sm">View Live Homepage &nearr;</a>
+          <button type="button" id="btn-new-leader" class="btn btn-primary btn-sm">+ Add New Leader</button>
+        </div>
       </header>
 
       <div class="admin-content">
-        <div class="admin-card">
-          <p style="color:var(--color-text-muted); font-size:0.92rem; margin-bottom:20px;">
-            Office bearers are assigned specifically per Lions Year (2026–2027). This allows annual leadership rotation without rewriting member biographies or rebuilding the public site.
-          </p>
+        <!-- ADD / EDIT LEADER FORM PANEL -->
+        <div class="admin-card" id="leader-editor-card" style="margin-bottom: 28px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding-bottom:14px; border-bottom:1px solid var(--color-border);">
+            <div>
+              <h2 id="editor-form-title" style="font-size:1.15rem; font-weight:800; color:var(--color-text);">Add / Edit Leadership Profile</h2>
+              <p style="font-size:0.84rem; color:var(--color-text-muted);">All changes synchronize directly with the Homepage executive row, secondary carousel, leadership directory, and interactive modal.</p>
+            </div>
+            <button type="button" id="btn-preview-modal" class="btn btn-secondary btn-sm">👁️ Preview Profile Modal</button>
+          </div>
 
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Lions Year</th>
-                <th>Position Title</th>
-                <th>Assigned Leader</th>
-                <th>Priority Order</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody id="leadership-table-body">
-              <tr>
-                <td><strong>2026–2027</strong></td>
-                <td>Club President</td>
-                <td>Charter Leadership</td>
-                <td>1</td>
-                <td><span class="admin-badge badge-published">Active</span></td>
-              </tr>
-              <tr>
-                <td><strong>2026–2027</strong></td>
-                <td>Honorary Secretary</td>
-                <td>Club Secretary</td>
-                <td>2</td>
-                <td><span class="admin-badge badge-published">Active</span></td>
-              </tr>
-              <tr>
-                <td><strong>2026–2027</strong></td>
-                <td>Finance & Accounts Chair</td>
-                <td>Club Treasurer</td>
-                <td>3</td>
-                <td><span class="admin-badge badge-published">Active</span></td>
-              </tr>
-              <tr>
-                <td><strong>2026–2027</strong></td>
-                <td>Technology & Communications Chair</td>
-                <td>Alfin Mathew</td>
-                <td>4</td>
-                <td><span class="admin-badge badge-published">Active</span></td>
-              </tr>
-            </tbody>
-          </table>
+          <form id="leader-crud-form">
+            <input type="hidden" id="leader-id" value="">
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr; gap:20px; margin-bottom:18px;">
+              <div>
+                <label class="form-label" for="leader-name">Full Name *</label>
+                <input type="text" id="leader-name" class="form-control" required placeholder="e.g. Alfin Mathew">
+              </div>
+              <div>
+                <label class="form-label" for="leader-role">Official Designation / Title *</label>
+                <input type="text" id="leader-role" class="form-control" required placeholder="e.g. Club President or Honorary Secretary">
+              </div>
+              <div>
+                <label class="form-label" for="leader-primary-pos">Executive Tier / Position *</label>
+                <select id="leader-primary-pos" class="form-control">
+                  <option value="none">General Office-Bearer (Grouped Carousel Stages 2–4)</option>
+                  <option value="president">Club President (Primary Left)</option>
+                  <option value="secretary">Honorary Secretary (Primary Centre)</option>
+                  <option value="treasurer">Club Treasurer (Primary Right)</option>
+                  <option value="ipp">Immediate Past President (Carousel Stage 1 Alone)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap:20px; margin-bottom:18px;">
+              <div>
+                <label class="form-label" for="leader-term-start">Term Start Year *</label>
+                <input type="number" id="leader-term-start" class="form-control" required min="2000" max="2100" value="2026">
+              </div>
+              <div>
+                <label class="form-label" for="leader-term-end">Term End Year *</label>
+                <input type="number" id="leader-term-end" class="form-control" required min="2000" max="2100" value="2027">
+              </div>
+              <div>
+                <label class="form-label" for="leader-order">Display Order *</label>
+                <input type="number" id="leader-order" class="form-control" required min="1" max="99" value="1">
+              </div>
+              <div>
+                <label class="form-label" for="leader-status">Publication Status</label>
+                <select id="leader-status" class="form-control">
+                  <option value="published">Published (Visible on Site)</option>
+                  <option value="unpublished">Unpublished / Draft (Hidden)</option>
+                </select>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:20px; margin-bottom:18px;">
+              <div>
+                <label class="form-label" for="leader-committee">Committee Responsibilities (Optional)</label>
+                <input type="text" id="leader-committee" class="form-control" placeholder="e.g. Executive Governance & Civic Partnerships">
+              </div>
+              <div>
+                <label class="form-label" for="leader-interests">Service Focus Areas (Comma-separated, Optional)</label>
+                <input type="text" id="leader-interests" class="form-control" placeholder="e.g. Vision Care, Youth Mentorship, Hunger Relief">
+              </div>
+            </div>
+
+            <!-- PHOTO UPLOAD, FRAMING & SELECTION -->
+            <div style="display:grid; grid-template-columns: 110px 1fr; gap:20px; align-items:start; margin-bottom:18px; padding:16px; border-radius:12px; background:var(--color-surface); border:1px solid var(--color-border);">
+              <div style="width:96px; height:116px; border-radius:10px; overflow:hidden; background:#FFFFFF; border:1px solid var(--color-border); display:flex; align-items:center; justify-content:center; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.8);">
+                <img id="leader-photo-preview" src="../assets/icons/avatar-placeholder.svg" alt="Leader portrait preview" style="width:100%; height:100%; object-fit:contain; object-position:center center; display:block;">
+              </div>
+              <div>
+                <label class="form-label" for="leader-photo-file">Leader Portrait Photograph</label>
+                <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:10px;">
+                  <input type="file" id="leader-photo-file" accept="image/jpeg,image/png,image/webp" class="form-control" style="max-width:280px; padding:7px;">
+                  <input type="text" id="leader-avatar-url" class="form-control" placeholder="Or enter image path/URL" style="flex:1; min-width:220px;" value="">
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:8px;">
+                  <div>
+                    <label class="form-label" for="leader-photo-fit" style="font-size:0.78rem; margin-bottom:4px;">Photo Framing (Aspect Fitting)</label>
+                    <select id="leader-photo-fit" class="form-control" style="font-size:0.82rem; padding:6px 10px;">
+                      <option value="contain" selected>Contain (Complete Photo — Recommended)</option>
+                      <option value="cover">Cover (Fill Portrait Frame)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="form-label" for="leader-photo-pos" style="font-size:0.78rem; margin-bottom:4px;">Focal Alignment (Positioning)</label>
+                    <select id="leader-photo-pos" class="form-control" style="font-size:0.82rem; padding:6px 10px;">
+                      <option value="center center" selected>Center (Default)</option>
+                      <option value="center 20%">Face & Upper Body (Top 20%)</option>
+                      <option value="center top">Top Edge</option>
+                      <option value="center 35%">Mid-Torso (Top 35%)</option>
+                      <option value="center bottom">Bottom</option>
+                    </select>
+                  </div>
+                </div>
+                <div style="font-size:0.78rem; color:var(--color-text-muted);">
+                  Portraits default to <strong>Contain</strong> on a clean neutral background to preserve full natural photography without clipping heads or shoulders. Switch to <strong>Cover</strong> with focal adjustment only when edge-to-edge bleed looks demonstrably better.
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-bottom:20px;">
+              <label class="form-label" for="leader-message">Leader Welcome Message / Short Biography *</label>
+              <textarea id="leader-message" class="form-control" rows="3" required placeholder="e.g. It is an honour to serve the Dubai Oasis Lions Club community and work together toward meaningful humanitarian impact."></textarea>
+              <div style="font-size:0.78rem; color:var(--color-text-muted); margin-top:4px;">
+                Displayed inside the interactive Leader Profile Modal when visitors click “Know More”.
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+              <div id="admin-save-feedback" style="font-size:0.86rem; font-weight:600; color:var(--color-primary);"></div>
+              <div style="display:flex; gap:12px;">
+                <button type="button" id="btn-reset-form" class="btn btn-secondary btn-sm">Clear / Cancel</button>
+                <button type="submit" id="btn-save-leader" class="btn btn-primary btn-sm">💾 Save Leader Profile</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- CURRENT LEADERSHIP ROSTER TABLE -->
+        <div class="admin-card">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+            <div>
+              <h3 style="font-size:1.05rem; font-weight:800; color:var(--color-text);">Assigned Club Leaders & Office-Bearers</h3>
+              <p style="color:var(--color-text-muted); font-size:0.85rem;">
+                The 3 primary positions (President, Secretary, Treasurer) are fixed prominently in the top row. The remaining positions populate the horizontal carousel below.
+              </p>
+            </div>
+            <button type="button" id="btn-restore-defaults" class="btn btn-secondary btn-sm" title="Restore default verified 13-member starter roster">Reset to Default 13 Roster</button>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Order</th>
+                  <th>Executive Tier</th>
+                  <th>Leader</th>
+                  <th>Designation</th>
+                  <th>Term</th>
+                  <th>Committee</th>
+                  <th>Status</th>
+                  <th style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="leadership-table-body">
+                <!-- Populated dynamically via JS -->
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </main>
@@ -98,8 +212,420 @@
 
   <script type="module">
     import { checkAdminSession, logoutAdmin } from '../js/admin/auth.js';
+    import { getSupabase, isSupabaseConfigured, uploadClubMedia } from '../js/supabase.js';
+    import { DEFAULT_PUBLIC_DATA } from '../js/public-data.js';
+    import {
+      fetchAllLeadershipForAdmin,
+      saveLeadershipRecords,
+      formatTermOfService,
+      getLeaderPrimaryPosition,
+      openLeaderModalWithData,
+      parseImageSettings,
+      getCleanImageUrl,
+      LIONS_LEADERSHIP_STORAGE_KEY
+    } from '../js/leadership.js';
+    import { sanitize, showToast } from '../js/utils.js';
+
     checkAdminSession();
     document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
+
+    let leadersState = [];
+
+    const form = document.getElementById('leader-crud-form');
+    const idInput = document.getElementById('leader-id');
+    const nameInput = document.getElementById('leader-name');
+    const roleInput = document.getElementById('leader-role');
+    const primaryPosInput = document.getElementById('leader-primary-pos');
+    const termStartInput = document.getElementById('leader-term-start');
+    const termEndInput = document.getElementById('leader-term-end');
+    const orderInput = document.getElementById('leader-order');
+    const statusInput = document.getElementById('leader-status');
+    const committeeInput = document.getElementById('leader-committee');
+    const interestsInput = document.getElementById('leader-interests');
+    const avatarUrlInput = document.getElementById('leader-avatar-url');
+    const photoFileInput = document.getElementById('leader-photo-file');
+    const photoFitSelect = document.getElementById('leader-photo-fit');
+    const photoPosSelect = document.getElementById('leader-photo-pos');
+    const photoPreview = document.getElementById('leader-photo-preview');
+    const messageInput = document.getElementById('leader-message');
+    const formTitle = document.getElementById('editor-form-title');
+    const feedbackEl = document.getElementById('admin-save-feedback');
+    const tableBody = document.getElementById('leadership-table-body');
+
+    function resolvePreviewUrl(url) {
+      if (!url) return '../assets/icons/avatar-placeholder.svg';
+      const clean = getCleanImageUrl(url);
+      if (clean.startsWith('data:') || clean.startsWith('http://') || clean.startsWith('https://') || clean.startsWith('/') || clean.startsWith('../')) {
+        return clean;
+      }
+      return `../${clean}`;
+    }
+
+    function updatePhotoPreview() {
+      const fit = photoFitSelect.value || 'contain';
+      const pos = photoPosSelect.value || (fit === 'cover' ? 'center 20%' : 'center center');
+      photoPreview.style.objectFit = fit;
+      photoPreview.style.objectPosition = pos;
+      const isPlaceholder = (photoPreview.src || '').includes('avatar-placeholder');
+      photoPreview.style.padding = isPlaceholder ? '8px' : '0';
+    }
+
+    photoFitSelect.addEventListener('change', updatePhotoPreview);
+    photoPosSelect.addEventListener('change', updatePhotoPreview);
+
+    avatarUrlInput.addEventListener('input', () => {
+      const rawVal = avatarUrlInput.value.trim();
+      const cleanVal = getCleanImageUrl(rawVal);
+      photoPreview.src = resolvePreviewUrl(cleanVal);
+      if (rawVal.includes('#')) {
+        const parsed = parseImageSettings({ avatar: rawVal });
+        photoFitSelect.value = parsed.fit;
+        photoPosSelect.value = parsed.pos;
+      }
+      updatePhotoPreview();
+    });
+
+    photoFileInput.addEventListener('change', async (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+
+      const supabase = getSupabase();
+      if (isSupabaseConfigured() && supabase) {
+        feedbackEl.textContent = 'Uploading portrait to Supabase Storage...';
+        showToast('Uploading leader portrait to Supabase Storage...', 'info');
+        const res = await uploadClubMedia(file, 'leadership');
+        if (res.ok && res.url) {
+          avatarUrlInput.value = res.url;
+          photoPreview.src = res.url;
+          updatePhotoPreview();
+          feedbackEl.textContent = 'Portrait uploaded to Supabase Storage.';
+          showToast('Leader portrait uploaded to Supabase Storage!', 'success');
+          return;
+        } else {
+          showToast('Storage upload warning: ' + (res.error || 'Using local preview'), 'warning');
+        }
+      }
+
+      // Clean client-side Data URL conversion for immediate preview & local persistence
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result === 'string') {
+          avatarUrlInput.value = reader.result;
+          photoPreview.src = reader.result;
+          updatePhotoPreview();
+          feedbackEl.textContent = 'Portrait loaded and ready to save.';
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function getFormLeaderData() {
+      const startYear = Number(termStartInput.value) || 2026;
+      const endYear = Number(termEndInput.value) || (startYear + 1);
+      const interestsArr = interestsInput.value
+        .split(',')
+        .map(s => s.trim())
+        .filter(Boolean);
+
+      const fit = photoFitSelect.value || 'contain';
+      const pos = photoPosSelect.value || (fit === 'cover' ? 'center 20%' : 'center center');
+
+      let rawAvatar = avatarUrlInput.value.trim();
+      if (rawAvatar) {
+        const clean = getCleanImageUrl(rawAvatar);
+        if (clean) {
+          rawAvatar = `${clean}#fit=${fit}&pos=${encodeURIComponent(pos)}`;
+        }
+      }
+
+      return {
+        id: idInput.value || `l-${Date.now()}`,
+        name: nameInput.value.trim() || 'Club Officer',
+        role: roleInput.value.trim() || 'Leadership Officer',
+        primary_position: primaryPosInput.value,
+        term_start_year: startYear,
+        term_end_year: endYear,
+        display_order: Number(orderInput.value) || (leadersState.length + 1),
+        is_active: statusInput.value === 'published',
+        committee: committeeInput.value.trim(),
+        interests: interestsArr,
+        avatar: rawAvatar || null,
+        image_fit: fit,
+        image_position: pos,
+        bio: messageInput.value.trim()
+      };
+    }
+
+    function resetForm() {
+      idInput.value = '';
+      nameInput.value = '';
+      roleInput.value = '';
+      primaryPosInput.value = 'none';
+      termStartInput.value = 2026;
+      termEndInput.value = 2027;
+      orderInput.value = leadersState.length + 1;
+      statusInput.value = 'published';
+      committeeInput.value = '';
+      interestsInput.value = '';
+      avatarUrlInput.value = '';
+      photoFileInput.value = '';
+      photoFitSelect.value = 'contain';
+      photoPosSelect.value = 'center center';
+      photoPreview.src = '../assets/icons/avatar-placeholder.svg';
+      updatePhotoPreview();
+      messageInput.value = '';
+      formTitle.textContent = 'Add New Leadership Profile';
+      feedbackEl.textContent = '';
+    }
+
+    function loadLeaderIntoForm(leader) {
+      idInput.value = leader.id;
+      nameInput.value = leader.name || '';
+      roleInput.value = leader.role || '';
+      primaryPosInput.value = getLeaderPrimaryPosition(leader);
+      termStartInput.value = leader.term_start_year || 2026;
+      termEndInput.value = leader.term_end_year || 2027;
+      orderInput.value = leader.display_order || 1;
+      statusInput.value = leader.is_active !== false ? 'published' : 'unpublished';
+      committeeInput.value = leader.committee || '';
+      interestsInput.value = Array.isArray(leader.interests) ? leader.interests.join(', ') : '';
+
+      const imgSettings = parseImageSettings(leader);
+      photoFitSelect.value = imgSettings.fit;
+      photoPosSelect.value = imgSettings.pos;
+      avatarUrlInput.value = getCleanImageUrl(leader.avatar || '');
+      photoPreview.src = resolvePreviewUrl(avatarUrlInput.value);
+      updatePhotoPreview();
+
+      messageInput.value = leader.bio || '';
+      formTitle.textContent = `Editing Leader: ${leader.name}`;
+      feedbackEl.textContent = '';
+      document.getElementById('leader-editor-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    async function syncLeaderToSupabase(record) {
+      const supabase = getSupabase();
+      if (!isSupabaseConfigured() || !supabase) return;
+
+      try {
+        const nameParts = record.name.trim().split(/\s+/);
+        const firstName = nameParts[0] || 'Club';
+        const lastName = nameParts.slice(1).join(' ') || 'Officer';
+
+        let memberId = record.member_id;
+        if (memberId) {
+          await supabase.from('members').update({
+            first_name: firstName,
+            last_name: lastName,
+            public_role: record.role,
+            committee: record.committee,
+            service_interests: record.interests,
+            biography: record.bio,
+            avatar_url: record.avatar
+          }).eq('id', memberId);
+        } else {
+          const { data: newMem } = await supabase.from('members').insert([{
+            first_name: firstName,
+            last_name: lastName,
+            public_role: record.role,
+            committee: record.committee,
+            service_interests: record.interests,
+            biography: record.bio,
+            avatar_url: record.avatar,
+            is_public: true
+          }]).select('id').single();
+          if (newMem?.id) memberId = newMem.id;
+        }
+
+        if (memberId) {
+          const payload = {
+            member_id: memberId,
+            lions_year: `${record.term_start_year}–${record.term_end_year}`,
+            term_start_year: record.term_start_year,
+            term_end_year: record.term_end_year,
+            position_title: record.role,
+            primary_position: record.primary_position || 'none',
+            leader_message: record.bio,
+            priority_order: record.display_order,
+            is_active: record.is_active
+          };
+
+          if (String(record.id).length > 20) {
+            await supabase.from('leadership_assignments').update(payload).eq('id', record.id);
+          } else {
+            await supabase.from('leadership_assignments').insert([payload]);
+          }
+        }
+      } catch (err) {
+        console.warn('Supabase sync note (saved in local store):', err);
+      }
+    }
+
+    function renderTable() {
+      if (!leadersState.length) {
+        tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; padding:24px; color:var(--color-text-muted);">No leadership records configured. Click "+ Add New Leader" above.</td></tr>`;
+        return;
+      }
+
+      tableBody.innerHTML = leadersState.map(leader => {
+        const imgSettings = parseImageSettings(leader);
+        const imgSrc = resolvePreviewUrl(getCleanImageUrl(leader.avatar));
+        const statusBadge = leader.is_active !== false
+          ? `<span class="admin-badge badge-published">Published</span>`
+          : `<span class="admin-badge" style="background:#F1F5F9; color:#475569;">Unpublished</span>`;
+
+        const prim = getLeaderPrimaryPosition(leader);
+        let tierBadge = `<span class="admin-badge" style="background:#F1F5F9; color:#475569;">Secondary (Stages 2–4)</span>`;
+        if (prim === 'president') {
+          tierBadge = `<span class="admin-badge" style="background:rgba(252,203,4,0.18); color:#854D0E; font-weight:700; border:1px solid rgba(252,203,4,0.4);">👑 President (Left)</span>`;
+        } else if (prim === 'secretary') {
+          tierBadge = `<span class="admin-badge" style="background:rgba(28,80,156,0.12); color:var(--color-primary); font-weight:700;">📋 Secretary (Centre)</span>`;
+        } else if (prim === 'treasurer') {
+          tierBadge = `<span class="admin-badge" style="background:rgba(28,80,156,0.12); color:var(--color-primary); font-weight:700;">💰 Treasurer (Right)</span>`;
+        } else if (prim === 'ipp') {
+          tierBadge = `<span class="admin-badge" style="background:rgba(100,116,139,0.12); color:#334155; font-weight:700;">⭐ IPP (Stage 1 Alone)</span>`;
+        }
+
+        const fitPill = imgSettings.fit === 'cover'
+          ? `<span style="font-size:0.68rem; padding:1px 6px; border-radius:4px; background:#EFF6FF; color:#1D4ED8; font-weight:600; border:1px solid rgba(29,78,216,0.2);">Cover (${imgSettings.pos})</span>`
+          : `<span style="font-size:0.68rem; padding:1px 6px; border-radius:4px; background:#F8FAFC; color:#64748B; font-weight:600; border:1px solid rgba(100,116,139,0.2);">Contain</span>`;
+
+        return `
+          <tr data-row-id="${sanitize(leader.id)}">
+            <td><strong>#${leader.display_order}</strong></td>
+            <td>${tierBadge}</td>
+            <td>
+              <div style="display:flex; align-items:center; gap:12px;">
+                <img src="${sanitize(imgSrc)}" alt="${sanitize(leader.name)}" style="width:40px; height:46px; border-radius:6px; object-fit:${imgSettings.fit}; object-position:${sanitize(imgSettings.pos)}; border:1px solid var(--color-border); background:#FFFFFF;" onerror="this.src='../assets/icons/avatar-placeholder.svg'">
+                <div>
+                  <div style="font-weight:700; color:var(--color-text);">${sanitize(leader.name)}</div>
+                  <div style="display:flex; align-items:center; gap:6px; margin-top:2px;">
+                    ${fitPill}
+                    <span style="font-size:0.75rem; color:var(--color-text-muted); max-width:160px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${sanitize(leader.bio)}</span>
+                  </div>
+                </div>
+              </div>
+            </td>
+            <td><em>${sanitize(leader.role)}</em></td>
+            <td><strong>${sanitize(formatTermOfService(leader))}</strong></td>
+            <td>${sanitize(leader.committee || '—')}</td>
+            <td>${statusBadge}</td>
+            <td style="text-align:right; white-space:nowrap;">
+              <button type="button" class="btn btn-secondary btn-sm action-preview" data-id="${sanitize(leader.id)}" style="padding:5px 10px; font-size:0.76rem;">Preview</button>
+              <button type="button" class="btn btn-secondary btn-sm action-edit" data-id="${sanitize(leader.id)}" style="padding:5px 10px; font-size:0.76rem;">Edit</button>
+              <button type="button" class="btn btn-secondary btn-sm action-toggle" data-id="${sanitize(leader.id)}" style="padding:5px 10px; font-size:0.76rem;">
+                ${leader.is_active !== false ? 'Unpublish' : 'Publish'}
+              </button>
+              <button type="button" class="btn btn-secondary btn-sm action-delete" data-id="${sanitize(leader.id)}" style="padding:5px 10px; font-size:0.76rem; color:#B91C1C;">Delete</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      tableBody.querySelectorAll('.action-preview').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const item = leadersState.find(l => String(l.id) === String(btn.dataset.id));
+          if (item) openLeaderModalWithData(item);
+        });
+      });
+
+      tableBody.querySelectorAll('.action-edit').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const item = leadersState.find(l => String(l.id) === String(btn.dataset.id));
+          if (item) loadLeaderIntoForm(item);
+        });
+      });
+
+      tableBody.querySelectorAll('.action-toggle').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const idx = leadersState.findIndex(l => String(l.id) === String(btn.dataset.id));
+          if (idx === -1) return;
+          leadersState[idx].is_active = !(leadersState[idx].is_active !== false);
+          leadersState = await saveLeadershipRecords(leadersState);
+          await syncLeaderToSupabase(leadersState[idx]);
+          renderTable();
+          feedbackEl.textContent = `${leadersState[idx].name} is now ${leadersState[idx].is_active ? 'Published' : 'Unpublished'}.`;
+          showToast(feedbackEl.textContent, 'success');
+        });
+      });
+
+      tableBody.querySelectorAll('.action-delete').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const item = leadersState.find(l => String(l.id) === String(btn.dataset.id));
+          if (!item) return;
+          leadersState = leadersState.filter(l => String(l.id) !== String(btn.dataset.id));
+          leadersState = await saveLeadershipRecords(leadersState);
+          renderTable();
+          feedbackEl.textContent = `Removed ${item.name} from leadership roster.`;
+          showToast(feedbackEl.textContent, 'info');
+        });
+      });
+    }
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const record = getFormLeaderData();
+
+      // VALIDATE CONFLICTING PRIMARY POSITIONS: Only 1 published assignment per specific executive position
+      if (record.is_active && ['president', 'secretary', 'treasurer', 'ipp'].includes(record.primary_position)) {
+        const conflictingIdx = leadersState.findIndex(l => 
+          String(l.id) !== String(record.id) &&
+          l.is_active !== false &&
+          getLeaderPrimaryPosition(l) === record.primary_position &&
+          formatTermOfService(l) === formatTermOfService(record)
+        );
+
+        if (conflictingIdx >= 0) {
+          const conflictName = leadersState[conflictingIdx].name;
+          const posLabel = record.primary_position.toUpperCase();
+          leadersState[conflictingIdx].primary_position = 'none';
+          showToast(`Reassigned ${conflictName} from ${posLabel} to General Leadership.`, 'info');
+        }
+      }
+
+      const existingIdx = leadersState.findIndex(l => String(l.id) === String(record.id));
+      if (existingIdx >= 0) {
+        leadersState[existingIdx] = { ...leadersState[existingIdx], ...record };
+      } else {
+        leadersState.push(record);
+      }
+
+      leadersState = await saveLeadershipRecords(leadersState);
+      await syncLeaderToSupabase(record);
+      renderTable();
+
+      feedbackEl.textContent = `Saved "${record.name}" (${formatTermOfService(record)}). Live on Homepage & Leadership directory.`;
+      showToast(`Saved ${record.name} successfully!`, 'success');
+      resetForm();
+    });
+
+    document.getElementById('btn-preview-modal').addEventListener('click', () => {
+      const draftLeader = getFormLeaderData();
+      openLeaderModalWithData(draftLeader);
+    });
+
+    document.getElementById('btn-reset-form').addEventListener('click', resetForm);
+    document.getElementById('btn-new-leader').addEventListener('click', () => {
+      resetForm();
+      nameInput.focus();
+    });
+
+    document.getElementById('btn-restore-defaults').addEventListener('click', async () => {
+      localStorage.removeItem(LIONS_LEADERSHIP_STORAGE_KEY);
+      leadersState = await fetchAllLeadershipForAdmin();
+      await saveLeadershipRecords(leadersState);
+      renderTable();
+      resetForm();
+      feedbackEl.textContent = 'Restored default verified 13-member leadership roster.';
+      showToast('Restored default 13-member leadership roster.', 'info');
+    });
+
+    // Initialize Admin View
+    (async () => {
+      leadersState = await fetchAllLeadershipForAdmin();
+      orderInput.value = leadersState.length + 1;
+      renderTable();
+    })();
   </script>
 </body>
 </html>

@@ -3,59 +3,179 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Login — Dubai Oasis Lions Club | Lions Year 2026–2027</title>
+  <title>Club Administration — Dubai Oasis Lions Club | Lions Year 2026–2027</title>
   <link rel="stylesheet" href="../css/reset.css">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/components.css">
   <link rel="stylesheet" href="../css/style.css">
+  <link rel="stylesheet" href="../css/login.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    /* Executive Admin Split Page Styles (No Outer Card) */
+    .admin-crest-emblem {
+      width: 58px;
+      height: auto;
+      filter: drop-shadow(0 4px 16px rgba(252, 203, 4, 0.45));
+      margin-bottom: 20px;
+      transition: transform 0.3s ease;
+    }
+
+    .admin-crest-emblem:hover {
+      transform: scale(1.06);
+    }
+
+    .admin-return-link {
+      margin-top: 24px;
+      text-align: center;
+    }
+
+    .admin-return-link a {
+      font-size: 0.88rem;
+      color: rgba(255, 255, 255, 0.72);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .admin-return-link a:hover {
+      color: var(--lions-gold);
+    }
+  </style>
 </head>
-<body style="background: #F1F5F9; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px;">
+<body class="login-page-body">
 
-  <div class="glass-panel" style="max-width: 440px; width: 100%; padding: 48px 36px; background: #FFFFFF;">
-    <!-- Mandatory Two Logos: Lions Intl Left, Dubai Oasis Right -->
-    <div style="display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 28px;">
-      <img src="../assets/logos/lions-international.png" alt="Lions International Emblem" style="height: 52px; width: auto;">
-      <div style="width: 1.5px; height: 32px; background: var(--color-border);"></div>
-      <div>
-        <div style="font-weight: 800; color: var(--color-primary); font-size: 1.05rem; line-height: 1.1;">DUBAI OASIS LIONS CLUB</div>
-        <div style="font-size: 0.75rem; color: var(--color-accent-dark); font-weight: 700; text-transform: uppercase;">Admin Portal 2026–27</div>
-      </div>
-    </div>
-
-    <h1 style="font-size: 1.5rem; font-weight: 800; text-align: center; color: var(--color-text); margin-bottom: 8px;">Authorized Access</h1>
-    <p style="text-align: center; color: var(--color-text-muted); font-size: 0.88rem; margin-bottom: 28px;">Sign in with your verified club credentials to manage content and enquiries.</p>
-
-    <form id="admin-login-form">
-      <div class="form-group">
-        <label class="form-label" for="login-email">Official Email</label>
-        <input type="email" class="form-control" id="login-email" required placeholder="admin@dubaioasislions.org">
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="login-password">Password</label>
-        <input type="password" class="form-control" id="login-password" required placeholder="••••••••••••">
-      </div>
-
-      <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 12px;">Sign In to Dashboard</button>
-    </form>
-
-    <div style="margin-top: 24px; text-align: center;">
-      <a href="../index.html" style="font-size: 0.85rem; color: var(--color-primary); font-weight: 500;">&larr; Return to Public Website</a>
-    </div>
+  <!-- Large Shadowed Background Logo Watermark (Complete Logo Visible) -->
+  <div class="login-bg-logo-stage" aria-hidden="true">
+    <img src="../assets/logos/dubai-oasis-lions-club.png" alt="" class="login-bg-crest-shadowed">
   </div>
+  <div class="login-ambient-glow" aria-hidden="true"></div>
+
+  <!-- Premium Split-Screen Composition — Direct on Blue Background (No Card) -->
+  <main class="login-viewport">
+    
+    <div class="login-split-stage">
+
+      <!-- LEFT SIDE — EXECUTIVE BRANDING & WELCOME -->
+      <section class="login-brand-panel" aria-label="Club Administration Identity">
+        
+        <img src="../assets/logos/dubai-oasis-lions-club.png" alt="Dubai Oasis Lions Club Official Crest" class="admin-crest-emblem" width="58" height="74">
+
+        <div class="login-motto-pill">
+          <span class="login-motto-dot" aria-hidden="true"></span>
+          <span>Executive Portal &bull; We Serve</span>
+        </div>
+
+        <h1 class="login-brand-heading">
+          Club Administration & <span>Executive Governance</span>
+        </h1>
+
+        <p class="login-brand-intro">
+          Authorized management portal for club officers, directors, and administrators to oversee member directory, upcoming community programs, editorial news bulletins, and verified public enquiries.
+        </p>
+
+        <div class="login-brand-pillars">
+          <div class="login-pillar-item">
+            <span class="login-pillar-dot"></span>
+            <span>Verified Officer Access</span>
+          </div>
+          <div class="login-pillar-item">
+            <span class="login-pillar-dot"></span>
+            <span>Lions Year 2026–2027</span>
+          </div>
+          <div class="login-pillar-item">
+            <span class="login-pillar-dot"></span>
+            <span>CMS Control Center</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT SIDE — ADMIN CREDENTIALS FORM (Directly on canvas, no box) -->
+      <section class="login-form-panel" aria-label="Administrator Authentication">
+
+        <div class="login-form-header">
+          <h2 class="login-title">Officer Sign In</h2>
+          <p class="login-subtitle">
+            Sign in with your verified administrative email and password to enter the dashboard.
+          </p>
+        </div>
+
+        <!-- Admin Login Form -->
+        <form id="admin-login-form" class="login-form" novalidate>
+          <div class="login-field-group">
+            <label class="login-label" for="login-email">Official Email</label>
+            <div class="login-input-box">
+              <span class="login-input-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              </span>
+              <input type="email" class="login-input" id="login-email" required placeholder="officer@dubaioasislions.org" autocomplete="email">
+            </div>
+          </div>
+
+          <div class="login-field-group">
+            <label class="login-label" for="login-password">Password</label>
+            <div class="login-input-box">
+              <span class="login-input-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
+              <input type="password" class="login-input" id="login-password" required placeholder="••••••••••••" autocomplete="current-password">
+            </div>
+          </div>
+
+          <button type="submit" class="btn-login-submit" id="admin-submit-btn">
+            <span class="login-spinner" aria-hidden="true"></span>
+            <span class="btn-text">Sign In to Dashboard &rarr;</span>
+          </button>
+        </form>
+
+        <div class="admin-return-link">
+          <a href="../login.html">&larr; Return to Member Portal</a>
+        </div>
+
+      </section>
+
+    </div>
+
+    <footer class="login-viewport-footer">
+      Dubai Oasis Lions Club &bull; Authorized Administrative Access Only
+    </footer>
+
+  </main>
 
   <script type="module">
     import { loginAdmin } from '../js/admin/auth.js';
     import { showToast } from '../js/utils.js';
 
-    document.getElementById('admin-login-form').addEventListener('submit', async (e) => {
+    const form = document.getElementById('admin-login-form');
+    const submitBtn = document.getElementById('admin-submit-btn');
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const email = document.getElementById('login-email').value;
+      const email = document.getElementById('login-email').value.trim();
       const pass = document.getElementById('login-password').value;
+
+      if (!email || !pass) {
+        showToast('Please enter both your official email and password.', 'error');
+        return;
+      }
+
+      submitBtn.classList.add('is-loading');
+      submitBtn.disabled = true;
+
       try {
         await loginAdmin(email, pass);
       } catch (err) {
+        submitBtn.classList.remove('is-loading');
+        submitBtn.disabled = false;
         showToast('Login failed: ' + (err.message || 'Invalid credentials'), 'error');
       }
     });

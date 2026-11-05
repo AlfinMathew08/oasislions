@@ -3,16 +3,231 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Members — Admin | Dubai Oasis Lions Club</title>
+  <title>Manage Member Directory — Admin | Dubai Oasis Lions Club</title>
   <link rel="stylesheet" href="../css/reset.css">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/components.css">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/admin.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .admin-filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 24px;
+      padding: 16px 20px;
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+    }
+    .admin-search-input {
+      flex: 1;
+      min-width: 240px;
+      padding: 9px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 0.92rem;
+    }
+    .admin-select-filter {
+      padding: 9px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background: #FFFFFF;
+    }
+    .member-thumb-portrait {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #1E293B;
+      display: block;
+      border: 2px solid var(--color-border);
+    }
+    .status-pill {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .status-public {
+      background: rgba(16, 185, 129, 0.12);
+      color: #047857;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .status-hidden {
+      background: rgba(100, 116, 139, 0.12);
+      color: #475569;
+      border: 1px solid rgba(100, 116, 139, 0.3);
+    }
+    .action-btn-group {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .btn-action-icon {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      border-radius: 6px;
+      border: 1px solid var(--color-border);
+      background: #FFFFFF;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 160ms ease;
+      text-decoration: none;
+      color: var(--color-text);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-action-icon:hover {
+      background: var(--color-surface);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+    .btn-action-danger:hover {
+      border-color: #EF4444;
+      color: #EF4444;
+      background: rgba(239, 68, 68, 0.05);
+    }
+    /* Modal Dialog */
+    .admin-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .admin-modal-backdrop.is-open {
+      display: flex;
+    }
+    .admin-modal-card {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 820px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 16px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--color-border);
+    }
+    .admin-modal-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--color-surface);
+      border-radius: 16px 16px 0 0;
+    }
+    .admin-modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--color-text);
+    }
+    .admin-modal-close {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--color-text-secondary);
+      line-height: 1;
+    }
+    .admin-modal-body {
+      padding: 28px;
+    }
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .form-grid-3 {
+      display: grid;
+      grid-template-columns: 140px 1fr 1fr;
+      gap: 16px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 6px;
+    }
+    .form-label-required::after {
+      content: " *";
+      color: #EF4444;
+    }
+    .form-hint {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      margin-top: 4px;
+    }
+    .form-control-input,
+    .form-control-textarea,
+    .form-control-select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 0.94rem;
+      background: #FFFFFF;
+      color: var(--color-text);
+      font-family: inherit;
+    }
+    .form-control-textarea {
+      min-height: 100px;
+      line-height: 1.6;
+      resize: vertical;
+    }
+    .form-control-input:focus,
+    .form-control-textarea:focus,
+    .form-control-select:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(28, 80, 156, 0.12);
+    }
+    .privacy-notice-box {
+      background: rgba(28, 80, 156, 0.05);
+      border-left: 4px solid var(--color-primary);
+      padding: 14px 18px;
+      border-radius: 0 8px 8px 0;
+      font-size: 0.86rem;
+      color: var(--color-text-secondary);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .admin-modal-footer {
+      padding: 20px 28px;
+      border-top: 1px solid var(--color-border);
+      background: var(--color-surface);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      border-radius: 0 0 16px 16px;
+    }
+    @media (max-width: 768px) {
+      .form-grid-2,
+      .form-grid-3 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="admin-layout">
+    <!-- Sidebar -->
     <aside class="admin-sidebar">
       <div class="admin-sidebar-header">
         <img src="../assets/logos/lions-international.png" alt="Lions Intl" style="height:36px; width:auto;">
@@ -24,7 +239,7 @@
       <nav class="admin-sidebar-nav">
         <a href="index.html" class="admin-nav-item">📊 Dashboard Overview</a>
         <a href="projects.html" class="admin-nav-item">🤝 Service Projects</a>
-        <a href="leadership.html" class="admin-nav-item">🦁 Leadership 2026–27</a>
+        <a href="leadership.html" class="admin-nav-item">🏛️ Leadership 2026–27</a>
         <a href="members.html" class="admin-nav-item active">👥 Member Directory</a>
         <a href="news.html" class="admin-nav-item">📰 News & Articles</a>
         <a href="events.html" class="admin-nav-item">📅 Upcoming Events</a>
@@ -39,53 +254,1232 @@
       </div>
     </aside>
 
+    <!-- Main Content -->
     <main class="admin-main">
       <header class="admin-topbar">
-        <div style="font-weight:700; color:var(--color-text); font-size:1.1rem;">Member Profiles Administration</div>
+        <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+          <div>
+            <h1 style="font-size:1.25rem; font-weight:800; color:var(--color-text); margin:0;">Club Member Directory</h1>
+            <div style="font-size:0.82rem; color:var(--color-text-muted); margin-top:2px;" id="data-status-indicator">Connecting to Supabase...</div>
+          </div>
+          <div style="display:flex; gap:12px;">
+            <a href="../index.html#section-members" target="_blank" class="btn btn-outline btn-sm">Homepage Section &rarr;</a>
+            <button id="btn-add-member" class="btn btn-primary btn-sm">+ Add New Member</button>
+          </div>
+        </div>
       </header>
 
       <div class="admin-content">
-        <div class="admin-card">
-          <p style="color:var(--color-text-muted); font-size:0.92rem; margin-bottom:20px;">
-            Only verified public profiles are exposed through public Supabase queries. Private contacts and personal member numbers are never exposed.
-          </p>
+        <div class="privacy-notice-box">
+          <strong>🔒 Member Privacy Policy:</strong> Only public attributes (prefix, full name, club role, committee, joining year, approved bio, service interests, and explicitly approved family photographs) are published. Private personal phone numbers, email addresses, and residential streets are never collected or exposed on public pages.
+        </div>
 
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Member Name</th>
-                <th>Public Role</th>
-                <th>Committee</th>
-                <th>Public Visibility</th>
-                <th>Featured</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Alfin Mathew</strong></td>
-                <td>Charter Member & Technology Lead</td>
-                <td>Digital Strategy</td>
-                <td><span class="admin-badge badge-published">Public</span></td>
-                <td><span class="badge badge-gold">Featured</span></td>
-              </tr>
-              <tr>
-                <td><strong>Active Service Member</strong></td>
-                <td>Member in Good Standing</td>
-                <td>Community Outreach</td>
-                <td><span class="admin-badge badge-published">Public</span></td>
-                <td><span>-</span></td>
-              </tr>
-            </tbody>
-          </table>
+        <!-- Filter & Search Bar -->
+        <div class="admin-filter-bar">
+          <input type="text" id="member-search" class="admin-search-input" placeholder="Search members by name, role, or committee...">
+          <select id="member-visibility-filter" class="admin-select-filter">
+            <option value="all">All Visibility</option>
+            <option value="public">Public Members Only</option>
+            <option value="hidden">Hidden / Private Only</option>
+            <option value="archived">Archived Members Only</option>
+          </select>
+          <select id="member-family-filter" class="admin-select-filter">
+            <option value="all">Family Photos (All)</option>
+            <option value="approved">Approved Family Photos Only</option>
+            <option value="none">No Family Photo / Unapproved</option>
+          </select>
+        </div>
+
+        <!-- Members Table Card -->
+        <div class="admin-card" style="padding:0; overflow:hidden;">
+          <div style="padding:18px 24px; border-bottom:1px solid var(--color-border); display:flex; justify-content:space-between; align-items:center; background:var(--color-surface);">
+            <div style="font-weight:700; color:var(--color-text); font-size:0.96rem;" id="member-count-label">Club Members</div>
+            <div style="font-size:0.82rem; color:var(--color-text-muted);">Displays on the homepage "Meet Our Members" directory grid</div>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="admin-table" style="margin:0;">
+              <thead>
+                <tr>
+                  <th style="width:60px;">Portrait</th>
+                  <th>Member Name (with Prefix)</th>
+                  <th>Club Role</th>
+                  <th>Committee</th>
+                  <th>Joined</th>
+                  <th>Family Photo</th>
+                  <th>Visibility</th>
+                  <th style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="member-table-body">
+                <tr>
+                  <td colspan="8" style="text-align:center; padding:40px; color:var(--color-text-muted);">Loading members...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </main>
   </div>
 
+  <!-- Add/Edit Member Modal Dialog -->
+  <div id="member-modal" class="admin-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="member-modal-title">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 id="member-modal-title" class="admin-modal-title">Add Member Profile</h3>
+        <button type="button" class="admin-modal-close" id="btn-close-member-modal">&times;</button>
+      </div>
+
+      <form id="member-form">
+        <div class="admin-modal-body">
+          <input type="hidden" id="member-edit-id" value="">
+
+          <!-- Name & Prefix Grid -->
+          <div class="form-grid-3">
+            <div class="form-group">
+              <label for="member-prefix" class="form-label form-label-required">Prefix</label>
+              <select id="member-prefix" class="form-control-select" required>
+                <option value="Lion">Lion</option>
+                <option value="Lion Dr.">Lion Dr.</option>
+                <option value="Dr.">Dr.</option>
+                <option value="Mr.">Mr.</option>
+                <option value="Mrs.">Mrs.</option>
+                <option value="Ms.">Ms.</option>
+                <option value="No prefix">No prefix</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="member-first-name" class="form-label form-label-required">First Name</label>
+              <input type="text" id="member-first-name" class="form-control-input" required placeholder="e.g. Alfin">
+            </div>
+
+            <div class="form-group">
+              <label for="member-last-name" class="form-label form-label-required">Last Name</label>
+              <input type="text" id="member-last-name" class="form-control-input" required placeholder="e.g. Mathew">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="member-role" class="form-label form-label-required">Public Role / Designation</label>
+              <input type="text" id="member-role" class="form-control-input" required placeholder="e.g. Charter Member & Technology Lead">
+            </div>
+
+            <div class="form-group">
+              <label for="member-committee" class="form-label">Committee / Focus</label>
+              <input type="text" id="member-committee" class="form-control-input" placeholder="e.g. Digital Strategy & Technology">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="member-joining-date" class="form-label form-label-required">Year of Joining / Date</label>
+              <input type="text" id="member-joining-date" class="form-control-input" required placeholder="e.g. 2024 or 2024-07-01">
+              <div class="form-hint">Displayed on public profile as 4-digit year (e.g. 2024)</div>
+            </div>
+
+            <div class="form-group">
+              <label for="member-dob" class="form-label">Date of Birth (Optional)</label>
+              <input type="text" id="member-dob" class="form-control-input" placeholder="e.g. 1985-05-14 or 14 May">
+              <div class="form-hint">Saved in database; formatted as DD/MM on public profile</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="member-interests" class="form-label">Service Interests (Comma-separated)</label>
+            <input type="text" id="member-interests" class="form-control-input" placeholder="e.g. Vision Care, Hunger Relief, Youth Mentorship">
+          </div>
+
+          <div class="form-group">
+            <label for="member-bio" class="form-label">Biography / Service Dedication</label>
+            <textarea id="member-bio" class="form-control-textarea" placeholder="Personal quote or summary of community service dedication..."></textarea>
+          </div>
+
+          <!-- Separate Member Photo Uploads: Individual Profile Photo & Family Photograph -->
+          <div class="member-photo-uploads-grid">
+            <!-- A. Individual Profile Photo -->
+            <div class="member-photo-upload-card" id="card-avatar-upload">
+              <div class="photo-card-header">
+                <span class="photo-card-title">Individual Profile Photo</span>
+                <span class="photo-card-badge">Portrait / Square</span>
+              </div>
+              
+              <div class="photo-dropzone" id="avatar-dropzone" tabindex="0" role="button" aria-label="Drop individual portrait or click to upload">
+                <div class="photo-preview-stage portrait">
+                  <img id="member-avatar-preview" src="../assets/icons/avatar-placeholder.svg" alt="Individual Profile Preview">
+                </div>
+                
+                <div class="photo-dropzone-prompt">
+                  <strong>Drag &amp; drop portrait here</strong> or browse
+                  <div class="photo-dropzone-sub">Square or portrait (PNG, JPG, WEBP &bull; Max 5MB)</div>
+                </div>
+
+                <div class="photo-status-badge" id="member-avatar-filename">No file chosen</div>
+
+                <div class="photo-actions-row">
+                  <input type="file" id="member-avatar-file" accept="image/*" style="display:none;">
+                  <button type="button" class="btn btn-outline btn-sm" id="btn-browse-avatar">Upload Photo</button>
+                  <button type="button" class="btn btn-outline btn-sm btn-photo-remove" id="btn-remove-avatar" title="Remove individual portrait">Remove</button>
+                </div>
+              </div>
+
+              <div class="photo-url-wrapper" style="margin-top:12px;">
+                <label for="member-avatar-url" class="form-hint" style="font-size:0.75rem; color:#64748B; margin-bottom:4px; display:block;">Or Direct Image URL</label>
+                <input type="text" id="member-avatar-url" class="form-control-input" placeholder="Leave empty or enter image URL" style="font-size:0.82rem; padding:6px 10px;">
+              </div>
+            </div>
+
+            <!-- B. Family Photograph -->
+            <div class="member-photo-upload-card" id="card-family-upload">
+              <div class="photo-card-header">
+                <span class="photo-card-title">Family Photograph</span>
+                <span class="photo-card-badge">Landscape 16:9</span>
+              </div>
+              
+              <div class="photo-dropzone" id="family-dropzone" tabindex="0" role="button" aria-label="Drop family photograph or click to upload">
+                <div class="photo-preview-stage landscape">
+                  <img id="member-family-preview" src="../assets/icons/image-placeholder.svg" alt="Family Photograph Preview">
+                </div>
+                
+                <div class="photo-dropzone-prompt">
+                  <strong>Drag &amp; drop family photo here</strong> or browse
+                  <div class="photo-dropzone-sub">Landscape preserves full proportions (PNG, JPG, WEBP &bull; Max 5MB)</div>
+                </div>
+
+                <div class="photo-status-badge" id="member-family-filename">No file chosen</div>
+
+                <div class="photo-actions-row">
+                  <input type="file" id="member-family-file" accept="image/*" style="display:none;">
+                  <button type="button" class="btn btn-outline btn-sm" id="btn-browse-family">Upload Family Photo</button>
+                  <button type="button" class="btn btn-outline btn-sm btn-photo-remove" id="btn-remove-family" title="Remove family photo">Remove</button>
+                </div>
+              </div>
+
+              <div class="photo-url-wrapper" style="margin-top:12px;">
+                <label for="member-family-url" class="form-hint" style="font-size:0.75rem; color:#64748B; margin-bottom:4px; display:block;">Or Direct Image URL</label>
+                <input type="text" id="member-family-url" class="form-control-input" placeholder="Leave empty or enter image URL" style="font-size:0.82rem; padding:6px 10px;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Spouse Information -->
+          <div style="background:#F8FAFC; border:1px solid var(--color-border); border-radius:12px; padding:18px 20px; margin-bottom:20px;">
+            <div style="font-weight:800; font-size:0.95rem; color:var(--color-primary-dark); margin-bottom:12px;">
+              Spouse Information
+            </div>
+
+            <div class="form-group" style="margin-bottom:12px;">
+              <label for="member-has-spouse" class="form-label">Has Spouse?</label>
+              <select id="member-has-spouse" class="form-control-select" style="max-width:200px;">
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+              </select>
+            </div>
+
+            <div id="spouse-fields-container" style="display:none;">
+              <div class="form-grid-3">
+                <div class="form-group">
+                  <label for="member-spouse-name" class="form-label">Spouse's Name</label>
+                  <input type="text" id="member-spouse-name" class="form-control-input" placeholder="e.g. Mariam Al Mansoori">
+                </div>
+
+                <div class="form-group">
+                  <label for="member-spouse-dob" class="form-label">Spouse Date of Birth</label>
+                  <input type="text" id="member-spouse-dob" class="form-control-input" placeholder="e.g. 14 May or YYYY-MM-DD">
+                </div>
+
+                <div class="form-group">
+                  <label for="member-wedding-anniversary" class="form-label">Wedding Anniversary</label>
+                  <input type="text" id="member-wedding-anniversary" class="form-control-input" placeholder="e.g. 20 November or YYYY-MM-DD">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Children Information (Dynamic Repeater) -->
+          <div style="background:#F8FAFC; border:1px solid var(--color-border); border-radius:12px; padding:18px 20px; margin-bottom:20px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+              <div>
+                <div style="font-weight:800; font-size:0.95rem; color:var(--color-primary-dark);">Children Information</div>
+                <div style="font-size:0.78rem; color:var(--color-text-muted);">Add any number of children with optional dates of birth</div>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm" id="btn-add-child">+ Add Child</button>
+            </div>
+
+            <div id="children-repeater-container" style="display:flex; flex-direction:column; gap:10px;">
+              <!-- Dynamic child rows populated here -->
+            </div>
+            <div id="no-children-notice" style="font-size:0.86rem; color:var(--color-text-muted); font-style:italic; padding:6px 0;">No children added yet. Click "+ Add Child" to add an entry.</div>
+          </div>
+
+          <!-- Section: Address in India -->
+          <div style="background:#F8FAFC; border:1px solid var(--color-border); border-radius:12px; padding:18px 20px; margin-bottom:20px;">
+            <div style="font-weight:800; font-size:0.95rem; color:var(--color-primary-dark); margin-bottom:8px;">
+              Address in India (Optional)
+            </div>
+            <div class="form-group" style="margin-bottom:0;">
+              <label for="member-address-in-india" class="form-label">Complete Address in India</label>
+              <textarea id="member-address-in-india" class="form-control-textarea" rows="3" placeholder="Enter complete residential or ancestral address in India..."></textarea>
+              <div class="form-hint">Saved without truncation. Displayed at the bottom of public profile only when publication is approved below.</div>
+            </div>
+          </div>
+
+          <!-- Section: Family Message -->
+          <div class="form-group">
+            <label for="member-family-message" class="form-label">A Message from Our Family (Optional)</label>
+            <textarea id="member-family-message" class="form-control-textarea" rows="3" placeholder="A warm, personal message written by the member or family about community, service, and family..."></textarea>
+            <div class="form-hint">A short friendly paragraph displayed in the member profile dialogue.</div>
+          </div>
+
+          <!-- Publication & Explicit Consent Controls -->
+          <div style="padding:16px 20px; background:#F8FAFC; border:1px solid var(--color-border); border-radius:12px; margin-bottom:20px; display:flex; flex-direction:column; gap:14px;">
+            <label style="display:inline-flex; align-items:flex-start; gap:12px; cursor:pointer;">
+              <input type="checkbox" id="member-family-approved" style="width:20px; height:20px; margin-top:2px;">
+              <div>
+                <strong style="color:var(--color-text); font-size:0.92rem;">Approve Family Photo for Public Showcase</strong>
+                <div style="font-size:0.8rem; color:var(--color-text-secondary); margin-top:2px;">
+                  Family photograph will <strong>never</strong> appear on the public website unless this explicit consent checkbox is selected.
+                </div>
+              </div>
+            </label>
+
+            <label style="display:inline-flex; align-items:flex-start; gap:12px; cursor:pointer;">
+              <input type="checkbox" id="member-family-details-approved" style="width:20px; height:20px; margin-top:2px;">
+              <div>
+                <strong style="color:var(--color-text); font-size:0.92rem;">Approve Family Details for Public Display</strong>
+                <div style="font-size:0.8rem; color:var(--color-text-secondary); margin-top:2px;">
+                  Spouse, wedding anniversary, and children information will <strong>only</strong> appear in the public profile when approved with member consent.
+                </div>
+              </div>
+            </label>
+
+            <label style="display:inline-flex; align-items:flex-start; gap:12px; cursor:pointer;">
+              <input type="checkbox" id="member-address-approved" style="width:20px; height:20px; margin-top:2px;">
+              <div>
+                <strong style="color:var(--color-text); font-size:0.92rem;">Approve Address in India for Public Display</strong>
+                <div style="font-size:0.8rem; color:var(--color-text-secondary); margin-top:2px;">
+                  Address in India will <strong>only</strong> appear at the bottom of the public profile when this approval checkbox is selected.
+                </div>
+              </div>
+            </label>
+
+            <label style="display:inline-flex; align-items:flex-start; gap:12px; cursor:pointer;">
+              <input type="checkbox" id="member-family-message-approved" style="width:20px; height:20px; margin-top:2px;">
+              <div>
+                <strong style="color:var(--color-text); font-size:0.92rem;">Approve Family Message for Public Display</strong>
+                <div style="font-size:0.8rem; color:var(--color-text-secondary); margin-top:2px;">
+                  "A Message from Our Family" will <strong>only</strong> appear when approved.
+                </div>
+              </div>
+            </label>
+          </div>
+
+          <div class="form-grid-3" style="align-items:center;">
+            <div class="form-group">
+              <label for="member-order" class="form-label">Display Order</label>
+              <input type="number" id="member-order" class="form-control-input" min="1" max="999" value="10">
+            </div>
+
+            <div class="form-group">
+              <label for="member-status" class="form-label">Membership Status</label>
+              <select id="member-status" class="form-control-select">
+                <option value="active" selected>Active Member</option>
+                <option value="archived">Archived / Past Member</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="padding-top:20px;">
+              <label style="display:inline-flex; align-items:center; gap:8px; cursor:pointer;">
+                <input type="checkbox" id="member-is-public" checked style="width:18px; height:18px;">
+                <span style="font-weight:700; font-size:0.92rem; color:var(--color-text);">Public Profile</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-member-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-member">Save Member Profile</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Safe Deletion & Archiving Confirmation Modal -->
+  <div id="delete-member-modal" class="admin-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="delete-modal-title">
+    <div class="admin-modal-card" style="max-width:540px;">
+      <div class="admin-modal-header">
+        <h3 id="delete-modal-title" class="admin-modal-title" style="color:#B91C1C;">Confirm Member Deletion</h3>
+        <button type="button" class="admin-modal-close" id="btn-close-delete-modal">&times;</button>
+      </div>
+      <div class="admin-modal-body" style="padding:24px;">
+        <input type="hidden" id="delete-target-id" value="">
+        <div id="delete-leadership-warning" style="display:none; padding:16px; background:#FEF2F2; border:1px solid #F87171; border-radius:10px; margin-bottom:18px;">
+          <div style="display:flex; align-items:flex-start; gap:12px;">
+            <span style="font-size:1.6rem; line-height:1;">⚠️</span>
+            <div>
+              <strong style="color:#991B1B; font-size:0.96rem;">Active Leadership Assignment Detected</strong>
+              <p style="color:#7F1D1D; font-size:0.86rem; margin:6px 0 0 0; line-height:1.5;" id="delete-leadership-text">
+                This member currently holds an active leadership office for the 2026–2027 Lions Year. Deleting this member will impact official governance continuity.
+              </p>
+            </div>
+          </div>
+        </div>
+        <p style="font-size:0.96rem; line-height:1.6; color:var(--color-text); margin:0 0 10px 0;" id="delete-confirm-prompt">
+          Are you sure you want to delete this member profile?
+        </p>
+        <div style="padding:12px 14px; background:#F8FAFC; border:1px solid var(--color-border); border-radius:8px; font-size:0.85rem; color:var(--color-text-secondary); line-height:1.5;">
+          <strong>Governance Note:</strong> Archiving preserves historical service, audit, and leadership records while immediately removing the member from the public directory.
+        </div>
+      </div>
+      <div class="admin-modal-footer" style="padding:16px 24px; display:flex; justify-content:space-between; align-items:center;">
+        <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-delete">Cancel</button>
+        <div style="display:flex; gap:10px;">
+          <button type="button" class="btn btn-outline btn-sm" id="btn-archive-instead" style="border-color:#F59E0B; color:#B45309; font-weight:700;">Archive Member Instead</button>
+          <button type="button" class="btn btn-primary btn-sm" id="btn-confirm-delete" style="background:#DC2626; border-color:#DC2626;">Permanently Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { checkAdminSession, logoutAdmin } from '../js/admin/auth.js';
+    import { getSupabase, isSupabaseConfigured, uploadClubMedia } from '../js/supabase.js';
+    import { DEFAULT_PUBLIC_DATA } from '../js/public-data.js';
+    import { sanitize, showToast, formatMemberName } from '../js/utils.js';
+
     checkAdminSession();
     document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
+
+    const supabase = getSupabase();
+    const STORAGE_KEY = 'lions_members_admin_store_v1';
+    let allMembers = [];
+
+    const tableBody = document.getElementById('member-table-body');
+    const searchFilter = document.getElementById('member-search');
+    const visFilter = document.getElementById('member-visibility-filter');
+    const famFilter = document.getElementById('member-family-filter');
+    const countLabel = document.getElementById('member-count-label');
+    const statusIndicator = document.getElementById('data-status-indicator');
+
+    const modal = document.getElementById('member-modal');
+    const form = document.getElementById('member-form');
+    const btnAdd = document.getElementById('btn-add-member');
+    const btnClose = document.getElementById('btn-close-member-modal');
+    const btnCancel = document.getElementById('btn-cancel-member-modal');
+
+    // Image Upload, Drag-and-Drop, and Removal Handlers
+    const avatarDropzone = document.getElementById('avatar-dropzone');
+    const familyDropzone = document.getElementById('family-dropzone');
+    const avatarFileInput = document.getElementById('member-avatar-file');
+    const familyFileInput = document.getElementById('member-family-file');
+    const avatarUrlInput = document.getElementById('member-avatar-url');
+    const familyUrlInput = document.getElementById('member-family-url');
+    const avatarPreviewImg = document.getElementById('member-avatar-preview');
+    const familyPreviewImg = document.getElementById('member-family-preview');
+    const avatarFilenameBadge = document.getElementById('member-avatar-filename');
+    const familyFilenameBadge = document.getElementById('member-family-filename');
+    const btnRemoveAvatar = document.getElementById('btn-remove-avatar');
+    const btnRemoveFamily = document.getElementById('btn-remove-family');
+
+    async function handleAvatarFileUpload(file) {
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        showToast('Please select a valid image file (PNG, JPG, WEBP)', 'error');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('Image size exceeds 5MB limit. Please choose a smaller file.', 'error');
+        return;
+      }
+
+      const localUrl = URL.createObjectURL(file);
+      avatarPreviewImg.src = localUrl;
+      avatarUrlInput.value = localUrl;
+      avatarFilenameBadge.textContent = file.name;
+      avatarFilenameBadge.classList.add('has-file');
+
+      if (isSupabaseConfigured() && supabase) {
+        showToast('Uploading member portrait to Supabase Storage...', 'info');
+        const res = await uploadClubMedia(file, 'members');
+        if (res.ok && res.url) {
+          avatarUrlInput.value = res.url;
+          avatarPreviewImg.src = res.url;
+          showToast('Member portrait uploaded to Supabase Storage!', 'success');
+        } else {
+          showToast('Storage upload warning: ' + (res.error || 'Using local preview'), 'warning');
+        }
+      }
+    }
+
+    async function handleFamilyFileUpload(file) {
+      if (!file) return;
+      if (!file.type.startsWith('image/')) {
+        showToast('Please select a valid image file (PNG, JPG, WEBP)', 'error');
+        return;
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        showToast('Image size exceeds 5MB limit. Please choose a smaller file.', 'error');
+        return;
+      }
+
+      const localUrl = URL.createObjectURL(file);
+      familyPreviewImg.src = localUrl;
+      familyUrlInput.value = localUrl;
+      familyFilenameBadge.textContent = file.name;
+      familyFilenameBadge.classList.add('has-file');
+
+      if (isSupabaseConfigured() && supabase) {
+        showToast('Uploading family photo to Supabase Storage...', 'info');
+        const res = await uploadClubMedia(file, 'family');
+        if (res.ok && res.url) {
+          familyUrlInput.value = res.url;
+          familyPreviewImg.src = res.url;
+          showToast('Family photo uploaded to Supabase Storage!', 'success');
+        } else {
+          showToast('Storage upload warning: ' + (res.error || 'Using local preview'), 'warning');
+        }
+      }
+    }
+
+    // Browse triggers
+    document.getElementById('btn-browse-avatar').addEventListener('click', (e) => {
+      e.stopPropagation();
+      avatarFileInput.click();
+    });
+
+    avatarFileInput.addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (file) await handleAvatarFileUpload(file);
+    });
+
+    document.getElementById('btn-browse-family').addEventListener('click', (e) => {
+      e.stopPropagation();
+      familyFileInput.click();
+    });
+
+    familyFileInput.addEventListener('change', async (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (file) await handleFamilyFileUpload(file);
+    });
+
+    // Remove buttons
+    btnRemoveAvatar.addEventListener('click', (e) => {
+      e.stopPropagation();
+      avatarUrlInput.value = '';
+      avatarPreviewImg.src = '../assets/icons/avatar-placeholder.svg';
+      avatarFileInput.value = '';
+      avatarFilenameBadge.textContent = 'No file chosen';
+      avatarFilenameBadge.classList.remove('has-file');
+      showToast('Individual portrait removed', 'info');
+    });
+
+    btnRemoveFamily.addEventListener('click', (e) => {
+      e.stopPropagation();
+      familyUrlInput.value = '';
+      familyPreviewImg.src = '../assets/icons/image-placeholder.svg';
+      familyFileInput.value = '';
+      familyFilenameBadge.textContent = 'No file chosen';
+      familyFilenameBadge.classList.remove('has-file');
+      showToast('Family photograph removed', 'info');
+    });
+
+    // Drag and Drop: Avatar Dropzone
+    ['dragenter', 'dragover'].forEach(eventName => {
+      avatarDropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        avatarDropzone.classList.add('is-dragover');
+      });
+    });
+
+    ['dragleave', 'dragend'].forEach(eventName => {
+      avatarDropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        avatarDropzone.classList.remove('is-dragover');
+      });
+    });
+
+    avatarDropzone.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      avatarDropzone.classList.remove('is-dragover');
+      const files = e.dataTransfer && e.dataTransfer.files;
+      if (files && files.length > 0) {
+        await handleAvatarFileUpload(files[0]);
+      }
+    });
+
+    // Drag and Drop: Family Dropzone
+    ['dragenter', 'dragover'].forEach(eventName => {
+      familyDropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        familyDropzone.classList.add('is-dragover');
+      });
+    });
+
+    ['dragleave', 'dragend'].forEach(eventName => {
+      familyDropzone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        familyDropzone.classList.remove('is-dragover');
+      });
+    });
+
+    familyDropzone.addEventListener('drop', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      familyDropzone.classList.remove('is-dragover');
+      const files = e.dataTransfer && e.dataTransfer.files;
+      if (files && files.length > 0) {
+        await handleFamilyFileUpload(files[0]);
+      }
+    });
+
+    // URL input sync
+    avatarUrlInput.addEventListener('input', (e) => {
+      const val = e.target.value.trim();
+      avatarPreviewImg.src = val || '../assets/icons/avatar-placeholder.svg';
+      if (val) {
+        avatarFilenameBadge.textContent = val.split('/').pop().split('?')[0] || 'Image URL linked';
+        avatarFilenameBadge.classList.add('has-file');
+      } else {
+        avatarFilenameBadge.textContent = 'No file chosen';
+        avatarFilenameBadge.classList.remove('has-file');
+      }
+    });
+
+    familyUrlInput.addEventListener('input', (e) => {
+      const val = e.target.value.trim();
+      familyPreviewImg.src = val || '../assets/icons/image-placeholder.svg';
+      if (val) {
+        familyFilenameBadge.textContent = val.split('/').pop().split('?')[0] || 'Image URL linked';
+        familyFilenameBadge.classList.add('has-file');
+      } else {
+        familyFilenameBadge.textContent = 'No file chosen';
+        familyFilenameBadge.classList.remove('has-file');
+      }
+    });
+
+    // Load Members Data
+    async function loadMembersData() {
+      allMembers = [];
+      let loadedFromDb = false;
+
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          const { data, error } = await supabase
+            .from('members')
+            .select('*, member_children(*)')
+            .order('display_order', { ascending: true });
+
+          if (!error && data && data.length > 0) {
+            allMembers = data.map(m => {
+              let cList = [];
+              if (Array.isArray(m.member_children) && m.member_children.length > 0) {
+                cList = m.member_children
+                  .slice()
+                  .sort((a, b) => (Number(a.display_order) || 0) - (Number(b.display_order) || 0))
+                  .map(c => ({ id: c.id, name: c.full_name, dob: c.date_of_birth }));
+              } else if (Array.isArray(m.children_data)) {
+                cList = m.children_data;
+              }
+              return { ...m, children_data: cList };
+            });
+            loadedFromDb = true;
+            statusIndicator.innerHTML = '🟢 Synced with Supabase (Live)';
+          }
+        } catch (err) {
+          console.warn('Supabase members fetch issue:', err);
+        }
+      }
+
+      if (!loadedFromDb) {
+        try {
+          const localStored = localStorage.getItem(STORAGE_KEY);
+          if (localStored) {
+            allMembers = JSON.parse(localStored);
+            statusIndicator.innerHTML = '🟡 Working with Local Storage';
+          } else {
+            allMembers = [];
+            statusIndicator.innerHTML = '⚪ Ready for Member Entry';
+          }
+        } catch (e) {
+          allMembers = [];
+        }
+      }
+
+      renderTable();
+    }
+
+    // Render Table
+    function renderTable() {
+      const search = searchFilter.value.toLowerCase().trim();
+      const vis = visFilter.value;
+      const fam = famFilter.value;
+
+      const filtered = allMembers.filter(m => {
+        const fullName = `${m.name_prefix || ''} ${m.first_name || ''} ${m.last_name || ''} ${m.name || ''}`.toLowerCase();
+        const role = (m.public_role || m.role || '').toLowerCase();
+        const committee = (m.committee || '').toLowerCase();
+
+        if (search && !fullName.includes(search) && !role.includes(search) && !committee.includes(search)) {
+          return false;
+        }
+
+        if (vis === 'public' && m.is_public === false) return false;
+        if (vis === 'hidden' && m.is_public !== false) return false;
+
+        if (fam === 'approved' && (!m.family_photo_url || m.family_photo_approved !== true)) return false;
+        if (fam === 'none' && (m.family_photo_url && m.family_photo_approved === true)) return false;
+
+        return true;
+      });
+
+      countLabel.textContent = `Club Members (${filtered.length} of ${allMembers.length})`;
+
+      if (filtered.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align:center; padding:48px 20px; color:var(--color-text-secondary);">
+              <div style="font-size:1.8rem; margin-bottom:8px;">👥</div>
+              <div style="font-weight:700; margin-bottom:4px;">No Members Located</div>
+              <div style="font-size:0.86rem; color:var(--color-text-muted);">Try adjusting your search criteria or click "+ Add New Member".</div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tableBody.innerHTML = filtered.map(item => {
+        const portrait = item.avatar_url || item.avatar ? ((item.avatar_url || item.avatar).startsWith('http') ? (item.avatar_url || item.avatar) : `../${item.avatar_url || item.avatar}`) : '../assets/icons/avatar-placeholder.svg';
+        const formattedName = formatMemberName(item);
+        const role = item.public_role || item.role || 'Club Member';
+        const isPublic = item.is_public !== false;
+        const hasApprovedFamily = Boolean(item.family_photo_url && item.family_photo_approved === true);
+        const joiningYear = item.joining_date ? (new Date(item.joining_date).getFullYear() || item.joining_date) : '2021';
+
+        return `
+          <tr data-id="${sanitize(item.id)}">
+            <td>
+              <img src="${sanitize(portrait)}" alt="Portrait" class="member-thumb-portrait" onerror="this.src='../assets/icons/avatar-placeholder.svg'">
+            </td>
+            <td>
+              <div style="font-weight:800; color:var(--color-text); font-size:0.96rem;">${sanitize(formattedName)}</div>
+              <div style="font-size:0.78rem; color:var(--color-text-muted);">Prefix: ${sanitize(item.name_prefix || 'Lion')}</div>
+            </td>
+            <td>
+              <span class="badge badge-primary" style="font-size:0.74rem;">${sanitize(role)}</span>
+            </td>
+            <td>
+              <span style="font-size:0.86rem; color:var(--color-text);">${sanitize(item.committee || 'Club Service')}</span>
+            </td>
+            <td>
+              <span style="font-size:0.86rem; color:var(--color-text-secondary);">${sanitize(String(joiningYear))}</span>
+            </td>
+            <td>
+              ${hasApprovedFamily 
+                ? '<span class="status-pill status-public" title="Approved for public display">✓ Approved</span>' 
+                : (item.family_photo_url ? '<span class="status-pill status-hidden" title="Pending Admin Approval">⏳ Pending</span>' : '<span style="color:#94A3B8;">None</span>')}
+            </td>
+            <td>
+              <span class="status-pill ${isPublic ? 'status-public' : 'status-hidden'}">${isPublic ? 'Public' : 'Hidden'}</span>
+            </td>
+            <td style="text-align:right;">
+              <div class="action-btn-group" style="justify-content:flex-end;">
+                <button type="button" class="btn-action-icon btn-edit" data-id="${sanitize(item.id)}" title="Edit Profile">
+                  ✏️ Edit
+                </button>
+                <button type="button" class="btn-action-icon btn-action-danger btn-delete" data-id="${sanitize(item.id)}" title="Delete Member">
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      tableBody.querySelectorAll('.btn-edit').forEach(btn => {
+        btn.addEventListener('click', () => openEditModal(btn.getAttribute('data-id')));
+      });
+
+      tableBody.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', () => deleteMember(btn.getAttribute('data-id')));
+      });
+    }
+
+    // Repeater & Conditional Spouse Handlers
+    const btnAddChild = document.getElementById('btn-add-child');
+    const childrenContainer = document.getElementById('children-repeater-container');
+    const noChildrenNotice = document.getElementById('no-children-notice');
+    const selectHasSpouse = document.getElementById('member-has-spouse');
+    const spouseContainer = document.getElementById('spouse-fields-container');
+
+    selectHasSpouse.addEventListener('change', () => {
+      spouseContainer.style.display = selectHasSpouse.value === 'yes' ? 'block' : 'none';
+    });
+
+    function updateNoChildrenNotice() {
+      const rows = childrenContainer.querySelectorAll('.child-row');
+      noChildrenNotice.style.display = rows.length === 0 ? 'block' : 'none';
+    }
+
+    function addChildRow(name = '', dob = '') {
+      const row = document.createElement('div');
+      row.className = 'child-row';
+      row.style.cssText = 'display:grid; grid-template-columns: 1fr 1fr 40px; gap:12px; align-items:center;';
+      row.innerHTML = `
+        <input type="text" class="form-control-input child-name-input" placeholder="Child's Name" value="${sanitize(name)}" required>
+        <input type="text" class="form-control-input child-dob-input" placeholder="Date of Birth (Optional)" value="${sanitize(dob)}">
+        <button type="button" class="btn btn-outline btn-sm btn-remove-child" style="color:#EF4444; border-color:#FCA5A5; padding:6px 0; text-align:center;" title="Remove Child">&times;</button>
+      `;
+      row.querySelector('.btn-remove-child').addEventListener('click', () => {
+        row.remove();
+        updateNoChildrenNotice();
+      });
+      childrenContainer.appendChild(row);
+      updateNoChildrenNotice();
+    }
+
+    btnAddChild.addEventListener('click', () => {
+      addChildRow('', '');
+    });
+
+    function renderChildrenRows(childrenList) {
+      childrenContainer.innerHTML = '';
+      if (Array.isArray(childrenList) && childrenList.length > 0) {
+        childrenList.forEach(c => addChildRow(c.name || '', c.dob || ''));
+      }
+      updateNoChildrenNotice();
+    }
+
+    function collectChildrenData() {
+      const rows = childrenContainer.querySelectorAll('.child-row');
+      const list = [];
+      rows.forEach(r => {
+        const nameInput = r.querySelector('.child-name-input');
+        const dobInput = r.querySelector('.child-dob-input');
+        const name = nameInput ? nameInput.value.trim() : '';
+        const dob = dobInput ? dobInput.value.trim() : '';
+        if (name) {
+          list.push({ name, dob });
+        }
+      });
+      return list;
+    }
+
+    // Modal Handlers
+    function openAddModal() {
+      document.getElementById('member-modal-title').textContent = 'Add Member Profile';
+      document.getElementById('member-edit-id').value = '';
+      form.reset();
+
+      document.getElementById('member-prefix').value = 'Lion';
+      document.getElementById('member-avatar-url').value = '';
+      document.getElementById('member-avatar-preview').src = '../assets/icons/avatar-placeholder.svg';
+      document.getElementById('member-avatar-file').value = '';
+      avatarFilenameBadge.textContent = 'No file chosen';
+      avatarFilenameBadge.classList.remove('has-file');
+
+      document.getElementById('member-family-url').value = '';
+      document.getElementById('member-family-preview').src = '../assets/icons/image-placeholder.svg';
+      document.getElementById('member-family-file').value = '';
+      familyFilenameBadge.textContent = 'No file chosen';
+      familyFilenameBadge.classList.remove('has-file');
+      
+      selectHasSpouse.value = 'no';
+      spouseContainer.style.display = 'none';
+      document.getElementById('member-spouse-name').value = '';
+      document.getElementById('member-spouse-dob').value = '';
+      document.getElementById('member-wedding-anniversary').value = '';
+
+      renderChildrenRows([]);
+      document.getElementById('member-family-message').value = '';
+      document.getElementById('member-dob').value = '';
+      document.getElementById('member-address-in-india').value = '';
+
+      document.getElementById('member-family-approved').checked = false;
+      document.getElementById('member-family-details-approved').checked = false;
+      document.getElementById('member-address-approved').checked = false;
+      document.getElementById('member-family-message-approved').checked = false;
+      document.getElementById('member-status').value = 'active';
+      document.getElementById('member-is-public').checked = true;
+      document.getElementById('member-order').value = (allMembers.length + 1) * 10;
+
+      modal.classList.add('is-open');
+    }
+
+    function openEditModal(id) {
+      const member = allMembers.find(m => String(m.id) === String(id));
+      if (!member) return;
+
+      document.getElementById('member-modal-title').textContent = 'Edit Member Profile';
+      document.getElementById('member-edit-id').value = member.id;
+      document.getElementById('member-prefix').value = member.name_prefix || 'Lion';
+      document.getElementById('member-first-name').value = member.first_name || (member.name ? member.name.split(' ')[0] : '');
+      document.getElementById('member-last-name').value = member.last_name || (member.name ? member.name.split(' ').slice(1).join(' ') : '');
+      document.getElementById('member-role').value = member.public_role || member.role || 'Club Member';
+      document.getElementById('member-committee').value = member.committee || '';
+      document.getElementById('member-bio').value = member.biography || member.bio || '';
+      
+      const interestsArr = Array.isArray(member.service_interests) ? member.service_interests : (Array.isArray(member.interests) ? member.interests : []);
+      document.getElementById('member-interests').value = interestsArr.join(', ');
+
+      if (member.joining_date) {
+        document.getElementById('member-joining-date').value = String(member.joining_date).slice(0, 10);
+      } else {
+        document.getElementById('member-joining-date').value = '';
+      }
+
+      document.getElementById('member-dob').value = member.date_of_birth || '';
+
+      const avatar = member.avatar_url || member.avatar || '';
+      document.getElementById('member-avatar-url').value = avatar;
+      document.getElementById('member-avatar-preview').src = avatar ? (avatar.startsWith('http') ? avatar : `../${avatar}`) : '../assets/icons/avatar-placeholder.svg';
+      document.getElementById('member-avatar-file').value = '';
+      if (avatar) {
+        avatarFilenameBadge.textContent = avatar.split('/').pop().split('?')[0] || 'Current Portrait';
+        avatarFilenameBadge.classList.add('has-file');
+      } else {
+        avatarFilenameBadge.textContent = 'No file chosen';
+        avatarFilenameBadge.classList.remove('has-file');
+      }
+
+      const familyUrl = member.family_photo_url || '';
+      document.getElementById('member-family-url').value = familyUrl;
+      document.getElementById('member-family-preview').src = familyUrl ? (familyUrl.startsWith('http') ? familyUrl : `../${familyUrl}`) : '../assets/icons/image-placeholder.svg';
+      document.getElementById('member-family-file').value = '';
+      if (familyUrl) {
+        familyFilenameBadge.textContent = familyUrl.split('/').pop().split('?')[0] || 'Current Family Photo';
+        familyFilenameBadge.classList.add('has-file');
+      } else {
+        familyFilenameBadge.textContent = 'No file chosen';
+        familyFilenameBadge.classList.remove('has-file');
+      }
+
+      // Spouse
+      const hasSpouse = Boolean(member.has_spouse || (member.spouse_name && member.spouse_name.trim()));
+      selectHasSpouse.value = hasSpouse ? 'yes' : 'no';
+      spouseContainer.style.display = hasSpouse ? 'block' : 'none';
+      document.getElementById('member-spouse-name').value = member.spouse_name || '';
+      document.getElementById('member-spouse-dob').value = member.spouse_dob || '';
+      document.getElementById('member-wedding-anniversary').value = member.wedding_anniversary || '';
+
+      // Children
+      let childrenList = Array.isArray(member.children_data) ? member.children_data : [];
+      if (childrenList.length === 0 && member.children_names) {
+        childrenList = member.children_names.split(',').map(s => ({ name: s.trim(), dob: '' })).filter(c => c.name);
+      }
+      renderChildrenRows(childrenList);
+
+      // Address in India
+      document.getElementById('member-address-in-india').value = member.address_in_india || '';
+
+      // Family message
+      document.getElementById('member-family-message').value = member.family_message || '';
+
+      document.getElementById('member-family-approved').checked = Boolean(member.family_photo_approved);
+      document.getElementById('member-family-details-approved').checked = Boolean(member.family_details_approved !== undefined ? member.family_details_approved : member.family_photo_approved);
+      document.getElementById('member-address-approved').checked = Boolean(member.address_in_india_visible);
+      document.getElementById('member-family-message-approved').checked = Boolean(member.family_message_approved !== undefined ? member.family_message_approved : member.family_details_approved);
+      document.getElementById('member-status').value = member.status || 'active';
+      document.getElementById('member-is-public').checked = member.is_public !== false;
+      document.getElementById('member-order').value = Number(member.display_order) || 10;
+
+      modal.classList.add('is-open');
+    }
+
+    function closeModal() {
+      modal.classList.remove('is-open');
+    }
+
+    btnAdd.addEventListener('click', openAddModal);
+    btnClose.addEventListener('click', closeModal);
+    btnCancel.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // Form Save Handler
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const editId = document.getElementById('member-edit-id').value;
+      const prefix = document.getElementById('member-prefix').value;
+      const firstName = document.getElementById('member-first-name').value.trim();
+      const lastName = document.getElementById('member-last-name').value.trim();
+      const role = document.getElementById('member-role').value.trim();
+      const committee = document.getElementById('member-committee').value.trim();
+      const joiningDate = document.getElementById('member-joining-date').value.trim() || null;
+      const dob = document.getElementById('member-dob').value.trim() || null;
+      const bio = document.getElementById('member-bio').value.trim();
+      const rawInterests = document.getElementById('member-interests').value;
+      const interests = rawInterests.split(',').map(s => s.trim()).filter(Boolean);
+      const avatarUrl = document.getElementById('member-avatar-url').value.trim() || null;
+      const familyUrl = document.getElementById('member-family-url').value.trim() || null;
+      
+      const hasSpouse = selectHasSpouse.value === 'yes';
+      const spouseName = hasSpouse ? (document.getElementById('member-spouse-name').value.trim() || null) : null;
+      const spouseDob = hasSpouse ? (document.getElementById('member-spouse-dob').value.trim() || null) : null;
+      const weddingAnniversary = hasSpouse ? (document.getElementById('member-wedding-anniversary').value.trim() || null) : null;
+
+      const childrenList = collectChildrenData();
+      const childrenNames = childrenList.map(c => c.name).filter(Boolean).join(', ') || null;
+
+      const addressInIndia = document.getElementById('member-address-in-india').value.trim() || null;
+      const addressApproved = document.getElementById('member-address-approved').checked;
+
+      const familyMessage = document.getElementById('member-family-message').value.trim() || null;
+      const familyApproved = document.getElementById('member-family-approved').checked;
+      const familyDetailsApproved = document.getElementById('member-family-details-approved').checked;
+      const familyMessageApproved = document.getElementById('member-family-message-approved').checked;
+      const status = document.getElementById('member-status').value || 'active';
+      const isPublic = document.getElementById('member-is-public').checked;
+      const order = Number(document.getElementById('member-order').value) || 10;
+
+      const memberPayload = {
+        name_prefix: prefix,
+        first_name: firstName,
+        last_name: lastName,
+        public_role: role,
+        committee,
+        biography: bio,
+        service_interests: interests,
+        avatar_url: avatarUrl,
+        family_photo_url: familyUrl,
+        date_of_birth: dob,
+        has_spouse: hasSpouse,
+        spouse_name: spouseName,
+        spouse_dob: spouseDob,
+        wedding_anniversary: weddingAnniversary,
+        children_data: childrenList,
+        children_names: childrenNames,
+        address_in_india: addressInIndia,
+        address_in_india_visible: addressApproved,
+        family_message: familyMessage,
+        family_photo_approved: familyApproved,
+        family_details_approved: familyDetailsApproved,
+        family_message_approved: familyMessageApproved,
+        family_members_names: childrenNames,
+        joining_date: joiningDate,
+        status: status,
+        is_public: status === 'archived' ? false : isPublic,
+        display_order: order
+      };
+
+      // 1. Supabase Sync (Member + Relational Children Table)
+      let savedMemberId = editId;
+      let dbError = null;
+
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          if (editId && editId.length > 20 && !editId.startsWith('mem-') && !editId.startsWith('m-')) {
+            const { error: updErr } = await supabase.from('members').update(memberPayload).eq('id', editId);
+            if (updErr) throw updErr;
+            savedMemberId = editId;
+          } else {
+            const { data, error: insErr } = await supabase.from('members').insert([memberPayload]).select('id').single();
+            if (insErr) throw insErr;
+            if (data?.id) {
+              savedMemberId = data.id;
+              memberPayload.id = savedMemberId;
+            }
+          }
+
+          // Sync relational member_children table to ensure parent-child foreign key integrity
+          if (savedMemberId && savedMemberId.length > 20 && !savedMemberId.startsWith('mem-') && !savedMemberId.startsWith('m-')) {
+            const { error: delErr } = await supabase.from('member_children').delete().eq('member_id', savedMemberId);
+            if (delErr) console.warn('Member children reset notice:', delErr);
+
+            if (childrenList.length > 0) {
+              const childrenRows = childrenList.map((ch, idx) => ({
+                member_id: savedMemberId,
+                full_name: ch.name,
+                date_of_birth: ch.dob || null,
+                display_order: idx + 1
+              }));
+              const { error: childErr } = await supabase.from('member_children').insert(childrenRows);
+              if (childErr) throw childErr;
+            }
+          }
+        } catch (err) {
+          dbError = err;
+          console.error('Supabase member save error:', err);
+        }
+      }
+
+      if (dbError) {
+        showToast('Supabase Error: ' + (dbError.message || 'Failed to persist member to database'), 'error');
+        return;
+      }
+
+      // 2. Local Fallback Sync
+      if (editId) {
+        const idx = allMembers.findIndex(m => String(m.id) === String(editId));
+        if (idx >= 0) {
+          allMembers[idx] = { 
+            ...allMembers[idx], 
+            ...memberPayload, 
+            name: `${firstName} ${lastName}`.trim(),
+            role,
+            interests,
+            bio,
+            avatar: avatarUrl
+          };
+        }
+      } else {
+        memberPayload.id = savedMemberId || `mem-${Date.now()}`;
+        memberPayload.name = `${firstName} ${lastName}`.trim();
+        memberPayload.role = role;
+        memberPayload.interests = interests;
+        memberPayload.bio = bio;
+        memberPayload.avatar = avatarUrl;
+        allMembers.push(memberPayload);
+      }
+
+      allMembers.sort((a, b) => (Number(a.display_order) || 99) - (Number(b.display_order) || 99));
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(allMembers));
+      } catch (_) {}
+
+      if (isSupabaseConfigured() && supabase) {
+        await loadMembersData();
+      } else {
+        renderTable();
+      }
+
+      closeModal();
+      showToast(editId ? 'Member profile updated successfully!' : 'Member added and published successfully!', 'success');
+    });
+
+    // Leadership Check & Safe Deletion Modal Handlers
+    let allLeadership = [];
+    async function loadLeadershipData() {
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          const { data } = await supabase.from('leadership_assignments').select('*').eq('is_active', true);
+          if (data && data.length > 0) allLeadership = data;
+        } catch (_) {}
+      }
+      if (!allLeadership.length) {
+        allLeadership = DEFAULT_PUBLIC_DATA.leadership || [];
+      }
+    }
+
+    const deleteModal = document.getElementById('delete-member-modal');
+    const deleteTargetIdInput = document.getElementById('delete-target-id');
+    const deleteLeadershipWarning = document.getElementById('delete-leadership-warning');
+    const deleteLeadershipText = document.getElementById('delete-leadership-text');
+    const deleteConfirmPrompt = document.getElementById('delete-confirm-prompt');
+    const btnCloseDeleteModal = document.getElementById('btn-close-delete-modal');
+    const btnCancelDelete = document.getElementById('btn-cancel-delete');
+    const btnArchiveInstead = document.getElementById('btn-archive-instead');
+    const btnConfirmDelete = document.getElementById('btn-confirm-delete');
+
+    function closeDeleteModal() {
+      deleteModal.classList.remove('is-open');
+      deleteTargetIdInput.value = '';
+    }
+
+    btnCloseDeleteModal.addEventListener('click', closeDeleteModal);
+    btnCancelDelete.addEventListener('click', closeDeleteModal);
+    deleteModal.addEventListener('click', (e) => {
+      if (e.target === deleteModal) closeDeleteModal();
+    });
+
+    function deleteMember(id) {
+      const member = allMembers.find(m => String(m.id) === String(id));
+      if (!member) return;
+
+      deleteTargetIdInput.value = id;
+      const memberName = formatMemberName(member);
+
+      // Check if member holds an active leadership assignment
+      const activeAssignment = allLeadership.find(l => 
+        (l.member_id && String(l.member_id) === String(id)) ||
+        (l.name && l.name.toLowerCase() === (member.name || `${member.first_name} ${member.last_name}`).toLowerCase()) ||
+        (l.id && String(l.id).replace('l-', '') === String(id).replace('m-', ''))
+      );
+
+      if (activeAssignment) {
+        deleteLeadershipWarning.style.display = 'block';
+        deleteLeadershipText.textContent = `This member currently serves as "${activeAssignment.position_title || activeAssignment.role}" (${activeAssignment.lions_year || '2026–2027'}). Deleting this member will break official club leadership continuity. We strongly recommend Archiving instead.`;
+        deleteConfirmPrompt.innerHTML = `Are you sure you want to delete <strong>${sanitize(memberName)}</strong>?`;
+      } else {
+        deleteLeadershipWarning.style.display = 'none';
+        deleteConfirmPrompt.innerHTML = `Are you sure you want to permanently delete <strong>${sanitize(memberName)}</strong> from the club database? This action cannot be undone.`;
+      }
+
+      deleteModal.classList.add('is-open');
+    }
+
+    // Archive Member Handler
+    async function archiveMember(id) {
+      const member = allMembers.find(m => String(m.id) === String(id));
+      if (!member) return;
+
+      member.status = 'archived';
+      member.is_public = false;
+
+      if (isSupabaseConfigured() && supabase && !String(id).startsWith('mem-') && !String(id).startsWith('m-')) {
+        try {
+          await supabase.from('members').update({ status: 'archived', is_public: false }).eq('id', id);
+        } catch (err) {
+          console.warn('Supabase archive error:', err);
+        }
+      }
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(allMembers));
+      } catch (_) {}
+
+      closeDeleteModal();
+      renderTable();
+      showToast(`Member "${formatMemberName(member)}" archived successfully (hidden from public directory).`, 'info');
+    }
+
+    btnArchiveInstead.addEventListener('click', () => {
+      const id = deleteTargetIdInput.value;
+      if (id) archiveMember(id);
+    });
+
+    btnConfirmDelete.addEventListener('click', async () => {
+      const id = deleteTargetIdInput.value;
+      if (!id) return;
+
+      const member = allMembers.find(m => String(m.id) === String(id));
+      const name = member ? formatMemberName(member) : 'Member';
+
+      if (isSupabaseConfigured() && supabase && !String(id).startsWith('mem-') && !String(id).startsWith('m-')) {
+        try {
+          await supabase.from('members').delete().eq('id', id);
+        } catch (err) {
+          console.warn('Supabase delete error:', err);
+        }
+      }
+
+      allMembers = allMembers.filter(m => String(m.id) !== String(id));
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(allMembers));
+      } catch (_) {}
+
+      closeDeleteModal();
+      renderTable();
+      showToast(`Member "${name}" permanently removed from the club database.`, 'info');
+    });
+
+    // Filter Listeners
+    searchFilter.addEventListener('input', renderTable);
+    visFilter.addEventListener('change', renderTable);
+    famFilter.addEventListener('change', renderTable);
+
+    await loadLeadershipData();
+    await loadMembersData();
   </script>
 </body>
 </html>

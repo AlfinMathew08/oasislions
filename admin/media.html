@@ -25,7 +25,7 @@
       <nav class="admin-sidebar-nav">
         <a href="index.html" class="admin-nav-item">📊 Dashboard Overview</a>
         <a href="projects.html" class="admin-nav-item">🤝 Service Projects</a>
-        <a href="leadership.html" class="admin-nav-item">🦁 Leadership 2026–27</a>
+        <a href="leadership.html" class="admin-nav-item">🏛️ Leadership 2026–27</a>
         <a href="members.html" class="admin-nav-item">👥 Member Directory</a>
         <a href="news.html" class="admin-nav-item">📰 News & Articles</a>
         <a href="events.html" class="admin-nav-item">📅 Upcoming Events</a>
@@ -66,9 +66,9 @@
           <h2 style="font-size:1.2rem; font-weight:700; margin-bottom:16px;">Current Stored Media Assets</h2>
           <div style="display:grid; grid-template-columns: repeat(4, 1fr); gap:16px;" id="media-library-grid">
             <div style="border:1px solid var(--color-border); border-radius:var(--radius-small); overflow:hidden; background:var(--color-surface); text-align:center; padding:16px;">
-              <div style="font-size:2rem; margin-bottom:8px;">🦁</div>
+              <img src="../assets/logos/dubai-oasis-lions-club.png" alt="Official Lions Emblem" style="height:48px; width:auto; margin-bottom:8px;">
               <div style="font-weight:600; font-size:0.85rem;">Official Lions Emblem</div>
-              <div style="font-size:0.75rem; color:var(--color-text-subtle);">assets/logos/lions-international.png</div>
+              <div style="font-size:0.75rem; color:var(--color-text-subtle);">assets/logos/dubai-oasis-lions-club.png</div>
             </div>
           </div>
         </div>
@@ -78,7 +78,7 @@
 
   <script type="module">
     import { checkAdminSession, logoutAdmin } from '../js/admin/auth.js';
-    import { getSupabase, isSupabaseConfigured } from '../js/supabase.js';
+    import { getSupabase, isSupabaseConfigured, uploadClubMedia } from '../js/supabase.js';
     import { showToast } from '../js/utils.js';
 
     async function init() {
@@ -98,12 +98,9 @@
         const supabase = getSupabase();
         if (isSupabaseConfigured() && supabase) {
           try {
-            const fileName = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9.-]/g, '_')}`;
-            const { data, error } = await supabase.storage.from('club-media').upload(`uploads/${fileName}`, file);
-            if (error) throw error;
-
+            const publicUrl = await uploadClubMedia(file, 'gallery');
             showToast('Photo uploaded successfully to Supabase Storage!', 'success');
-            statusEl.textContent = `Uploaded: uploads/${fileName}`;
+            statusEl.textContent = `Uploaded: ${publicUrl}`;
             fileInput.value = '';
             captionInput.value = '';
           } catch(err) {

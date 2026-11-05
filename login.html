@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Member Portal Login — Dubai Oasis Lions Club | Lions Year 2026–2027</title>
+  <meta name="description" content="Dubai Oasis Lions Club official member portal authentication. Lions Year 2026–2027. We Serve.">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/login.css">
+</head>
+<body class="login-page-body">
+
+  <!-- ======================================================================
+       LARGE SHADOWED BACKGROUND CREST WATERMARK (100% UNCLUTTERED & VISIBLE)
+       ====================================================================== -->
+  <div class="login-bg-logo-stage" aria-hidden="true">
+    <img src="assets/logos/dubai-oasis-lions-club.png" alt="" class="login-bg-crest-shadowed">
+  </div>
+  <div class="login-ambient-glow" aria-hidden="true"></div>
+
+  <!-- ======================================================================
+       PREMIUM SPLIT-SCREEN COMPOSITION — NO CENTRAL CARD, DIRECT ON BLUE CANVAS
+       ====================================================================== -->
+  <main class="login-viewport">
+    
+    <div class="login-split-stage">
+
+      <!-- LEFT SIDE — BRANDING AND WELCOME -->
+      <section class="login-brand-panel" aria-label="Dubai Oasis Lions Club Identity">
+        
+        <!-- Trio of Official Logos with Interactive Centre Logo Dashboard Entry -->
+        <div class="login-trio-logos" aria-label="Official Club and International Logos">
+          <img src="assets/logos/lions-international.png" alt="Lions Clubs International Official Emblem" title="Lions Clubs International" width="46" height="43">
+          <div class="login-trio-divider" aria-hidden="true"></div>
+          <a href="admin.html" class="login-centre-logo-link" id="centre-logo-dashboard-link" aria-label="Dubai Oasis Lions Club Official Crest" title="Dubai Oasis Lions Club">
+            <img src="assets/logos/dubai-oasis-lions-club.png" alt="Dubai Oasis Lions Club Official Crest" class="login-centre-logo-img" width="42" height="54">
+          </a>
+          <div class="login-trio-divider" aria-hidden="true"></div>
+          <img src="assets/logos/who-we-are-logo.png" alt="Dubai Oasis Lions Club Unity in Service Emblem" title="Who We Are Unity Emblem" width="44" height="44">
+        </div>
+
+        <!-- WE SERVE Identity Pill -->
+        <div class="login-motto-pill">
+          <span class="login-motto-dot" aria-hidden="true"></span>
+          <span>DUBAI OASIS LIONS CLUB &bull; “WE SERVE”</span>
+        </div>
+
+        <!-- Prominent Welcome Heading -->
+        <h1 class="login-brand-heading">
+          Dedicated to Humanitarian Service Across <span>Dubai & the Emirates</span>
+        </h1>
+
+        <!-- Elegant Club Introduction -->
+        <p class="login-brand-intro">
+          Dubai Oasis Lions Club unites civic-minded professionals and passionate volunteers under a shared global commitment to sight conservation, hunger relief, youth empowerment, diabetes care, and community fellowship.
+        </p>
+
+        <!-- Brand Highlights -->
+        <div class="login-brand-pillars">
+          <div class="login-pillar-item">
+            <span class="login-pillar-dot"></span>
+            <span>Chartered Service Club</span>
+          </div>
+          <div class="login-pillar-item">
+            <span class="login-pillar-dot"></span>
+            <span>Lions Year 2026–2027</span>
+          </div>
+          <div class="login-pillar-item">
+            <span class="login-pillar-dot"></span>
+            <span>Global Fellowship</span>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- RIGHT SIDE — MEMBER LOGIN (Appears directly on the blue background without outer card) -->
+      <section class="login-form-panel" aria-label="Dubai Oasis Lions Club Member Portal Login">
+
+        <div class="login-form-header">
+          <h2 class="login-title">Member Portal</h2>
+          <p class="login-subtitle">
+            Welcome to the Dubai Oasis Lions Club member portal. Sign in with your Member ID to continue.
+          </p>
+        </div>
+
+        <!-- Interactive Form -->
+        <form id="member-login-form" class="login-form" novalidate>
+          
+          <!-- Member ID / Registered Email Field (No Placeholder) -->
+          <div class="login-field-group">
+            <label for="member-id-input" class="login-label">Member ID or Registered Email</label>
+            <div class="login-input-box">
+              <span class="login-input-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </span>
+              <input 
+                type="text" 
+                id="member-id-input" 
+                name="member_id" 
+                class="login-input" 
+                autocomplete="username"
+                required
+              >
+            </div>
+            <span id="member-id-error" class="login-field-error">Please enter your Member ID or registered email.</span>
+          </div>
+
+          <!-- Password Field (No Placeholder) -->
+          <div class="login-field-group">
+            <label for="member-password-input" class="login-label">Password</label>
+            <div class="login-input-box">
+              <span class="login-input-icon" aria-hidden="true">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
+              <input 
+                type="password" 
+                id="member-password-input" 
+                name="password" 
+                class="login-input" 
+                autocomplete="current-password"
+                required
+              >
+              <button 
+                type="button" 
+                id="toggle-password-btn" 
+                class="login-password-toggle" 
+                aria-label="Show password"
+                title="Toggle password visibility"
+              >
+                <!-- Eye Open -->
+                <svg id="eye-icon-open" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                  <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <!-- Eye Closed -->
+                <svg id="eye-icon-closed" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: none;">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                  <line x1="1" y1="2" x2="23" y2="23"></line>
+                </svg>
+              </button>
+            </div>
+            <span id="member-password-error" class="login-field-error">Please enter your password.</span>
+          </div>
+
+          <!-- Primary Sign In Button -->
+          <button type="submit" id="btn-login-submit" class="btn-login-submit">
+            <span class="login-spinner" aria-hidden="true"></span>
+            <span class="btn-text">Sign In to Member Portal</span>
+          </button>
+        </form>
+
+        <div class="login-form-foot-links">
+          <span>Lions Year 2026–2027 &bull; We Serve</span>
+        </div>
+
+      </section>
+
+    </div>
+
+    <footer class="login-viewport-footer">
+      Dubai Oasis Lions Club &bull; Lions Clubs International &bull; We Serve
+    </footer>
+
+  </main>
+
+  <!-- ======================================================================
+       MODAL — MEMBER PORTAL PREVIEW NOTICE
+       ====================================================================== -->
+  <div id="login-info-modal" class="login-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="modal-preview-title" aria-hidden="true">
+    <div class="login-modal-box">
+      <div class="login-modal-icon-badge" aria-hidden="true">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          <polyline points="9 12 11 14 15 10"></polyline>
+        </svg>
+      </div>
+      <h3 id="modal-preview-title" class="login-modal-title">Member Portal Access</h3>
+      <p class="login-modal-desc">
+        Welcome, Lion! The authenticated Member Portal is in frontend preview mode. Full database-backed credential authentication will be activated in an upcoming development release. You can enter now in Preview Mode to view all club sections.
+      </p>
+      <div class="login-modal-actions">
+        <button type="button" id="btn-enter-portal-preview" class="login-modal-btn primary">Enter Member Portal (Preview)</button>
+        <button type="button" id="btn-close-preview-modal" class="login-modal-btn secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Client-Side Interactive Logic -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginForm = document.getElementById('member-login-form');
+      const memberIdInput = document.getElementById('member-id-input');
+      const passwordInput = document.getElementById('member-password-input');
+      const memberIdError = document.getElementById('member-id-error');
+      const passwordError = document.getElementById('member-password-error');
+      const togglePasswordBtn = document.getElementById('toggle-password-btn');
+      const eyeOpen = document.getElementById('eye-icon-open');
+      const eyeClosed = document.getElementById('eye-icon-closed');
+      const submitBtn = document.getElementById('btn-login-submit');
+
+      const infoModal = document.getElementById('login-info-modal');
+      const closeInfoModalBtn = document.getElementById('btn-close-preview-modal');
+      const enterPortalBtn = document.getElementById('btn-enter-portal-preview');
+      const centreLogoLink = document.getElementById('centre-logo-dashboard-link');
+
+      // 1. Centre Logo Dashboard Navigation Interaction
+      if (centreLogoLink) {
+        centreLogoLink.addEventListener('click', (e) => {
+          try {
+            sessionStorage.setItem('dolc_member_active', 'true');
+          } catch (_) {}
+        });
+      }
+
+      // 2. Password Visibility Toggle
+      if (togglePasswordBtn && passwordInput) {
+        togglePasswordBtn.addEventListener('click', () => {
+          const isPassword = passwordInput.getAttribute('type') === 'password';
+          passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+          eyeOpen.style.display = isPassword ? 'none' : 'block';
+          eyeClosed.style.display = isPassword ? 'block' : 'none';
+          togglePasswordBtn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+        });
+      }
+
+      // 3. Clear validation errors on typing
+      if (memberIdInput) {
+        memberIdInput.addEventListener('input', () => {
+          memberIdInput.classList.remove('has-error');
+          if (memberIdError) memberIdError.classList.remove('visible');
+        });
+      }
+      if (passwordInput) {
+        passwordInput.addEventListener('input', () => {
+          passwordInput.classList.remove('has-error');
+          if (passwordError) passwordError.classList.remove('visible');
+        });
+      }
+
+      // 4. Modal Helpers
+      function openModal(modal) {
+        if (!modal) return;
+        modal.classList.add('is-open');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeModal(modal) {
+        if (!modal) return;
+        modal.classList.remove('is-open');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+      }
+
+      // 5. Form Submission with Validation & Simulated Interaction
+      if (loginForm) {
+        loginForm.addEventListener('submit', (e) => {
+          e.preventDefault();
+
+          let hasError = false;
+          const idVal = memberIdInput ? memberIdInput.value.trim() : '';
+          const passVal = passwordInput ? passwordInput.value.trim() : '';
+
+          if (!idVal) {
+            if (memberIdInput) memberIdInput.classList.add('has-error');
+            if (memberIdError) memberIdError.classList.add('visible');
+            hasError = true;
+          }
+
+          if (!passVal) {
+            if (passwordInput) passwordInput.classList.add('has-error');
+            if (passwordError) passwordError.classList.add('visible');
+            hasError = true;
+          }
+
+          if (hasError) return;
+
+          // Button Loading State
+          submitBtn.disabled = true;
+          submitBtn.classList.add('is-loading');
+
+          setTimeout(() => {
+            submitBtn.disabled = false;
+            submitBtn.classList.remove('is-loading');
+            openModal(infoModal);
+          }, 500);
+        });
+      }
+
+      // 6. Enter Portal Preview
+      if (enterPortalBtn) {
+        enterPortalBtn.addEventListener('click', () => {
+          try {
+            sessionStorage.setItem('dolc_member_active', 'true');
+          } catch(e) {}
+          window.location.href = 'index.html';
+        });
+      }
+
+      // 7. Close Info Modal Handlers
+      if (closeInfoModalBtn) {
+        closeInfoModalBtn.addEventListener('click', () => closeModal(infoModal));
+      }
+      if (infoModal) {
+        infoModal.addEventListener('click', (e) => {
+          if (e.target === infoModal) closeModal(infoModal);
+        });
+      }
+
+      // 8. Global Escape key closes modal
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          closeModal(infoModal);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

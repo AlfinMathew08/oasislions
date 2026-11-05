@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Member Profile — Dubai Oasis Lions Club | Together We Can</title>
+  <title>Member Profile — Dubai Oasis Lions Club | We Serve</title>
   <meta name="description" content="Official public profile of Dubai Oasis Lions Club member. Discover their service commitments and community involvement.">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/variables.css">
@@ -11,16 +11,33 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- PRIVATE MEMBERS PORTAL SESSION GUARD (Mockup Phase) -->
+  <script>
+    (function() {
+      try {
+        const isAuthed = sessionStorage.getItem("dolc_member_active") === "true";
+        if (!isAuthed) {
+          window.location.replace("login.html");
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
+  <!-- Persistent Stationary Background Canvas: Fixed Watermark Crest & Ambient Lighting -->
+  <div class=site-fixed-background aria-hidden=true>
+    <div class=site-bg-ambient-mesh></div>
+    <div class=site-bg-crest-stage>
+      <img src="assets/logos/dubai-oasis-lions-club.png" alt="" class="site-bg-crest-watermark" width="640" height="832">
+    </div>
+  </div>
 
-    <!-- REFINED APPLE-GRADE GLOBAL HEADER -->
-    <!-- SLIM, ELEGANT APPLE-INSPIRED GLOBAL HEADER -->
+
+  <!-- SLIM, ELEGANT APPLE-INSPIRED GLOBAL HEADER (Single Official Club Logo) -->
   <header class="site-header">
     <div class="container header-inner">
       <a href="index.html" class="brand-pair" aria-label="Dubai Oasis Lions Club Home">
-        <img src="assets/logos/lions-international.png" alt="Lions Clubs International Emblem" class="logo-lions-intl" width="40" height="40">
-        <div class="brand-rule"></div>
+        <img src="assets/logos/dubai-oasis-lions-club.png" alt="Dubai Oasis Lions Club Official Crest" class="logo-club-crest" width="38" height="49">
         <div class="brand-titles">
           <span class="brand-club-name">DUBAI OASIS LIONS CLUB</span>
           <span class="brand-year">United Arab Emirates</span>
@@ -59,10 +76,53 @@
       </nav>
 
       <div class="nav-actions">
-        <a href="contact.html" class="btn-header-cta">Get Involved</a>
+        <div class="member-identity-badge" title="Authenticated Member Session">
+          <span class="member-badge-dot" aria-hidden="true"></span>
+          <span class="member-badge-text">Lion Member</span>
+        </div>
+        <a href="login.html" class="btn-header-login btn-header-logout" id="btn-portal-logout" aria-label="Sign Out of Members Portal">Logout</a>
+        <button class="mobile-toggle" aria-label="Open Navigation Menu">
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- Mobile Slide-Over Navigation Drawer -->
+  <div class="mobile-drawer-overlay"></div>
+  <aside class="mobile-drawer" aria-label="Mobile Navigation">
+    <div class="mobile-drawer-header">
+      <div class="mobile-drawer-brand">
+        <img src="assets/logos/dubai-oasis-lions-club.png" alt="Dubai Oasis Lions Club Official Crest" class="drawer-club-crest" width="30" height="38">
+        <div class="drawer-brand-titles">
+          <span class="brand-club-name">DUBAI OASIS LIONS CLUB</span>
+          <span class="brand-year">United Arab Emirates</span>
+        </div>
+      </div>
+      <button class="drawer-close-btn" aria-label="Close Menu">&times;</button>
+    </div>
+    <nav class="mobile-drawer-nav">
+      <a href="index.html" class="drawer-nav-link${activePage === "home" ? " active" : ""}">Home</a>
+      
+      <div class="drawer-nav-section-title">Our Club</div>
+      <a href="about.html" class="drawer-nav-link${activePage === "about" ? " active" : ""}">About Us</a>
+      <a href="leadership.html" class="drawer-nav-link${activePage === "leadership" ? " active" : ""}">Leadership</a>
+      <a href="members.html" class="drawer-nav-link${activePage === "members" ? " active" : ""}">Meet Our Members</a>
+      
+      <div class="drawer-nav-section-title">Our Impact</div>
+      <a href="projects.html" class="drawer-nav-link${activePage === "projects" ? " active" : ""}">Service Projects</a>
+      <a href="events.html" class="drawer-nav-link${activePage === "events" ? " active" : ""}">Upcoming Events</a>
+      
+      <div class="drawer-nav-section-title">Stories</div>
+      <a href="news.html" class="drawer-nav-link${activePage === "news" ? " active" : ""}">News & Announcements</a>
+      <a href="gallery.html" class="drawer-nav-link${activePage === "gallery" ? " active" : ""}">Photo Gallery</a>
+      <a href="contact.html" class="drawer-nav-link${activePage === "contact" ? " active" : ""}">Contact</a>
+    </nav>
+    <div class="mobile-drawer-footer">
+      <a href="login.html" class="btn-drawer-logout" id="drawer-portal-logout" aria-label="Sign Out of Members Portal">Logout of Portal</a>
+    </div>
+  </aside>
 
   <main style="padding: 60px 0 100px 0;">
     <div class="container" style="max-width: 800px;" id="profile-mount">
@@ -76,12 +136,15 @@
     <div class="container">
       <div class="footer-columns-grid">
         <div>
-          <div class="brand-pair" style="margin-bottom:20px;">
-            <img src="assets/logos/lions-international.png" alt="Lions Clubs International" style="height:42px; width:auto;">
-            <div class="brand-rule" style="background:rgba(255,255,255,0.18);"></div>
-            <div>
-              <div style="color:#FFFFFF; font-weight:800; font-size:0.92rem;">DUBAI OASIS LIONS CLUB</div>
-              <div style="color:var(--color-accent); font-size:0.68rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;">Together We Can</div>
+          <div class="footer-brand-composition">
+            <div class="footer-brand-trio">
+              <img src="assets/logos/lions-international.png" alt="Lions Clubs International" class="footer-logo-lions" width="44" height="41">
+              <img src="assets/logos/dubai-oasis-lions-club.png" alt="Dubai Oasis Lions Club Official Crest" class="footer-logo-club" width="42" height="55">
+              <img src="assets/logos/who-we-are-logo.png" alt="Dubai Oasis Lions Club — Who We Are Unity Emblem" class="footer-logo-whoweare" data-src-unprocessed="assets/logos/who we are logo.jpg" width="44" height="44">
+            </div>
+            <div class="footer-brand-text">
+              <div class="footer-brand-name">DUBAI OASIS LIONS CLUB</div>
+              <div class="footer-brand-tagline">WE SERVE</div>
             </div>
           </div>
           <p style="font-size:0.9rem; line-height:1.65; max-width:340px; color:#94A3B8;">
@@ -116,7 +179,7 @@
       </div>
       <div class="footer-base-row">
         <div>&copy; Dubai Oasis Lions Club. All rights reserved.</div>
-        <div>Lions Year 2026–2027 &bull; Together We Can.</div>
+        <div>Lions Year 2026–2027 &bull; We Serve.</div>
       </div>
     </div>
   </footer>
@@ -131,34 +194,52 @@
 
     async function load() {
       const mount = document.getElementById('profile-mount');
-      let member = DEFAULT_PUBLIC_DATA.members.find(m => m.id === memberId) || DEFAULT_PUBLIC_DATA.members[0];
+      let member = null;
 
       const supabase = getSupabase();
       if (isSupabaseConfigured() && supabase && memberId) {
         try {
-          const { data } = await supabase.from('members').select('*').eq('id', memberId).eq('is_public', true).single();
+          const { data } = await supabase.from('public_members').select('*').eq('id', memberId).single();
           if (data) {
             member = {
               id: data.id,
-              name: `${data.first_name} ${data.last_name}`,
+              name: `${data.first_name || ''} ${data.last_name || ''}`.trim() || 'Club Member',
               role: data.public_role || 'Club Member',
               committee: data.committee,
               interests: data.service_interests || [],
               bio: data.biography,
+              avatar: data.avatar_url,
               background: data.professional_background
             };
           }
         } catch(e) {
-          console.warn('Fallback member profile:', e);
+          console.warn('Error fetching member profile:', e);
         }
+      }
+
+      if (!member) {
+        mount.innerHTML = `
+          <div class="empty-state-box">
+            <div class="empty-state-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <h2 class="empty-state-title">Member Profile Not Found</h2>
+            <p class="empty-state-desc">The requested member profile could not be located or may not be listed in the public directory.</p>
+            <a href="members.html" class="btn btn-primary" style="margin-top:16px;">&larr; Back to Member Directory</a>
+          </div>
+        `;
+        return;
       }
 
       mount.innerHTML = `
         <a href="members.html" style="display:inline-flex; align-items:center; gap:6px; font-weight:600; color:var(--color-primary); margin-bottom:24px;">&larr; Back to Member Directory</a>
         <div class="glass-panel" style="padding:48px; background:#FFFFFF;">
           <div style="display:flex; align-items:center; gap:24px; margin-bottom:32px; flex-wrap:wrap;">
-            <div style="width:100px; height:100px; border-radius:50%; background:var(--color-primary-light); display:flex; align-items:center; justify-content:center; font-size:3rem;">
-              🦁
+            <div style="width:100px; height:100px; border-radius:50%; background:var(--color-surface); display:flex; align-items:center; justify-content:center; overflow:hidden; border: 2px solid var(--color-border);">
+              <img src="${sanitize(member.avatar || 'assets/icons/avatar-placeholder.svg')}" alt="${sanitize(member.name)}" style="height:100%; width:100%; object-fit:cover;" onerror="this.src='assets/icons/avatar-placeholder.svg'">
             </div>
             <div>
               <h1 style="font-size:2.2rem; font-weight:800; color:var(--color-text); margin-bottom:4px;">${sanitize(member.name)}</h1>
@@ -190,5 +271,6 @@
 
     load();
   </script>
+  <script type="module" src="js/auth-guard.js"></script>
 </body>
 </html>

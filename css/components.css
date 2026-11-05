@@ -34,16 +34,16 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--color-primary);
+  color: var(--color-accent, #FCCB04);
   margin-bottom: 16px;
 }
 
 .eyebrow-gold {
-  color: var(--color-accent-dark);
+  color: var(--color-accent, #FCCB04);
 }
 
 .eyebrow-light {
-  color: var(--color-accent);
+  color: var(--color-accent, #FCCB04);
 }
 
 .editorial-headline {
@@ -51,7 +51,7 @@
   font-weight: 800;
   letter-spacing: -0.04em;
   line-height: 1.06;
-  color: var(--color-text);
+  color: #FFFFFF;
   margin-bottom: 24px;
 }
 
@@ -62,13 +62,13 @@
 .editorial-subhead {
   font-size: clamp(1.125rem, 2vw, 1.35rem);
   font-weight: 400;
-  line-height: 1.55;
-  color: var(--color-text-secondary);
+  line-height: 1.68;
+  color: #E5EDF8;
   max-width: 680px;
 }
 
 .editorial-subhead-light {
-  color: var(--color-text-light-muted);
+  color: #E5EDF8;
 }
 
 /* Apple-style Buttons */
@@ -147,12 +147,12 @@
   gap: 6px;
   font-weight: 600;
   font-size: 0.95rem;
-  color: var(--color-primary);
+  color: var(--color-accent, #FCCB04);
   transition: gap var(--transition-fast), color var(--transition-fast);
 }
 
 .btn-text-link:hover {
-  color: var(--color-primary-dark);
+  color: #FFFFFF;
   gap: 10px;
 }
 

@@ -10,6 +10,184 @@
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/admin.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .admin-filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 24px;
+      padding: 16px 20px;
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+    }
+    .admin-search-input {
+      flex: 1;
+      min-width: 220px;
+      padding: 9px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 0.92rem;
+    }
+    .admin-select-filter {
+      padding: 9px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background: #FFFFFF;
+    }
+    .admin-table-cover-thumb {
+      width: 64px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #0F172A;
+      display: block;
+    }
+    .status-pill {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .status-published {
+      background: rgba(16, 185, 129, 0.12);
+      color: #047857;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .status-draft {
+      background: rgba(100, 116, 139, 0.12);
+      color: #475569;
+      border: 1px solid rgba(100, 116, 139, 0.3);
+    }
+    .status-cancelled {
+      background: rgba(239, 68, 68, 0.12);
+      color: #B91C1C;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+    .status-archived {
+      background: rgba(148, 163, 184, 0.18);
+      color: #64748B;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+    .action-btn-group {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .btn-action-icon {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      border-radius: 6px;
+      border: 1px solid var(--color-border);
+      background: #FFFFFF;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 160ms ease;
+      text-decoration: none;
+      color: var(--color-text);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-action-icon:hover {
+      background: var(--color-surface);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+    .btn-action-danger:hover {
+      border-color: #EF4444;
+      color: #EF4444;
+      background: rgba(239, 68, 68, 0.05);
+    }
+    /* Event Modal Dialog */
+    .admin-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .admin-modal-backdrop.is-open {
+      display: flex;
+    }
+    .admin-modal-card {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 780px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 16px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--color-border);
+    }
+    .admin-modal-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--color-surface);
+      border-radius: 16px 16px 0 0;
+    }
+    .admin-modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--color-primary);
+    }
+    .admin-modal-close {
+      background: transparent;
+      border: none;
+      font-size: 1.6rem;
+      cursor: pointer;
+      color: var(--color-text-muted);
+      line-height: 1;
+    }
+    .admin-modal-body {
+      padding: 28px;
+    }
+    .admin-modal-footer {
+      padding: 18px 28px;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      background: var(--color-surface);
+      border-radius: 0 0 16px 16px;
+    }
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+    .form-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+    .field-help-text {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      margin-top: 4px;
+    }
+    .validation-error-msg {
+      color: #EF4444;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 4px;
+      display: none;
+    }
+  </style>
 </head>
 <body>
   <div class="admin-layout">
@@ -24,7 +202,7 @@
       <nav class="admin-sidebar-nav">
         <a href="index.html" class="admin-nav-item">📊 Dashboard Overview</a>
         <a href="projects.html" class="admin-nav-item">🤝 Service Projects</a>
-        <a href="leadership.html" class="admin-nav-item">🦁 Leadership 2026–27</a>
+        <a href="leadership.html" class="admin-nav-item">🏛️ Leadership 2026–27</a>
         <a href="members.html" class="admin-nav-item">👥 Member Directory</a>
         <a href="news.html" class="admin-nav-item">📰 News & Articles</a>
         <a href="events.html" class="admin-nav-item active">📅 Upcoming Events</a>
@@ -41,32 +219,78 @@
 
     <main class="admin-main">
       <header class="admin-topbar">
-        <div style="font-weight:700; color:var(--color-text); font-size:1.1rem;">Calendar & Events Management (GST)</div>
+        <div style="display:flex; justify-content:space-between; align-items:center; width:100%;">
+          <div>
+            <div style="font-weight:800; color:var(--color-text); font-size:1.25rem;">📅 Upcoming Events & Calendar</div>
+            <div style="font-size:0.82rem; color:var(--color-text-muted);">Manage scheduled humanitarian outreach, assemblies, and public registrations (GST).</div>
+          </div>
+          <button id="btn-create-event" class="btn btn-primary btn-sm" style="display:inline-flex; align-items:center; gap:6px;">
+            <span>+ Create New Event</span>
+          </button>
+        </div>
       </header>
 
       <div class="admin-content">
+        <!-- Filter and Search Bar -->
+        <div class="admin-filter-bar">
+          <input type="text" id="filter-search" class="admin-search-input" placeholder="🔍 Search events by title, venue, location...">
+          
+          <select id="filter-category" class="admin-select-filter">
+            <option value="all">All Focus Categories</option>
+            <option value="Vision Care">Vision Care</option>
+            <option value="Hunger Relief">Hunger Relief</option>
+            <option value="Environment">Environment</option>
+            <option value="Youth Support">Youth Support</option>
+            <option value="Health & Wellness">Health & Wellness</option>
+            <option value="Community Service">Community Service</option>
+          </select>
+
+          <select id="filter-status" class="admin-select-filter">
+            <option value="all">All Publication Statuses</option>
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+            <option value="archived">Archived</option>
+          </select>
+
+          <select id="filter-event-status" class="admin-select-filter">
+            <option value="all">All Event States</option>
+            <option value="scheduled">Scheduled</option>
+            <option value="cancelled">Cancelled</option>
+            <option value="postponed">Postponed</option>
+            <option value="completed">Completed</option>
+          </select>
+
+          <button id="btn-reset-filters" class="btn btn-secondary btn-sm" style="padding:8px 14px;">Reset</button>
+        </div>
+
+        <!-- Events Table Card -->
         <div class="admin-card">
+          <div style="padding:16px 20px; border-bottom:1px solid var(--color-border); display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-weight:700; color:var(--color-text); font-size:0.95rem;" id="events-count-label">
+              Scheduled Events (0)
+            </div>
+            <div id="backend-status-indicator" style="font-size:0.8rem; color:var(--color-text-muted);">
+              Connecting to Supabase...
+            </div>
+          </div>
+
           <table class="admin-table">
             <thead>
               <tr>
-                <th>Event Title</th>
-                <th>Location</th>
-                <th>Start Date & Time (GST)</th>
-                <th>Status</th>
+                <th style="width:70px;">Cover</th>
+                <th>Event Title & Category</th>
+                <th>Date & Time (GST)</th>
+                <th>Venue & Location</th>
+                <th>Event State</th>
+                <th>Publication</th>
+                <th>Actions</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody id="events-table-body">
               <tr>
-                <td><strong>Annual Community Vision Care Drive</strong></td>
-                <td>Al Quoz Community Center, Dubai</td>
-                <td>15 Nov 2026, 09:00</td>
-                <td><span class="admin-badge badge-published">Published</span></td>
-              </tr>
-              <tr>
-                <td><strong>Dubai Oasis Environmental Clean-up</strong></td>
-                <td>Al Qudra Lakes, Dubai</td>
-                <td>05 Dec 2026, 08:00</td>
-                <td><span class="admin-badge badge-published">Published</span></td>
+                <td colspan="7" style="text-align:center; padding:32px; color:var(--color-text-muted);">
+                  Loading events roster...
+                </td>
               </tr>
             </tbody>
           </table>
@@ -75,10 +299,620 @@
     </main>
   </div>
 
+  <!-- Event Create/Edit Modal Dialog -->
+  <div class="admin-modal-backdrop" id="event-modal-backdrop" aria-hidden="true">
+    <div class="admin-modal-card" role="dialog" aria-labelledby="modal-event-heading">
+      <div class="admin-modal-header">
+        <h3 class="admin-modal-title" id="modal-event-heading">Create Event Initiative</h3>
+        <button type="button" class="admin-modal-close" id="btn-modal-close" aria-label="Close Modal">&times;</button>
+      </div>
+
+      <form id="event-form">
+        <div class="admin-modal-body">
+          <input type="hidden" id="event-id">
+
+          <!-- Title & Slug -->
+          <div class="form-grid-2">
+            <div>
+              <label class="form-label" for="event-title">Event Title *</label>
+              <input type="text" id="event-title" class="form-control" required placeholder="e.g. Annual Community Vision Care Drive">
+            </div>
+            <div>
+              <label class="form-label" for="event-slug">URL Slug *</label>
+              <input type="text" id="event-slug" class="form-control" required placeholder="e.g. annual-vision-care-drive">
+              <div class="field-help-text">Unique URL identifier (used in event-detail.html?slug=...)</div>
+            </div>
+          </div>
+
+          <!-- Category & Registration URL -->
+          <div class="form-grid-2">
+            <div>
+              <label class="form-label" for="event-category">Focus Category *</label>
+              <select id="event-category" class="form-control" required>
+                <option value="Vision Care">Vision Care</option>
+                <option value="Hunger Relief">Hunger Relief</option>
+                <option value="Environment">Environment</option>
+                <option value="Youth Support">Youth Support</option>
+                <option value="Health & Wellness">Health & Wellness</option>
+                <option value="Diabetes Awareness">Diabetes Awareness</option>
+                <option value="Community Service">Community Service</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="event-reg-url">Registration URL / Instruction</label>
+              <input type="text" id="event-reg-url" class="form-control" placeholder="e.g. contact.html?subject=Vision+Registration or https://...">
+            </div>
+          </div>
+
+          <!-- Dates & Times (GST) -->
+          <div class="form-grid-2">
+            <div>
+              <label class="form-label" for="event-start-time">Start Date & Time (GST) *</label>
+              <input type="datetime-local" id="event-start-time" class="form-control" required>
+            </div>
+            <div>
+              <label class="form-label" for="event-end-time">End Date & Time (GST)</label>
+              <input type="datetime-local" id="event-end-time" class="form-control">
+              <div class="validation-error-msg" id="date-range-error">End date/time must not precede start date/time.</div>
+            </div>
+          </div>
+
+          <!-- Venue & Location -->
+          <div class="form-grid-2">
+            <div>
+              <label class="form-label" for="event-venue">Venue Name</label>
+              <input type="text" id="event-venue" class="form-control" placeholder="e.g. Al Quoz Community Hall 2">
+            </div>
+            <div>
+              <label class="form-label" for="event-location">Address / Location *</label>
+              <input type="text" id="event-location" class="form-control" required placeholder="e.g. Al Quoz Community Center, Dubai">
+            </div>
+          </div>
+
+          <!-- Contact Info & Featured -->
+          <div class="form-grid-2">
+            <div>
+              <label class="form-label" for="event-contact">Approved Public Contact Email/Phone</label>
+              <input type="text" id="event-contact" class="form-control" placeholder="e.g. events@dubaioasislions.org">
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding-top:28px;">
+              <input type="checkbox" id="event-is-featured" style="width:18px; height:18px; accent-color:var(--color-primary);">
+              <label for="event-is-featured" style="font-size:0.92rem; font-weight:600; cursor:pointer;">Feature in prominent club announcements</label>
+            </div>
+          </div>
+
+          <!-- Short Summary -->
+          <div style="margin-bottom:18px;">
+            <label class="form-label" for="event-summary">Short Summary (for homepage banners & cards) *</label>
+            <textarea id="event-summary" class="form-control" rows="2" required placeholder="1-2 sentences summarizing the initiative for visitors..."></textarea>
+          </div>
+
+          <!-- Full Description -->
+          <div style="margin-bottom:18px;">
+            <label class="form-label" for="event-description">Full Description (for event-detail page) *</label>
+            <textarea id="event-description" class="form-control" rows="4" required placeholder="Full details, schedule, requirements, and volunteer instructions..."></textarea>
+          </div>
+
+          <!-- Cover Image Picker & URL -->
+          <div style="padding:16px; border-radius:12px; background:var(--color-surface); border:1px solid var(--color-border); margin-bottom:18px;">
+            <label class="form-label">Cover Photograph</label>
+            <div style="display:grid; grid-template-columns: 80px 1fr; gap:16px; align-items:center;">
+              <img id="event-cover-preview" src="../assets/icons/image-placeholder.svg" alt="Cover preview" style="width:80px; height:60px; object-fit:contain; border-radius:8px; border:1px solid var(--color-border); background:#fff; padding:4px;">
+              <div>
+                <div style="display:flex; gap:10px; margin-bottom:6px;">
+                  <input type="file" id="event-cover-file" accept="image/jpeg,image/png,image/webp" class="form-control" style="max-width:240px; padding:6px;">
+                  <input type="text" id="event-cover-url" class="form-control" placeholder="Or enter image path/URL" value="">
+                </div>
+                <div class="field-help-text">Image shown on homepage horizontal banner and detail page. Uploads to Supabase Storage <code>club-media</code> when configured.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Publication Status & Event Operational State -->
+          <div class="form-grid-2">
+            <div>
+              <label class="form-label" for="event-status">Publication Status *</label>
+              <select id="event-status" class="form-control" required>
+                <option value="published">Published (Visible on site)</option>
+                <option value="draft">Draft (Hidden from public)</option>
+                <option value="archived">Archived (Historical archive)</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label" for="event-op-status">Operational State *</label>
+              <select id="event-op-status" class="form-control" required>
+                <option value="scheduled">Scheduled</option>
+                <option value="cancelled">Cancelled</option>
+                <option value="postponed">Postponed</option>
+                <option value="completed">Completed</option>
+              </select>
+              <div class="field-help-text">Cancelled and archived events are automatically hidden from upcoming lists.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-secondary" id="btn-modal-cancel">Cancel</button>
+          <button type="button" class="btn btn-secondary" id="btn-save-draft">Save as Draft</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-submit">Save & Publish</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script type="module">
     import { checkAdminSession, logoutAdmin } from '../js/admin/auth.js';
+    import { getSupabase, isSupabaseConfigured, uploadClubMedia } from '../js/supabase.js';
+    import { DEFAULT_PUBLIC_DATA } from '../js/public-data.js';
+    import { sanitize, formatUAEEventDate, showToast } from '../js/utils.js';
+
     checkAdminSession();
     document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
+
+    const STORAGE_KEY = 'lions_events_custom_v1';
+    let allEvents = [];
+    const supabase = getSupabase();
+
+    // Elements
+    const tableBody = document.getElementById('events-table-body');
+    const countLabel = document.getElementById('events-count-label');
+    const statusIndicator = document.getElementById('backend-status-indicator');
+    const modalBackdrop = document.getElementById('event-modal-backdrop');
+    const modalHeading = document.getElementById('modal-event-heading');
+    const eventForm = document.getElementById('event-form');
+    const searchFilter = document.getElementById('filter-search');
+    const catFilter = document.getElementById('filter-category');
+    const statusFilter = document.getElementById('filter-status');
+    const eventStatusFilter = document.getElementById('filter-event-status');
+
+    // Auto-slugify on title input if not manually modified
+    let slugTouched = false;
+    document.getElementById('event-title').addEventListener('input', (e) => {
+      if (!slugTouched) {
+        const slugVal = e.target.value.toLowerCase()
+          .replace(/[^\w\s-]/g, '')
+          .trim()
+          .replace(/[\s_-]+/g, '-');
+        document.getElementById('event-slug').value = slugVal;
+      }
+    });
+    document.getElementById('event-slug').addEventListener('input', () => {
+      slugTouched = true;
+    });
+
+    // Cover file picker preview & storage upload
+    document.getElementById('event-cover-file').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (loadEvt) => {
+        const dataUrl = loadEvt.target.result;
+        document.getElementById('event-cover-preview').src = dataUrl;
+        document.getElementById('event-cover-url').value = dataUrl;
+      };
+      reader.readAsDataURL(file);
+
+      // Attempt Supabase Storage upload
+      if (isSupabaseConfigured() && supabase) {
+        showToast('Uploading event banner to Supabase Storage...', 'info');
+        const res = await uploadClubMedia(file, 'events');
+        if (res.ok && res.url) {
+          document.getElementById('event-cover-url').value = res.url;
+          document.getElementById('event-cover-preview').src = res.url;
+          showToast('Event banner uploaded to Supabase Storage!', 'success');
+        } else {
+          showToast('Storage upload warning: ' + (res.error || 'Using local preview'), 'warning');
+        }
+      }
+    });
+
+    document.getElementById('event-cover-url').addEventListener('input', (e) => {
+      document.getElementById('event-cover-preview').src = e.target.value || '../assets/icons/image-placeholder.svg';
+    });
+
+    // Date range validation
+    function validateDateRange() {
+      const startVal = document.getElementById('event-start-time').value;
+      const endVal = document.getElementById('event-end-time').value;
+      const errorEl = document.getElementById('date-range-error');
+
+      if (startVal && endVal) {
+        const startDate = new Date(startVal);
+        const endDate = new Date(endVal);
+        if (endDate < startDate) {
+          errorEl.style.display = 'block';
+          return false;
+        }
+      }
+      errorEl.style.display = 'none';
+      return true;
+    }
+
+    document.getElementById('event-start-time').addEventListener('change', validateDateRange);
+    document.getElementById('event-end-time').addEventListener('change', validateDateRange);
+
+    // Load Events Data
+    async function loadEventsData() {
+      allEvents = [];
+      let loadedFromDb = false;
+
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          const { data, error } = await supabase
+            .from('events')
+            .select('*')
+            .order('start_time', { ascending: true });
+
+          if (!error && data && data.length > 0) {
+            allEvents = data;
+            loadedFromDb = true;
+            statusIndicator.innerHTML = '🟢 Synced with Supabase (Live)';
+          }
+        } catch (err) {
+          console.warn('Supabase fetch issue:', err);
+        }
+      }
+
+      if (!loadedFromDb) {
+        try {
+          const localStored = localStorage.getItem(STORAGE_KEY);
+          if (localStored) {
+            allEvents = JSON.parse(localStored);
+            statusIndicator.innerHTML = '🟡 Working with Local Storage';
+          } else {
+            allEvents = [];
+            statusIndicator.innerHTML = '⚪ Ready for Event Creation';
+          }
+        } catch (e) {
+          allEvents = [];
+        }
+      }
+
+      renderTable();
+    }
+
+    // Render Table based on filters
+    function renderTable() {
+      const search = searchFilter.value.toLowerCase().trim();
+      const cat = catFilter.value;
+      const pubStatus = statusFilter.value;
+      const opStatus = eventStatusFilter.value;
+
+      const filtered = allEvents.filter(evt => {
+        if (search) {
+          const title = (evt.title || '').toLowerCase();
+          const venue = (evt.venue_name || '').toLowerCase();
+          const loc = (evt.location || '').toLowerCase();
+          if (!title.includes(search) && !venue.includes(search) && !loc.includes(search)) return false;
+        }
+        if (cat !== 'all' && evt.category !== cat) return false;
+        if (pubStatus !== 'all' && evt.status !== pubStatus) return false;
+        if (opStatus !== 'all' && (evt.event_status || 'scheduled') !== opStatus) return false;
+        return true;
+      });
+
+      countLabel.textContent = `Scheduled Events (${filtered.length} of ${allEvents.length})`;
+
+      if (filtered.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align:center; padding:36px; color:var(--color-text-muted);">
+              No events match the selected criteria.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tableBody.innerHTML = filtered.map(evt => {
+        const cover = evt.cover_image_url ? (evt.cover_image_url.startsWith('http') || evt.cover_image_url.startsWith('data:') ? evt.cover_image_url : '../' + evt.cover_image_url) : '../assets/icons/image-placeholder.svg';
+        const startStr = formatUAEEventDate(evt.start_time);
+        const venue = evt.venue_name || evt.location || 'Dubai, UAE';
+        const pub = evt.status || 'draft';
+        const op = evt.event_status || 'scheduled';
+
+        const pubBadgeClass = pub === 'published' ? 'status-published' : (pub === 'archived' ? 'status-archived' : 'status-draft');
+        const opBadgeClass = op === 'scheduled' ? 'status-published' : (op === 'cancelled' ? 'status-cancelled' : 'status-draft');
+
+        return `
+          <tr>
+            <td>
+              <img src="${sanitize(cover)}" alt="" class="admin-table-cover-thumb">
+            </td>
+            <td>
+              <div style="font-weight:700; color:var(--color-text); margin-bottom:4px;">${sanitize(evt.title)}</div>
+              <div style="font-size:0.78rem; color:var(--color-primary); font-weight:600;">${sanitize(evt.category || 'Community Service')}</div>
+            </td>
+            <td>
+              <div style="font-size:0.88rem; font-weight:600; color:var(--color-text);">${sanitize(startStr)}</div>
+            </td>
+            <td>
+              <div style="font-size:0.86rem; color:var(--color-text);">${sanitize(venue)}</div>
+              <div style="font-size:0.78rem; color:var(--color-text-muted);">${sanitize(evt.location || '')}</div>
+            </td>
+            <td>
+              <span class="status-pill ${opBadgeClass}">${sanitize(op)}</span>
+            </td>
+            <td>
+              <span class="status-pill ${pubBadgeClass}">${sanitize(pub)}</span>
+            </td>
+            <td>
+              <div class="action-btn-group">
+                <button type="button" class="btn-action-icon btn-edit-event" data-id="${sanitize(evt.id)}" title="Edit event details">✏️ Edit</button>
+                <a href="../event-detail.html?slug=${encodeURIComponent(evt.slug || evt.id)}" target="_blank" class="btn-action-icon" title="Preview public event page">👁️ View</a>
+                ${pub === 'published' ? `
+                  <button type="button" class="btn-action-icon btn-unpublish-event" data-id="${sanitize(evt.id)}" title="Unpublish to draft">⏸️ Draft</button>
+                ` : `
+                  <button type="button" class="btn-action-icon btn-publish-event" data-id="${sanitize(evt.id)}" title="Publish event">▶️ Publish</button>
+                `}
+                <button type="button" class="btn-action-icon btn-action-danger btn-cancel-event" data-id="${sanitize(evt.id)}" title="Mark event as cancelled">🚫 Cancel</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Wire row actions
+      tableBody.querySelectorAll('.btn-edit-event').forEach(b => {
+        b.addEventListener('click', () => openEditModal(b.getAttribute('data-id')));
+      });
+      tableBody.querySelectorAll('.btn-publish-event').forEach(b => {
+        b.addEventListener('click', () => updateEventStatus(b.getAttribute('data-id'), { status: 'published' }));
+      });
+      tableBody.querySelectorAll('.btn-unpublish-event').forEach(b => {
+        b.addEventListener('click', () => updateEventStatus(b.getAttribute('data-id'), { status: 'draft' }));
+      });
+      tableBody.querySelectorAll('.btn-cancel-event').forEach(b => {
+        b.addEventListener('click', () => {
+          if (confirm('Are you sure you want to cancel this event? Cancelled events are excluded from the public upcoming list.')) {
+            updateEventStatus(b.getAttribute('data-id'), { event_status: 'cancelled' });
+          }
+        });
+      });
+    }
+
+    // Filter listeners
+    searchFilter.addEventListener('input', renderTable);
+    catFilter.addEventListener('change', renderTable);
+    statusFilter.addEventListener('change', renderTable);
+    eventStatusFilter.addEventListener('change', renderTable);
+    document.getElementById('btn-reset-filters').addEventListener('click', () => {
+      searchFilter.value = '';
+      catFilter.value = 'all';
+      statusFilter.value = 'all';
+      eventStatusFilter.value = 'all';
+      renderTable();
+    });
+
+    // Open Modal for Create
+    document.getElementById('btn-create-event').addEventListener('click', () => {
+      eventForm.reset();
+      slugTouched = false;
+      document.getElementById('event-id').value = '';
+      modalHeading.textContent = 'Create New Event Initiative';
+      document.getElementById('event-status').value = 'published';
+      document.getElementById('event-op-status').value = 'scheduled';
+      document.getElementById('event-cover-url').value = '';
+      document.getElementById('event-cover-preview').src = '../assets/icons/image-placeholder.svg';
+      document.getElementById('date-range-error').style.display = 'none';
+
+      // Set default start time to 2 weeks from now at 09:00 GST
+      const defaultDate = new Date();
+      defaultDate.setDate(defaultDate.getDate() + 14);
+      defaultDate.setHours(9, 0, 0, 0);
+      document.getElementById('event-start-time').value = toLocalISOString(defaultDate);
+
+      const defaultEnd = new Date(defaultDate);
+      defaultEnd.setHours(13, 0, 0, 0);
+      document.getElementById('event-end-time').value = toLocalISOString(defaultEnd);
+
+      modalBackdrop.classList.add('is-open');
+    });
+
+    // Open Modal for Edit
+    function openEditModal(id) {
+      const evt = allEvents.find(e => String(e.id) === String(id));
+      if (!evt) return;
+
+      slugTouched = true;
+      document.getElementById('event-id').value = evt.id;
+      modalHeading.textContent = 'Edit Event Initiative';
+      document.getElementById('event-title').value = evt.title || '';
+      document.getElementById('event-slug').value = evt.slug || '';
+      document.getElementById('event-category').value = evt.category || 'Community Service';
+      document.getElementById('event-reg-url').value = evt.registration_url || '';
+      document.getElementById('event-venue').value = evt.venue_name || '';
+      document.getElementById('event-location').value = evt.location || '';
+      document.getElementById('event-contact').value = evt.contact_info || '';
+      document.getElementById('event-summary').value = evt.short_summary || '';
+      document.getElementById('event-description').value = evt.description || '';
+      document.getElementById('event-is-featured').checked = Boolean(evt.is_featured);
+      document.getElementById('event-status').value = evt.status || 'published';
+      document.getElementById('event-op-status').value = evt.event_status || 'scheduled';
+
+      if (evt.start_time) {
+        document.getElementById('event-start-time').value = toLocalISOString(new Date(evt.start_time));
+      }
+      if (evt.end_time) {
+        document.getElementById('event-end-time').value = toLocalISOString(new Date(evt.end_time));
+      } else {
+        document.getElementById('event-end-time').value = '';
+      }
+
+      const coverUrl = evt.cover_image_url || '';
+      document.getElementById('event-cover-url').value = coverUrl;
+      document.getElementById('event-cover-preview').src = coverUrl ? (coverUrl.startsWith('http') || coverUrl.startsWith('data:') ? coverUrl : '../' + coverUrl) : '../assets/icons/image-placeholder.svg';
+
+      document.getElementById('date-range-error').style.display = 'none';
+      modalBackdrop.classList.add('is-open');
+    }
+
+    // Modal Close
+    const closeModal = () => modalBackdrop.classList.remove('is-open');
+    document.getElementById('btn-modal-close').addEventListener('click', closeModal);
+    document.getElementById('btn-modal-cancel').addEventListener('click', closeModal);
+    modalBackdrop.addEventListener('click', (e) => {
+      if (e.target === modalBackdrop) closeModal();
+    });
+
+    // Helper: Format Date for datetime-local input
+    function toLocalISOString(date) {
+      const pad = (n) => String(n).padStart(2, '0');
+      return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+    }
+
+    // Save Event Handler (Create or Update)
+    async function saveEvent(overrideStatus = null) {
+      if (!validateDateRange()) return;
+
+      const submitBtn = document.getElementById('btn-save-submit');
+      const draftBtn = document.getElementById('btn-save-draft');
+      submitBtn.disabled = true;
+      draftBtn.disabled = true;
+
+      const id = document.getElementById('event-id').value || `evt-${Date.now()}`;
+      const title = document.getElementById('event-title').value.trim();
+      const slug = document.getElementById('event-slug').value.trim();
+      const category = document.getElementById('event-category').value;
+      const regUrl = document.getElementById('event-reg-url').value.trim();
+      const startTime = document.getElementById('event-start-time').value;
+      const endTime = document.getElementById('event-end-time').value;
+      const venue = document.getElementById('event-venue').value.trim();
+      const location = document.getElementById('event-location').value.trim();
+      const contact = document.getElementById('event-contact').value.trim();
+      const summary = document.getElementById('event-summary').value.trim();
+      const description = document.getElementById('event-description').value.trim();
+      const isFeatured = document.getElementById('event-is-featured').checked;
+      const status = overrideStatus || document.getElementById('event-status').value;
+      const eventStatus = document.getElementById('event-op-status').value;
+      const coverUrl = document.getElementById('event-cover-url').value.trim() || null;
+
+      if (!title || !slug || !startTime || !location) {
+        showToast('Please complete all required fields.', 'error');
+        submitBtn.disabled = false;
+        draftBtn.disabled = false;
+        return;
+      }
+
+      // Convert local datetime to ISO with UAE GST (+04:00)
+      const startIso = new Date(startTime).toISOString();
+      const endIso = endTime ? new Date(endTime).toISOString() : null;
+
+      const eventPayload = {
+        id,
+        title,
+        slug,
+        category,
+        short_summary: summary,
+        description,
+        start_time: startIso,
+        end_time: endIso,
+        venue_name: venue || location,
+        location,
+        contact_info: contact,
+        cover_image_url: coverUrl,
+        status,
+        event_status: eventStatus,
+        is_featured: isFeatured,
+        registration_url: regUrl || null,
+        updated_at: new Date().toISOString()
+      };
+
+      if (status === 'published') {
+        eventPayload.published_at = new Date().toISOString();
+      }
+
+      let savedToDb = false;
+      let dbError = null;
+
+      const isExistingUuid = id && id.length > 20 && !id.startsWith('evt-');
+      const dbPayload = { ...eventPayload };
+      delete dbPayload.id;
+
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          if (isExistingUuid) {
+            const { error: updErr } = await supabase.from('events').update(dbPayload).eq('id', id);
+            if (updErr) throw updErr;
+            savedToDb = true;
+          } else {
+            const { data, error: insErr } = await supabase.from('events').insert([dbPayload]).select('id').single();
+            if (insErr) throw insErr;
+            if (data?.id) {
+              eventPayload.id = data.id;
+              savedToDb = true;
+            }
+          }
+        } catch (err) {
+          dbError = err;
+          console.error('Supabase save error:', err);
+        }
+      }
+
+      if (dbError) {
+        submitBtn.disabled = false;
+        draftBtn.disabled = false;
+        showToast('Supabase Error: ' + (dbError.message || 'Failed to save event to database'), 'error');
+        return;
+      }
+
+      // Always persist to local cache/storage for high availability
+      const existingIdx = allEvents.findIndex(e => String(e.id) === String(id) || String(e.id) === String(eventPayload.id));
+      if (existingIdx >= 0) {
+        allEvents[existingIdx] = { ...allEvents[existingIdx], ...eventPayload };
+      } else {
+        allEvents.unshift(eventPayload);
+      }
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(allEvents));
+      } catch (_) {}
+
+      submitBtn.disabled = false;
+      draftBtn.disabled = false;
+
+      if (isSupabaseConfigured() && supabase) {
+        await loadEventsData();
+      } else {
+        renderTable();
+      }
+
+      closeModal();
+      showToast(isExistingUuid ? 'Event updated successfully in Supabase!' : 'Event scheduled and published to Supabase!', 'success');
+    }
+
+    eventForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      saveEvent();
+    });
+
+    document.getElementById('btn-save-draft').addEventListener('click', () => {
+      saveEvent('draft');
+    });
+
+    // Quick Status Update
+    async function updateEventStatus(id, changes) {
+      const idx = allEvents.findIndex(e => String(e.id) === String(id));
+      if (idx < 0) return;
+
+      allEvents[idx] = { ...allEvents[idx], ...changes, updated_at: new Date().toISOString() };
+
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          await supabase.from('events').update(changes).eq('id', id);
+        } catch (_) {}
+      }
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(allEvents));
+      } catch (_) {}
+
+      renderTable();
+      showToast('Event status updated.', 'info');
+    }
+
+    loadEventsData();
   </script>
 </body>
 </html>

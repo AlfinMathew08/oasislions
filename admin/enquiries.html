@@ -10,6 +10,210 @@
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/admin.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .admin-filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 24px;
+      padding: 16px 20px;
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+    }
+    .admin-search-input {
+      flex: 1;
+      min-width: 240px;
+      padding: 9px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 0.92rem;
+    }
+    .admin-select-filter {
+      padding: 9px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background: #FFFFFF;
+    }
+    .status-pill {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .status-new {
+      background: rgba(245, 158, 11, 0.12);
+      color: #B45309;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .status-in_progress {
+      background: rgba(28, 80, 156, 0.12);
+      color: #1C509C;
+      border: 1px solid rgba(28, 80, 156, 0.3);
+    }
+    .status-resolved {
+      background: rgba(16, 185, 129, 0.12);
+      color: #047857;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .status-archived {
+      background: rgba(100, 116, 139, 0.12);
+      color: #475569;
+      border: 1px solid rgba(100, 116, 139, 0.3);
+    }
+    .unread-dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #FCCB04;
+      box-shadow: 0 0 0 2px rgba(252, 203, 4, 0.35);
+      margin-right: 6px;
+    }
+    .row-unread {
+      background-color: #FEFCE8;
+      font-weight: 600;
+    }
+    .action-btn-group {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .btn-action-icon {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      border-radius: 6px;
+      border: 1px solid var(--color-border);
+      background: #FFFFFF;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 160ms ease;
+      text-decoration: none;
+      color: var(--color-text);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-action-icon:hover {
+      background: var(--color-surface);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+    .btn-action-danger:hover {
+      border-color: #EF4444;
+      color: #EF4444;
+      background: rgba(239, 68, 68, 0.05);
+    }
+    /* Modal Dialog */
+    .admin-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .admin-modal-backdrop.is-open {
+      display: flex;
+    }
+    .admin-modal-card {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 760px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 16px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--color-border);
+    }
+    .admin-modal-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--color-surface);
+      border-radius: 16px 16px 0 0;
+    }
+    .admin-modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--color-text);
+    }
+    .admin-modal-close {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--color-text-secondary);
+      line-height: 1;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    .admin-modal-close:hover {
+      color: var(--color-text);
+      background: var(--color-border);
+    }
+    .admin-modal-body {
+      padding: 28px;
+    }
+    .admin-modal-footer {
+      padding: 18px 28px;
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--color-surface);
+      border-radius: 0 0 16px 16px;
+    }
+    .enquiry-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+      padding: 16px;
+      background: #F8FAFC;
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+    }
+    .enquiry-meta-item {
+      font-size: 0.88rem;
+    }
+    .enquiry-meta-label {
+      color: var(--color-text-muted);
+      font-weight: 600;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 2px;
+    }
+    .enquiry-meta-value {
+      color: var(--color-text);
+      font-weight: 700;
+    }
+    .message-display-box {
+      padding: 18px 20px;
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--color-text);
+      white-space: pre-wrap;
+      margin-bottom: 24px;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+  </style>
 </head>
 <body>
   <div class="admin-layout">
@@ -24,7 +228,7 @@
       <nav class="admin-sidebar-nav">
         <a href="index.html" class="admin-nav-item">📊 Dashboard Overview</a>
         <a href="projects.html" class="admin-nav-item">🤝 Service Projects</a>
-        <a href="leadership.html" class="admin-nav-item">🦁 Leadership 2026–27</a>
+        <a href="leadership.html" class="admin-nav-item">🏛️ Leadership 2026–27</a>
         <a href="members.html" class="admin-nav-item">👥 Member Directory</a>
         <a href="news.html" class="admin-nav-item">📰 News & Articles</a>
         <a href="events.html" class="admin-nav-item">📅 Upcoming Events</a>
@@ -41,46 +245,486 @@
 
     <main class="admin-main">
       <header class="admin-topbar">
-        <div style="font-weight:700; color:var(--color-text); font-size:1.1rem;">Private Contact & Membership Inbox</div>
+        <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+          <div>
+            <h1 style="font-size:1.25rem; font-weight:800; color:var(--color-text); margin:0;">Contact & Membership Inbox</h1>
+            <div style="font-size:0.82rem; color:var(--color-text-muted); margin-top:2px;" id="data-status-indicator">Connecting to Supabase...</div>
+          </div>
+          <div style="display:flex; gap:12px;">
+            <a href="../index.html#section-contact" target="_blank" class="btn btn-outline btn-sm">Homepage Contact Form &rarr;</a>
+          </div>
+        </div>
       </header>
 
       <div class="admin-content">
-        <div class="admin-card">
-          <p style="color:var(--color-text-muted); font-size:0.92rem; margin-bottom:20px;">
-            Strictly protected by Supabase RLS. Anonymous site visitors can never select or view messages. Submitting does not automatically grant club membership.
-          </p>
+        <div class="privacy-notice-box" style="margin-bottom:20px;">
+          <strong>🔒 Security & Privacy Notice:</strong> Strictly protected by Supabase Row Level Security (RLS). Anonymous site visitors can insert new enquiries but can never select, view, or modify messages. All communication here is private to authenticated club administrators.
+        </div>
 
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Type</th>
-                <th>Full Name</th>
-                <th>Email</th>
-                <th>Message Snippet</th>
-                <th>Status</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><span class="badge badge-primary">Membership</span></td>
-                <td>Alfin Mathew</td>
-                <td>alfin@example.com</td>
-                <td>Interested in joining the technology and digital strategy committee...</td>
-                <td><span class="admin-badge badge-published">New</span></td>
-                <td><button class="btn btn-sm btn-outline">Review</button></td>
-              </tr>
-            </tbody>
-          </table>
+        <!-- Filter & Search Bar -->
+        <div class="admin-filter-bar">
+          <input type="text" id="enquiry-search" class="admin-search-input" placeholder="Search by sender name, email, phone, or message...">
+          <select id="enquiry-type-filter" class="admin-select-filter">
+            <option value="all">All Enquiry Types</option>
+            <option value="Membership Enquiry">Membership Enquiry</option>
+            <option value="General Enquiry">General Enquiry</option>
+            <option value="Volunteering">Volunteering</option>
+            <option value="Partnership or Collaboration">Partnership or Collaboration</option>
+            <option value="Other">Other</option>
+          </select>
+          <select id="enquiry-status-filter" class="admin-select-filter">
+            <option value="all">All Statuses</option>
+            <option value="new">New</option>
+            <option value="in_progress">In Progress</option>
+            <option value="resolved">Resolved</option>
+            <option value="archived">Archived</option>
+          </select>
+          <select id="enquiry-read-filter" class="admin-select-filter">
+            <option value="all">All (Read &amp; Unread)</option>
+            <option value="unread">Unread Only</option>
+            <option value="read">Read Only</option>
+          </select>
+        </div>
+
+        <!-- Enquiries Table Card -->
+        <div class="admin-card" style="padding:0; overflow:hidden;">
+          <div style="padding:18px 24px; border-bottom:1px solid var(--color-border); display:flex; justify-content:space-between; align-items:center; background:var(--color-surface);">
+            <div style="font-weight:700; color:var(--color-text); font-size:0.96rem;" id="enquiry-count-label">Enquiries Inbox</div>
+            <div style="font-size:0.82rem; color:var(--color-text-muted);">Incoming messages from website visitors</div>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="admin-table" style="margin:0;">
+              <thead>
+                <tr>
+                  <th style="width:110px;">Status</th>
+                  <th>Type</th>
+                  <th>Sender</th>
+                  <th>Contact Info</th>
+                  <th>Message Preview</th>
+                  <th>Received</th>
+                  <th style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="enquiry-table-body">
+                <tr>
+                  <td colspan="7" style="text-align:center; padding:40px; color:var(--color-text-muted);">Loading enquiries...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </main>
   </div>
 
+  <!-- Review Enquiry Modal Dialog -->
+  <div id="enquiry-modal" class="admin-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="enquiry-modal-title">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 id="enquiry-modal-title" class="admin-modal-title">Review Public Enquiry</h3>
+        <button type="button" class="admin-modal-close" id="btn-close-enquiry-modal">&times;</button>
+      </div>
+
+      <div class="admin-modal-body">
+        <input type="hidden" id="modal-enquiry-id" value="">
+
+        <div class="enquiry-meta-grid">
+          <div class="enquiry-meta-item">
+            <div class="enquiry-meta-label">Sender Name</div>
+            <div class="enquiry-meta-value" id="modal-sender-name">—</div>
+          </div>
+          <div class="enquiry-meta-item">
+            <div class="enquiry-meta-label">Enquiry Category</div>
+            <div class="enquiry-meta-value" id="modal-enquiry-type">—</div>
+          </div>
+          <div class="enquiry-meta-item">
+            <div class="enquiry-meta-label">Email Address</div>
+            <div class="enquiry-meta-value">
+              <span id="modal-sender-email">—</span>
+              <a id="modal-email-link" href="#" class="btn-action-icon" style="margin-left:8px; display:inline-flex;">✉️ Email</a>
+            </div>
+          </div>
+          <div class="enquiry-meta-item">
+            <div class="enquiry-meta-label">Phone Number</div>
+            <div class="enquiry-meta-value">
+              <span id="modal-sender-phone">—</span>
+              <a id="modal-phone-link" href="#" class="btn-action-icon" style="margin-left:8px; display:inline-flex;">📞 Call</a>
+            </div>
+          </div>
+          <div class="enquiry-meta-item">
+            <div class="enquiry-meta-label">Date Received</div>
+            <div class="enquiry-meta-value" id="modal-received-date">—</div>
+          </div>
+          <div class="enquiry-meta-item">
+            <div class="enquiry-meta-label">Workflow Status</div>
+            <div style="margin-top:4px;">
+              <select id="modal-status-select" class="admin-select-filter" style="padding:6px 12px; font-weight:700;">
+                <option value="new">New</option>
+                <option value="in_progress">In Progress</option>
+                <option value="resolved">Resolved</option>
+                <option value="archived">Archived</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" style="font-weight:700; color:var(--color-text);">Full Message Content</label>
+          <div id="modal-message-body" class="message-display-box"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="modal-internal-notes" class="form-label">Private Administrative Notes (Internal Only)</label>
+          <textarea id="modal-internal-notes" class="form-control-textarea" rows="3" placeholder="Record internal follow-up notes, phone call summaries, or next committee actions..."></textarea>
+          <div class="form-hint">These notes are visible only to logged-in club admins and are never shared with the sender.</div>
+        </div>
+      </div>
+
+      <div class="admin-modal-footer">
+        <div>
+          <button type="button" class="btn btn-outline btn-sm" id="btn-toggle-read">Mark as Read</button>
+          <button type="button" class="btn btn-outline btn-sm btn-action-danger" id="btn-delete-enquiry" style="margin-left:8px;">🗑️ Delete</button>
+        </div>
+        <div style="display:flex; gap:12px;">
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-close-modal-bottom">Close</button>
+          <button type="button" class="btn btn-primary btn-sm" id="btn-save-enquiry">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script type="module">
     import { checkAdminSession, logoutAdmin } from '../js/admin/auth.js';
-    checkAdminSession();
-    document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
+    import { getSupabase, isSupabaseConfigured } from '../js/supabase.js';
+    import { DEFAULT_PUBLIC_DATA } from '../js/public-data.js';
+    import { formatDate, showToast, sanitize } from '../js/utils.js';
+
+    const STORAGE_KEY = 'lions_enquiries_store_v1';
+    let allEnquiries = [];
+    let currentEnquiry = null;
+
+    // Elements
+    const tableBody = document.getElementById('enquiry-table-body');
+    const countLabel = document.getElementById('enquiry-count-label');
+    const searchInput = document.getElementById('enquiry-search');
+    const typeFilter = document.getElementById('enquiry-type-filter');
+    const statusFilter = document.getElementById('enquiry-status-filter');
+    const readFilter = document.getElementById('enquiry-read-filter');
+    const modal = document.getElementById('enquiry-modal');
+    const btnCloseModal = document.getElementById('btn-close-enquiry-modal');
+    const btnCloseModalBottom = document.getElementById('btn-close-modal-bottom');
+    const btnSaveEnquiry = document.getElementById('btn-save-enquiry');
+    const btnToggleRead = document.getElementById('btn-toggle-read');
+    const btnDeleteEnquiry = document.getElementById('btn-delete-enquiry');
+
+    async function init() {
+      const session = await checkAdminSession();
+      if (!session) return;
+
+      document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
+
+      await loadEnquiries();
+
+      searchInput.addEventListener('input', renderTable);
+      typeFilter.addEventListener('change', renderTable);
+      statusFilter.addEventListener('change', renderTable);
+      readFilter.addEventListener('change', renderTable);
+
+      btnCloseModal.addEventListener('click', closeModal);
+      btnCloseModalBottom.addEventListener('click', closeModal);
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+      });
+
+      btnSaveEnquiry.addEventListener('click', saveModalChanges);
+      btnToggleRead.addEventListener('click', toggleModalReadState);
+      btnDeleteEnquiry.addEventListener('click', deleteCurrentEnquiry);
+    }
+
+    async function loadEnquiries() {
+      const statusEl = document.getElementById('data-status-indicator');
+      const supabase = getSupabase();
+
+      // Check local storage first for any offline/fresh changes
+      let localData = [];
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) localData = JSON.parse(raw);
+      } catch (_) {}
+
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          statusEl.textContent = 'Fetching inquiries from Supabase...';
+          const { data, error } = await supabase
+            .from('contact_enquiries')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+          if (error) throw error;
+
+          if (data && data.length > 0) {
+            allEnquiries = data;
+            statusEl.textContent = 'Connected to Supabase (Live RLS Secure)';
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+          } else if (localData.length > 0) {
+            allEnquiries = localData;
+            statusEl.textContent = 'Supabase active (Using local records cache)';
+          } else {
+            allEnquiries = DEFAULT_PUBLIC_DATA.enquiries || [];
+            statusEl.textContent = 'Default inbox records loaded';
+          }
+        } catch (err) {
+          console.warn('Supabase fetch failed, falling back:', err);
+          statusEl.textContent = 'Local preview mode (Storage synced)';
+          allEnquiries = localData.length > 0 ? localData : (DEFAULT_PUBLIC_DATA.enquiries || []);
+        }
+      } else {
+        statusEl.textContent = 'Local preview mode (Simulated Inbox)';
+        allEnquiries = localData.length > 0 ? localData : (DEFAULT_PUBLIC_DATA.enquiries || []);
+      }
+
+      renderTable();
+    }
+
+    function renderTable() {
+      const search = searchInput.value.toLowerCase().trim();
+      const type = typeFilter.value;
+      const status = statusFilter.value;
+      const readState = readFilter.value;
+
+      const filtered = allEnquiries.filter(item => {
+        const name = (item.full_name || '').toLowerCase();
+        const email = (item.email || '').toLowerCase();
+        const phone = (item.phone || '').toLowerCase();
+        const message = (item.message || '').toLowerCase();
+        const itemType = item.enquiry_type || 'General Enquiry';
+        const itemStatus = item.status || 'new';
+        const isRead = Boolean(item.is_read);
+
+        if (search && !name.includes(search) && !email.includes(search) && !phone.includes(search) && !message.includes(search)) {
+          return false;
+        }
+
+        if (type !== 'all' && itemType !== type) return false;
+        if (status !== 'all' && itemStatus !== status) return false;
+
+        if (readState === 'unread' && isRead) return false;
+        if (readState === 'read' && !isRead) return false;
+
+        return true;
+      });
+
+      const unreadCount = allEnquiries.filter(e => !e.is_read).length;
+      countLabel.textContent = `Enquiries Inbox (${filtered.length} total, ${unreadCount} unread)`;
+
+      if (filtered.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align:center; padding:48px 20px; color:var(--color-text-secondary);">
+              <div style="font-size:1.8rem; margin-bottom:8px;">📬</div>
+              <div style="font-weight:700; margin-bottom:4px;">No Enquiries Match Filters</div>
+              <div style="font-size:0.86rem; color:var(--color-text-muted);">Adjust search criteria or view all received messages.</div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tableBody.innerHTML = filtered.map(item => {
+        const itemStatus = item.status || 'new';
+        const isRead = Boolean(item.is_read);
+        const itemType = item.enquiry_type || 'Membership Enquiry';
+        const dateStr = item.created_at ? new Date(item.created_at).toLocaleDateString('en-AE', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' }) : 'Recent';
+        const snippet = (item.message || '').slice(0, 75) + ((item.message || '').length > 75 ? '...' : '');
+
+        return `
+          <tr data-id="${sanitize(item.id)}" class="${!isRead ? 'row-unread' : ''}">
+            <td>
+              <span class="status-pill status-${sanitize(itemStatus)}">
+                ${!isRead ? '<span class="unread-dot" title="Unread"></span>' : ''}
+                ${sanitize(itemStatus.replace('_', ' '))}
+              </span>
+            </td>
+            <td>
+              <span class="badge badge-primary" style="font-size:0.75rem;">${sanitize(itemType)}</span>
+            </td>
+            <td>
+              <div style="font-weight:800; color:var(--color-text); font-size:0.95rem;">${sanitize(item.full_name || 'Anonymous')}</div>
+            </td>
+            <td>
+              <div style="font-size:0.85rem; color:var(--color-text);">
+                <a href="mailto:${sanitize(item.email)}" style="color:var(--color-primary);">${sanitize(item.email || '—')}</a>
+              </div>
+              ${item.phone ? `<div style="font-size:0.78rem; color:var(--color-text-muted); margin-top:2px;"><a href="tel:${sanitize(item.phone)}" style="color:inherit;">${sanitize(item.phone)}</a></div>` : ''}
+            </td>
+            <td style="max-width:280px;">
+              <span style="font-size:0.86rem; color:var(--color-text-secondary); line-height:1.4;">${sanitize(snippet)}</span>
+            </td>
+            <td>
+              <span style="font-size:0.82rem; color:var(--color-text-muted);">${sanitize(dateStr)}</span>
+            </td>
+            <td style="text-align:right;">
+              <div class="action-btn-group" style="justify-content:flex-end;">
+                <button type="button" class="btn-action-icon btn-review" data-id="${sanitize(item.id)}" title="Review Full Message">
+                  👁️ Review
+                </button>
+                <button type="button" class="btn-action-icon btn-toggle-read-row" data-id="${sanitize(item.id)}" title="${isRead ? 'Mark as Unread' : 'Mark as Read'}">
+                  ${isRead ? '✉️' : '✓'}
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      tableBody.querySelectorAll('.btn-review').forEach(btn => {
+        btn.addEventListener('click', () => openReviewModal(btn.getAttribute('data-id')));
+      });
+
+      tableBody.querySelectorAll('.btn-toggle-read-row').forEach(btn => {
+        btn.addEventListener('click', () => quickToggleRead(btn.getAttribute('data-id')));
+      });
+    }
+
+    function openReviewModal(id) {
+      const item = allEnquiries.find(e => String(e.id) === String(id));
+      if (!item) return;
+
+      currentEnquiry = item;
+
+      // Auto mark as read on open if previously unread
+      if (!item.is_read) {
+        item.is_read = true;
+        syncEnquiryUpdate(item);
+      }
+
+      document.getElementById('modal-enquiry-id').value = item.id;
+      document.getElementById('modal-sender-name').textContent = item.full_name || 'Anonymous';
+      document.getElementById('modal-enquiry-type').textContent = item.enquiry_type || 'General Enquiry';
+      document.getElementById('modal-sender-email').textContent = item.email || '—';
+      document.getElementById('modal-email-link').href = `mailto:${item.email}?subject=Dubai Oasis Lions Club: Re: ${encodeURIComponent(item.enquiry_type || 'Enquiry')}`;
+      
+      const phoneEl = document.getElementById('modal-sender-phone');
+      const phoneLink = document.getElementById('modal-phone-link');
+      if (item.phone) {
+        phoneEl.textContent = item.phone;
+        phoneLink.href = `tel:${item.phone}`;
+        phoneLink.style.display = 'inline-flex';
+      } else {
+        phoneEl.textContent = 'None provided';
+        phoneLink.style.display = 'none';
+      }
+
+      const dateStr = item.created_at ? new Date(item.created_at).toLocaleString('en-AE', { dateStyle:'long', timeStyle:'short' }) : 'Recently submitted';
+      document.getElementById('modal-received-date').textContent = dateStr;
+
+      document.getElementById('modal-status-select').value = item.status || 'new';
+      document.getElementById('modal-message-body').textContent = item.message || '(No message provided)';
+      document.getElementById('modal-internal-notes').value = item.internal_notes || '';
+
+      updateReadButtonLabel();
+
+      modal.classList.add('is-open');
+    }
+
+    function updateReadButtonLabel() {
+      if (!currentEnquiry) return;
+      btnToggleRead.textContent = currentEnquiry.is_read ? 'Mark as Unread' : 'Mark as Read';
+    }
+
+    function closeModal() {
+      modal.classList.remove('is-open');
+      currentEnquiry = null;
+      renderTable();
+    }
+
+    async function toggleModalReadState() {
+      if (!currentEnquiry) return;
+      currentEnquiry.is_read = !currentEnquiry.is_read;
+      updateReadButtonLabel();
+      await syncEnquiryUpdate(currentEnquiry);
+      showToast(currentEnquiry.is_read ? 'Marked as read' : 'Marked as unread', 'info');
+    }
+
+    async function quickToggleRead(id) {
+      const item = allEnquiries.find(e => String(e.id) === String(id));
+      if (!item) return;
+      item.is_read = !item.is_read;
+      await syncEnquiryUpdate(item);
+      renderTable();
+    }
+
+    async function saveModalChanges() {
+      if (!currentEnquiry) return;
+
+      const newStatus = document.getElementById('modal-status-select').value;
+      const notes = document.getElementById('modal-internal-notes').value.trim();
+
+      currentEnquiry.status = newStatus;
+      currentEnquiry.internal_notes = notes;
+
+      await syncEnquiryUpdate(currentEnquiry);
+      showToast('Enquiry record updated successfully!', 'success');
+      closeModal();
+    }
+
+    async function syncEnquiryUpdate(item) {
+      const supabase = getSupabase();
+
+      // 1. Update Supabase if configured
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          if (!String(item.id).startsWith('enq-mock-')) {
+            await supabase
+              .from('contact_enquiries')
+              .update({
+                status: item.status,
+                is_read: item.is_read,
+                internal_notes: item.internal_notes
+              })
+              .eq('id', item.id);
+          }
+        } catch (err) {
+          console.warn('Supabase enquiry update error:', err);
+        }
+      }
+
+      // 2. Persist in local storage
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(allEnquiries));
+      } catch (_) {}
+    }
+
+    async function deleteCurrentEnquiry() {
+      if (!currentEnquiry) return;
+      if (!confirm(`Are you sure you want to delete this enquiry from "${currentEnquiry.full_name}"? This action cannot be undone.`)) {
+        return;
+      }
+
+      const id = currentEnquiry.id;
+      const supabase = getSupabase();
+
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          if (!String(id).startsWith('enq-mock-')) {
+            await supabase.from('contact_enquiries').delete().eq('id', id);
+          }
+        } catch (err) {
+          console.warn('Supabase enquiry delete error:', err);
+        }
+      }
+
+      allEnquiries = allEnquiries.filter(e => String(e.id) !== String(id));
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(allEnquiries));
+      } catch (_) {}
+
+      showToast('Enquiry removed from inbox.', 'info');
+      closeModal();
+    }
+
+    init();
   </script>
 </body>
 </html>

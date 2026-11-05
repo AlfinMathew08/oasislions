@@ -1,5 +1,5 @@
 /* Dubai Oasis Lions Club — Lions Year 2026–2027
-   Theme: "Together We Can"
+   Motto: "We Serve"
    Apple-Caliber Editorial Design System & Tokens
 */
 :root {
@@ -49,6 +49,7 @@
   --font-mono: "SF Mono", Menlo, Monaco, Consolas, monospace;
 
   /* Container & Layout Constraints */
+  --header-height: 69px;
   --container-width: 1240px;
   --container-narrow: 860px;
   --container-wide: 1400px;

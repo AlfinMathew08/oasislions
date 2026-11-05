@@ -1,13 +1,16 @@
 {
   "name": "dubai-oasis-lions-club",
   "version": "1.0.0",
-  "description": "Production-oriented website for Dubai Oasis Lions Club — Lions Year 2026–2027. Theme: Together We Can.",
+  "description": "Production-oriented website for Dubai Oasis Lions Club — Lions Year 2026–2027. Motto: We Serve.",
   "main": "index.html",
   "type": "module",
   "scripts": {
     "start": "npx serve -l 3000 .",
     "dev": "npx serve -l 3000 .",
-    "test": "node tests/verify-site.js"
+    "test": "node tests/verify-site.js && node tests/test-leadership-photo-styling.js && node tests/test-fixed-background-and-photo-uploads.js && node tests/test-text-readability-and-leadership.js",
+    "test:readability-leadership": "node tests/test-text-readability-and-leadership.js",
+    "test:leadership": "node tests/test-leadership-photo-styling.js",
+    "test:background-uploads": "node tests/test-fixed-background-and-photo-uploads.js"
   },
   "keywords": [
     "lions-club",
@@ -19,5 +22,8 @@
   "license": "ISC",
   "devDependencies": {
     "serve": "^14.2.4"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.117.3"
   }
 }

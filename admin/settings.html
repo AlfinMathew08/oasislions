@@ -24,7 +24,7 @@
       <nav class="admin-sidebar-nav">
         <a href="index.html" class="admin-nav-item">📊 Dashboard Overview</a>
         <a href="projects.html" class="admin-nav-item">🤝 Service Projects</a>
-        <a href="leadership.html" class="admin-nav-item">🦁 Leadership 2026–27</a>
+        <a href="leadership.html" class="admin-nav-item">🏛️ Leadership 2026–27</a>
         <a href="members.html" class="admin-nav-item">👥 Member Directory</a>
         <a href="news.html" class="admin-nav-item">📰 News & Articles</a>
         <a href="events.html" class="admin-nav-item">📅 Upcoming Events</a>
@@ -73,6 +73,72 @@
               </tr>
             </tbody>
           </table>
+        <!-- Name Prefixes Management Card -->
+        <div class="admin-card" style="margin-top:24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <div>
+              <h2 style="font-size:1.2rem; font-weight:700; color:var(--color-text); margin:0;">Club Member Name Prefixes</h2>
+              <p style="color:var(--color-text-muted); font-size:0.9rem; margin-top:4px;">
+                Configure the official salutations and prefixes offered across leadership cards and member directory profiles.
+              </p>
+            </div>
+            <button id="btn-add-prefix" class="btn btn-outline btn-sm">+ Add Prefix</button>
+          </div>
+
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>Salutation Prefix</th>
+                <th>UI Label</th>
+                <th>Status</th>
+                <th style="text-align:right;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="prefixes-table-body">
+              <tr>
+                <td><strong>Lion</strong></td>
+                <td>Lion (Official Lions Member)</td>
+                <td><span class="admin-badge badge-published">Active Default</span></td>
+                <td style="text-align:right;"><span style="color:#94A3B8; font-size:0.8rem;">Core System</span></td>
+              </tr>
+              <tr>
+                <td><strong>Lion Dr.</strong></td>
+                <td>Lion Dr. (Medical / Doctoral Fellow)</td>
+                <td><span class="admin-badge badge-published">Active</span></td>
+                <td style="text-align:right;"><span style="color:#94A3B8; font-size:0.8rem;">Core System</span></td>
+              </tr>
+              <tr>
+                <td><strong>Dr.</strong></td>
+                <td>Dr. (Doctoral / Academic)</td>
+                <td><span class="admin-badge badge-published">Active</span></td>
+                <td style="text-align:right;"><span style="color:#94A3B8; font-size:0.8rem;">Core System</span></td>
+              </tr>
+              <tr>
+                <td><strong>Mr.</strong></td>
+                <td>Mr.</td>
+                <td><span class="admin-badge badge-published">Active</span></td>
+                <td style="text-align:right;"><span style="color:#94A3B8; font-size:0.8rem;">Core System</span></td>
+              </tr>
+              <tr>
+                <td><strong>Mrs.</strong></td>
+                <td>Mrs.</td>
+                <td><span class="admin-badge badge-published">Active</span></td>
+                <td style="text-align:right;"><span style="color:#94A3B8; font-size:0.8rem;">Core System</span></td>
+              </tr>
+              <tr>
+                <td><strong>Ms.</strong></td>
+                <td>Ms.</td>
+                <td><span class="admin-badge badge-published">Active</span></td>
+                <td style="text-align:right;"><span style="color:#94A3B8; font-size:0.8rem;">Core System</span></td>
+              </tr>
+              <tr>
+                <td><strong>No prefix</strong></td>
+                <td>No prefix (Display name only)</td>
+                <td><span class="admin-badge badge-published">Active</span></td>
+                <td style="text-align:right;"><span style="color:#94A3B8; font-size:0.8rem;">Core System</span></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </main>
@@ -80,8 +146,29 @@
 
   <script type="module">
     import { checkAdminSession, logoutAdmin } from '../js/admin/auth.js';
+    import { getSupabase, isSupabaseConfigured } from '../js/supabase.js';
+    import { showToast } from '../js/utils.js';
+
     checkAdminSession();
     document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
+
+    const supabase = getSupabase();
+    const btnAddPrefix = document.getElementById('btn-add-prefix');
+
+    if (btnAddPrefix) {
+      btnAddPrefix.addEventListener('click', async () => {
+        const customPrefix = prompt('Enter new salutation prefix (e.g. "Engr.", "Prof."):');
+        if (!customPrefix || !customPrefix.trim()) return;
+
+        const clean = customPrefix.trim();
+        if (isSupabaseConfigured() && supabase) {
+          try {
+            await supabase.from('name_prefixes').insert([{ prefix: clean, label: clean, display_order: 10 }]);
+          } catch (_) {}
+        }
+        showToast(`Added "${clean}" prefix to club registry!`, 'success');
+      });
+    }
   </script>
 </body>
 </html>

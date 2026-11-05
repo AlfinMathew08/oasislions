@@ -57,6 +57,25 @@ ON members FOR ALL
 USING (auth_is_editor_or_admin())
 WITH CHECK (auth_is_editor_or_admin());
 
+-- 2b. member_children: public reads only approved children of public members
+ALTER TABLE member_children ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public can view approved member children"
+ON member_children FOR SELECT
+USING (
+  EXISTS (
+    SELECT 1 FROM members
+    WHERE members.id = member_children.member_id
+      AND members.is_public = true
+      AND members.family_details_approved = true
+  )
+);
+
+CREATE POLICY "Staff can manage member children"
+ON member_children FOR ALL
+USING (auth_is_editor_or_admin())
+WITH CHECK (auth_is_editor_or_admin());
+
 -- 3. leadership_assignments
 CREATE POLICY "Public can view active leadership"
 ON leadership_assignments FOR SELECT
@@ -153,3 +172,42 @@ CREATE POLICY "Staff can manage announcement banners"
 ON announcement_banners FOR ALL
 USING (auth_is_editor_or_admin())
 WITH CHECK (auth_is_editor_or_admin());
+
+-- 10. Storage Configuration & Storage Object RLS Policies
+-- Ensures 'club-media' bucket exists and is publicly readable for verified assets,
+-- while uploads and modifications are restricted to authenticated staff.
+INSERT INTO storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+VALUES (
+  'club-media',
+  'club-media',
+  true,
+  10485760, -- 10MB limit
+  ARRAY['image/jpeg', 'image/png', 'image/webp', 'image/gif']
+)
+ON CONFLICT (id) DO UPDATE SET public = true;
+
+CREATE POLICY "Public can view club media"
+ON storage.objects FOR SELECT
+USING (bucket_id = 'club-media');
+
+CREATE POLICY "Authenticated staff can upload club media"
+ON storage.objects FOR INSERT
+WITH CHECK (
+  bucket_id = 'club-media'
+  AND auth.role() = 'authenticated'
+);
+
+CREATE POLICY "Authenticated staff can update club media"
+ON storage.objects FOR UPDATE
+USING (
+  bucket_id = 'club-media'
+  AND auth.role() = 'authenticated'
+);
+
+CREATE POLICY "Authenticated staff can delete club media"
+ON storage.objects FOR DELETE
+USING (
+  bucket_id = 'club-media'
+  AND auth.role() = 'authenticated'
+);
+

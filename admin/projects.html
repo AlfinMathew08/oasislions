@@ -25,7 +25,7 @@
       <nav class="admin-sidebar-nav">
         <a href="index.html" class="admin-nav-item">📊 Dashboard Overview</a>
         <a href="projects.html" class="admin-nav-item active">🤝 Service Projects</a>
-        <a href="leadership.html" class="admin-nav-item">🦁 Leadership 2026–27</a>
+        <a href="leadership.html" class="admin-nav-item">🏛️ Leadership 2026–27</a>
         <a href="members.html" class="admin-nav-item">👥 Member Directory</a>
         <a href="news.html" class="admin-nav-item">📰 News & Articles</a>
         <a href="events.html" class="admin-nav-item">📅 Upcoming Events</a>
@@ -128,7 +128,7 @@
     import { DEFAULT_PUBLIC_DATA } from '../js/public-data.js';
     import { showToast, sanitize } from '../js/utils.js';
 
-    let projects = DEFAULT_PUBLIC_DATA.projects;
+    let projects = [];
 
     async function init() {
       await checkAdminSession();
@@ -170,6 +170,8 @@
             const { error } = await supabase.from('projects').insert([payload]);
             if (error) throw error;
             showToast('Project saved to Supabase successfully!', 'success');
+            const { data } = await supabase.from('projects').select('*').order('created_at', { ascending: false });
+            if (data && data.length) projects = data;
           } catch(err) {
             showToast(err.message, 'error');
             return;

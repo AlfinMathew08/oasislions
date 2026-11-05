@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Upcoming Events — Dubai Oasis Lions Club | Together We Can</title>
+  <title>Upcoming Events — Dubai Oasis Lions Club | We Serve</title>
   <meta name="description" content="Community service calendar and scheduled volunteer activities for Dubai Oasis Lions Club. Displayed in UAE GST timezone.">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/variables.css">
@@ -11,16 +11,33 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- PRIVATE MEMBERS PORTAL SESSION GUARD (Mockup Phase) -->
+  <script>
+    (function() {
+      try {
+        const isAuthed = sessionStorage.getItem("dolc_member_active") === "true";
+        if (!isAuthed) {
+          window.location.replace("login.html");
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
+  <!-- Persistent Stationary Background Canvas: Fixed Watermark Crest & Ambient Lighting -->
+  <div class=site-fixed-background aria-hidden=true>
+    <div class=site-bg-ambient-mesh></div>
+    <div class=site-bg-crest-stage>
+      <img src="assets/logos/dubai-oasis-lions-club.png" alt="" class="site-bg-crest-watermark" width="640" height="832">
+    </div>
+  </div>
 
-    <!-- REFINED APPLE-GRADE GLOBAL HEADER -->
-    <!-- SLIM, ELEGANT APPLE-INSPIRED GLOBAL HEADER -->
+
+  <!-- SLIM, ELEGANT APPLE-INSPIRED GLOBAL HEADER -->
   <header class="site-header">
     <div class="container header-inner">
       <a href="index.html" class="brand-pair" aria-label="Dubai Oasis Lions Club Home">
-        <img src="assets/logos/lions-international.png" alt="Lions Clubs International Emblem" class="logo-lions-intl" width="40" height="40">
-        <div class="brand-rule"></div>
+        <img src="assets/logos/dubai-oasis-lions-club.png" alt="Dubai Oasis Lions Club Official Crest" class="logo-club-crest" width="38" height="49">
         <div class="brand-titles">
           <span class="brand-club-name">DUBAI OASIS LIONS CLUB</span>
           <span class="brand-year">United Arab Emirates</span>
@@ -39,7 +56,7 @@
             <a href="members.html" class="dropdown-link">Meet Our Members<span class="dropdown-link-desc">Searchable public member directory</span></a>
           </div>
         </div>
-        <div class="nav-item">
+        <div class="nav-item active">
           <span class="nav-link" tabindex="0">Our Impact <span class="caret"></span></span>
           <div class="dropdown-pane">
             <a href="projects.html" class="dropdown-link">Service Projects<span class="dropdown-link-desc">Humanitarian initiatives across Dubai</span></a>
@@ -59,10 +76,53 @@
       </nav>
 
       <div class="nav-actions">
-        <a href="contact.html" class="btn-header-cta">Get Involved</a>
+        <div class="member-identity-badge" title="Authenticated Member Session">
+          <span class="member-badge-dot" aria-hidden="true"></span>
+          <span class="member-badge-text">Lion Member</span>
+        </div>
+        <a href="login.html" class="btn-header-login btn-header-logout" id="btn-portal-logout" aria-label="Sign Out of Members Portal">Logout</a>
+        <button class="mobile-toggle" aria-label="Open Navigation Menu">
+          <span></span>
+          <span></span>
+        </button>
       </div>
     </div>
   </header>
+
+  <!-- Mobile Slide-Over Navigation Drawer -->
+  <div class="mobile-drawer-overlay"></div>
+  <aside class="mobile-drawer" aria-label="Mobile Navigation">
+    <div class="mobile-drawer-header">
+      <div class="mobile-drawer-brand">
+        <img src="assets/logos/dubai-oasis-lions-club.png" alt="Dubai Oasis Lions Club Official Crest" class="drawer-club-crest" width="30" height="38">
+        <div class="drawer-brand-titles">
+          <span class="brand-club-name">DUBAI OASIS LIONS CLUB</span>
+          <span class="brand-year">United Arab Emirates</span>
+        </div>
+      </div>
+      <button class="drawer-close-btn" aria-label="Close Menu">&times;</button>
+    </div>
+    <nav class="mobile-drawer-nav">
+      <a href="index.html" class="drawer-nav-link${activePage === "home" ? " active" : ""}">Home</a>
+      
+      <div class="drawer-nav-section-title">Our Club</div>
+      <a href="about.html" class="drawer-nav-link${activePage === "about" ? " active" : ""}">About Us</a>
+      <a href="leadership.html" class="drawer-nav-link${activePage === "leadership" ? " active" : ""}">Leadership</a>
+      <a href="members.html" class="drawer-nav-link${activePage === "members" ? " active" : ""}">Meet Our Members</a>
+      
+      <div class="drawer-nav-section-title">Our Impact</div>
+      <a href="projects.html" class="drawer-nav-link${activePage === "projects" ? " active" : ""}">Service Projects</a>
+      <a href="events.html" class="drawer-nav-link${activePage === "events" ? " active" : ""}">Upcoming Events</a>
+      
+      <div class="drawer-nav-section-title">Stories</div>
+      <a href="news.html" class="drawer-nav-link${activePage === "news" ? " active" : ""}">News & Announcements</a>
+      <a href="gallery.html" class="drawer-nav-link${activePage === "gallery" ? " active" : ""}">Photo Gallery</a>
+      <a href="contact.html" class="drawer-nav-link${activePage === "contact" ? " active" : ""}">Contact</a>
+    </nav>
+    <div class="mobile-drawer-footer">
+      <a href="login.html" class="btn-drawer-logout" id="drawer-portal-logout" aria-label="Sign Out of Members Portal">Logout of Portal</a>
+    </div>
+  </aside>
 
   <main>
     <section class="hero-section" style="padding: 80px 0 60px 0;">
@@ -82,18 +142,20 @@
     </section>
   </main>
 
-    <!-- REFINED FOOTER -->
-    <!-- SECTION 11 — FOOTER -->
+    <!-- FOOTER (Three Official Logos: Lions International -> Dubai Oasis Lions Club -> Who We Are logo) -->
   <footer class="site-footer-editorial">
     <div class="container">
       <div class="footer-columns-grid">
         <div>
-          <div class="brand-pair" style="margin-bottom:20px;">
-            <img src="assets/logos/lions-international.png" alt="Lions Clubs International" style="height:42px; width:auto;">
-            <div class="brand-rule" style="background:rgba(255,255,255,0.18);"></div>
-            <div>
-              <div style="color:#FFFFFF; font-weight:800; font-size:0.92rem;">DUBAI OASIS LIONS CLUB</div>
-              <div style="color:var(--color-accent); font-size:0.68rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;">Together We Can</div>
+          <div class="footer-brand-composition">
+            <div class="footer-brand-trio">
+              <img src="assets/logos/lions-international.png" alt="Lions Clubs International" class="footer-logo-lions" width="44" height="41">
+              <img src="assets/logos/dubai-oasis-lions-club.png" alt="Dubai Oasis Lions Club Official Crest" class="footer-logo-club" width="42" height="55">
+              <img src="assets/logos/who-we-are-logo.png" alt="Dubai Oasis Lions Club — Who We Are Unity Emblem" class="footer-logo-whoweare" data-src-unprocessed="assets/logos/who we are logo.jpg" width="44" height="44">
+            </div>
+            <div class="footer-brand-text">
+              <div class="footer-brand-name">DUBAI OASIS LIONS CLUB</div>
+              <div class="footer-brand-tagline">WE SERVE</div>
             </div>
           </div>
           <p style="font-size:0.9rem; line-height:1.65; max-width:340px; color:#94A3B8;">
@@ -128,47 +190,42 @@
       </div>
       <div class="footer-base-row">
         <div>&copy; Dubai Oasis Lions Club. All rights reserved.</div>
-        <div>Lions Year 2026–2027 &bull; Together We Can.</div>
+        <div>Lions Year 2026–2027 &bull; We Serve.</div>
       </div>
     </div>
   </footer>
 
   <script type="module">
-    import { getSupabase, isSupabaseConfigured } from './js/supabase.js';
-    import { DEFAULT_PUBLIC_DATA } from './js/public-data.js';
-    import { sanitize, formatUAEEventDate } from './js/utils.js';
-
-    let eventsList = DEFAULT_PUBLIC_DATA.events;
+    import { fetchUpcomingEvents, renderEventBannerHtml } from './js/events.js';
 
     async function load() {
-      const supabase = getSupabase();
-      if (isSupabaseConfigured() && supabase) {
-        try {
-          const { data } = await supabase.from('events').select('*').eq('status', 'published').order('start_time', { ascending: true });
-          if (data && data.length) eventsList = data;
-        } catch(e) {
-          console.warn('Fallback events:', e);
-        }
+      const mount = document.getElementById('full-events-mount');
+      const events = await fetchUpcomingEvents();
+
+      if (!events || events.length === 0) {
+        mount.innerHTML = `
+          <div class="empty-state-box">
+            <div class="empty-state-icon">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <h3 class="empty-state-title">Upcoming Events Will Be Announced Soon</h3>
+            <p class="empty-state-desc">Check back soon for new service initiatives or contact our leadership team.</p>
+          </div>
+        `;
+        return;
       }
 
-      const mount = document.getElementById('full-events-mount');
-      mount.innerHTML = eventsList.map(evt => `
-        <div class="event-card">
-          <div class="event-date-badge">
-            <div style="font-size: 0.82rem; text-transform: uppercase;">GST (Dubai)</div>
-            <div style="font-size: 1.05rem;">${formatUAEEventDate(evt.start_time)}</div>
-          </div>
-          <div class="event-card-body">
-            <h3 style="font-size: 1.25rem; font-weight: 700; margin-bottom: 8px;">${sanitize(evt.title)}</h3>
-            <p style="font-size: 0.9rem; color: var(--color-primary); font-weight: 600; margin-bottom: 12px;">📍 ${sanitize(evt.location)}</p>
-            <p style="font-size: 0.92rem; color: var(--color-text-muted); margin-bottom: 24px; flex: 1;">${sanitize(evt.description)}</p>
-            <a href="contact.html?subject=${encodeURIComponent('Enquiry for Event: ' + evt.title)}" class="btn btn-secondary btn-sm">Register / Inquire</a>
-          </div>
-        </div>
-      `).join('');
+      mount.className = 'events-horizontal-stream';
+      mount.innerHTML = events.map(evt => renderEventBannerHtml(evt)).join('');
     }
 
     load();
   </script>
+  <script type="module" src="js/auth-guard.js"></script>
 </body>
 </html>

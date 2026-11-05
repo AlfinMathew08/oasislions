@@ -3,16 +3,240 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage News — Admin | Dubai Oasis Lions Club</title>
+  <title>Manage News & Articles — Admin | Dubai Oasis Lions Club</title>
   <link rel="stylesheet" href="../css/reset.css">
   <link rel="stylesheet" href="../css/variables.css">
   <link rel="stylesheet" href="../css/components.css">
   <link rel="stylesheet" href="../css/style.css">
   <link rel="stylesheet" href="../css/admin.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .admin-filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: 24px;
+      padding: 16px 20px;
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: 12px;
+    }
+    .admin-search-input {
+      flex: 1;
+      min-width: 240px;
+      padding: 9px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 0.92rem;
+    }
+    .admin-select-filter {
+      padding: 9px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 0.9rem;
+      background: #FFFFFF;
+    }
+    .admin-table-cover-thumb {
+      width: 72px;
+      height: 48px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: #0F172A;
+      display: block;
+    }
+    .status-pill {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .status-published {
+      background: rgba(16, 185, 129, 0.12);
+      color: #047857;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+    .status-draft {
+      background: rgba(100, 116, 139, 0.12);
+      color: #475569;
+      border: 1px solid rgba(100, 116, 139, 0.3);
+    }
+    .status-archived {
+      background: rgba(148, 163, 184, 0.18);
+      color: #64748B;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+    .action-btn-group {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .btn-action-icon {
+      padding: 6px 10px;
+      font-size: 0.8rem;
+      border-radius: 6px;
+      border: 1px solid var(--color-border);
+      background: #FFFFFF;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 160ms ease;
+      text-decoration: none;
+      color: var(--color-text);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-action-icon:hover {
+      background: var(--color-surface);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+    }
+    .btn-action-danger:hover {
+      border-color: #EF4444;
+      color: #EF4444;
+      background: rgba(239, 68, 68, 0.05);
+    }
+    /* Modal Dialog */
+    .admin-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .admin-modal-backdrop.is-open {
+      display: flex;
+    }
+    .admin-modal-card {
+      background: #FFFFFF;
+      width: 100%;
+      max-width: 800px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 16px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--color-border);
+    }
+    .admin-modal-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--color-surface);
+      border-radius: 16px 16px 0 0;
+    }
+    .admin-modal-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--color-text);
+    }
+    .admin-modal-close {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--color-text-secondary);
+      line-height: 1;
+    }
+    .admin-modal-body {
+      padding: 28px;
+    }
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-label {
+      display: block;
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 6px;
+    }
+    .form-label-required::after {
+      content: " *";
+      color: #EF4444;
+    }
+    .form-hint {
+      font-size: 0.78rem;
+      color: var(--color-text-muted);
+      margin-top: 4px;
+    }
+    .form-control-input,
+    .form-control-textarea,
+    .form-control-select {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      font-size: 0.94rem;
+      background: #FFFFFF;
+      color: var(--color-text);
+      font-family: inherit;
+    }
+    .form-control-textarea {
+      min-height: 140px;
+      line-height: 1.6;
+      resize: vertical;
+    }
+    .form-control-input:focus,
+    .form-control-textarea:focus,
+    .form-control-select:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(28, 80, 156, 0.12);
+    }
+    .cover-upload-box {
+      border: 2px dashed var(--color-border);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      background: var(--color-surface);
+      cursor: pointer;
+      transition: border-color 160ms ease;
+    }
+    .cover-upload-box:hover {
+      border-color: var(--color-primary);
+    }
+    .cover-preview-img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-top: 12px;
+      background: #0F172A;
+      display: block;
+    }
+    .admin-modal-footer {
+      padding: 20px 28px;
+      border-top: 1px solid var(--color-border);
+      background: var(--color-surface);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      border-radius: 0 0 16px 16px;
+    }
+    @media (max-width: 768px) {
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
   <div class="admin-layout">
+    <!-- Sidebar -->
     <aside class="admin-sidebar">
       <div class="admin-sidebar-header">
         <img src="../assets/logos/lions-international.png" alt="Lions Intl" style="height:36px; width:auto;">
@@ -24,7 +248,7 @@
       <nav class="admin-sidebar-nav">
         <a href="index.html" class="admin-nav-item">📊 Dashboard Overview</a>
         <a href="projects.html" class="admin-nav-item">🤝 Service Projects</a>
-        <a href="leadership.html" class="admin-nav-item">🦁 Leadership 2026–27</a>
+        <a href="leadership.html" class="admin-nav-item">🏛️ Leadership 2026–27</a>
         <a href="members.html" class="admin-nav-item">👥 Member Directory</a>
         <a href="news.html" class="admin-nav-item active">📰 News & Articles</a>
         <a href="events.html" class="admin-nav-item">📅 Upcoming Events</a>
@@ -39,49 +263,550 @@
       </div>
     </aside>
 
+    <!-- Main Content -->
     <main class="admin-main">
       <header class="admin-topbar">
-        <div style="font-weight:700; color:var(--color-text); font-size:1.1rem;">News & Editorial Publishing</div>
+        <div style="display:flex; align-items:center; justify-content:space-between; width:100%;">
+          <div>
+            <h1 style="font-size:1.25rem; font-weight:800; color:var(--color-text); margin:0;">News & Articles Management</h1>
+            <div style="font-size:0.82rem; color:var(--color-text-muted); margin-top:2px;" id="data-status-indicator">Connecting to Supabase...</div>
+          </div>
+          <div style="display:flex; gap:12px;">
+            <a href="../news.html" target="_blank" class="btn btn-outline btn-sm">Public News Page &rarr;</a>
+            <button id="btn-add-news" class="btn btn-primary btn-sm">+ Add New Article</button>
+          </div>
+        </div>
       </header>
 
       <div class="admin-content">
-        <div class="admin-card">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Category</th>
-                <th>Status</th>
-                <th>Featured</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Inauguration of Lions Year 2026–2027</strong></td>
-                <td><span class="badge badge-primary">Club Announcements</span></td>
-                <td><span class="admin-badge badge-published">Published</span></td>
-                <td><span class="badge badge-gold">Featured</span></td>
-                <td><a href="../news-detail.html?slug=inauguration-lions-year-2026-2027" target="_blank" class="btn btn-sm btn-outline">View Article</a></td>
-              </tr>
-              <tr>
-                <td><strong>Community Health & Vision Screening Initiative</strong></td>
-                <td><span class="badge badge-primary">Service Activities</span></td>
-                <td><span class="admin-badge badge-published">Published</span></td>
-                <td><span>-</span></td>
-                <td><a href="../news-detail.html?slug=community-vision-screening-initiative" target="_blank" class="btn btn-sm btn-outline">View Article</a></td>
-              </tr>
-            </tbody>
-          </table>
+        <!-- Filter & Search Bar -->
+        <div class="admin-filter-bar">
+          <input type="text" id="news-search" class="admin-search-input" placeholder="Search by title, summary or author...">
+          <select id="news-category-filter" class="admin-select-filter">
+            <option value="all">All Categories</option>
+            <option value="Club Announcements">Club Announcements</option>
+            <option value="Service Activities">Service Activities</option>
+            <option value="Humanitarian Impact">Humanitarian Impact</option>
+            <option value="International">International</option>
+            <option value="Leadership">Leadership</option>
+          </select>
+          <select id="news-status-filter" class="admin-select-filter">
+            <option value="all">All Statuses</option>
+            <option value="published">Published</option>
+            <option value="draft">Draft</option>
+            <option value="archived">Archived</option>
+          </select>
+        </div>
+
+        <!-- News Table Card -->
+        <div class="admin-card" style="padding:0; overflow:hidden;">
+          <div style="padding:18px 24px; border-bottom:1px solid var(--color-border); display:flex; justify-content:space-between; align-items:center; background:var(--color-surface);">
+            <div style="font-weight:700; color:var(--color-text); font-size:0.96rem;" id="news-count-label">Articles List</div>
+            <div style="font-size:0.82rem; color:var(--color-text-muted);">Published articles appear in the homepage editorial carousel</div>
+          </div>
+
+          <div style="overflow-x:auto;">
+            <table class="admin-table" style="margin:0;">
+              <thead>
+                <tr>
+                  <th style="width:80px;">Cover</th>
+                  <th>Title & Slug</th>
+                  <th>Category</th>
+                  <th>Author</th>
+                  <th>Published Date</th>
+                  <th>Status</th>
+                  <th>Featured</th>
+                  <th style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="news-table-body">
+                <tr>
+                  <td colspan="8" style="text-align:center; padding:40px; color:var(--color-text-muted);">Loading articles...</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </main>
   </div>
 
+  <!-- Add/Edit Article Modal Dialog -->
+  <div id="news-modal" class="admin-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="news-modal-title">
+    <div class="admin-modal-card">
+      <div class="admin-modal-header">
+        <h3 id="news-modal-title" class="admin-modal-title">Add New Article</h3>
+        <button type="button" class="admin-modal-close" id="btn-close-news-modal">&times;</button>
+      </div>
+
+      <form id="news-form">
+        <div class="admin-modal-body">
+          <input type="hidden" id="news-edit-id" value="">
+
+          <div class="form-group">
+            <label for="news-title" class="form-label form-label-required">Article Title</label>
+            <input type="text" id="news-title" class="form-control-input" required placeholder="e.g. Inauguration of Lions Year 2026–2027">
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="news-slug" class="form-label form-label-required">URL Slug</label>
+              <input type="text" id="news-slug" class="form-control-input" required placeholder="e.g. inauguration-lions-year-2026-2027">
+              <div class="form-hint">Unique identifier for the public detail URL</div>
+            </div>
+
+            <div class="form-group">
+              <label for="news-category" class="form-label form-label-required">Category</label>
+              <select id="news-category" class="form-control-select" required>
+                <option value="Club Announcements">Club Announcements</option>
+                <option value="Service Activities">Service Activities</option>
+                <option value="Humanitarian Impact">Humanitarian Impact</option>
+                <option value="International">International</option>
+                <option value="Leadership">Leadership</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label for="news-author" class="form-label">Author / Editorial Desk</label>
+              <input type="text" id="news-author" class="form-control-input" placeholder="e.g. Communications Committee">
+            </div>
+
+            <div class="form-group">
+              <label for="news-published-at" class="form-label">Publish Date & Time</label>
+              <input type="datetime-local" id="news-published-at" class="form-control-input">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="news-summary" class="form-label form-label-required">Lead Summary / Excerpt</label>
+            <textarea id="news-summary" class="form-control-textarea" style="min-height:80px;" required placeholder="Brief 1-2 sentence overview displayed in carousels and cards..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="news-content" class="form-label form-label-required">Full Article Content</label>
+            <textarea id="news-content" class="form-control-textarea" required placeholder="Full narrative article, speech transcript, or community report..."></textarea>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Cover Photograph</label>
+              <div class="cover-upload-box" id="cover-drop-zone">
+                <input type="file" id="news-cover-file" accept="image/*" style="display:none;">
+                <button type="button" class="btn btn-outline btn-sm" id="btn-browse-cover">Browse Image</button>
+                <div class="form-hint" style="margin-top:6px;">Recommended 16:9 landscape (JPG or PNG)</div>
+              </div>
+              <input type="text" id="news-cover-url" class="form-control-input" placeholder="Or enter image URL" style="margin-top:8px;">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Cover Preview</label>
+              <img id="news-cover-preview" src="../assets/icons/image-placeholder.svg" alt="Cover Preview" class="cover-preview-img" style="background:#fff; object-fit:contain; padding:4px;">
+            </div>
+          </div>
+
+          <div class="form-grid-2" style="align-items:center; margin-top:10px;">
+            <div class="form-group">
+              <label for="news-status" class="form-label form-label-required">Publication Status</label>
+              <select id="news-status" class="form-control-select" required>
+                <option value="published">Published (Visible to Public)</option>
+                <option value="draft">Draft (Saved Privately)</option>
+                <option value="archived">Archived (Unlisted)</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="padding-top:20px;">
+              <label style="display:inline-flex; align-items:center; gap:10px; cursor:pointer;">
+                <input type="checkbox" id="news-is-featured" style="width:18px; height:18px;">
+                <span style="font-weight:700; font-size:0.94rem; color:var(--color-text);">Feature in Homepage Showcase</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-modal-footer">
+          <button type="button" class="btn btn-secondary" id="btn-cancel-news-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btn-save-news">Save Article</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <script type="module">
     import { checkAdminSession, logoutAdmin } from '../js/admin/auth.js';
+    import { getSupabase, isSupabaseConfigured, uploadClubMedia } from '../js/supabase.js';
+    import { DEFAULT_PUBLIC_DATA } from '../js/public-data.js';
+    import { sanitize, showToast, formatDate } from '../js/utils.js';
+
     checkAdminSession();
     document.getElementById('admin-logout-btn').addEventListener('click', logoutAdmin);
+
+    const supabase = getSupabase();
+    const STORAGE_KEY = 'lions_news_admin_store_v1';
+    let allNews = [];
+
+    const tableBody = document.getElementById('news-table-body');
+    const searchFilter = document.getElementById('news-search');
+    const catFilter = document.getElementById('news-category-filter');
+    const statusFilter = document.getElementById('news-status-filter');
+    const countLabel = document.getElementById('news-count-label');
+    const statusIndicator = document.getElementById('data-status-indicator');
+
+    const modal = document.getElementById('news-modal');
+    const form = document.getElementById('news-form');
+    const btnAdd = document.getElementById('btn-add-news');
+    const btnClose = document.getElementById('btn-close-news-modal');
+    const btnCancel = document.getElementById('btn-cancel-news-modal');
+
+    // Slug generator helper
+    function slugify(text) {
+      return text.toString().toLowerCase()
+        .replace(/\s+/g, '-')
+        .replace(/[^\w\-]+/g, '')
+        .replace(/\-\-+/g, '-')
+        .replace(/^-+/, '')
+        .replace(/-+$/, '');
+    }
+
+    document.getElementById('news-title').addEventListener('input', (e) => {
+      const editId = document.getElementById('news-edit-id').value;
+      if (!editId) {
+        document.getElementById('news-slug').value = slugify(e.target.value);
+      }
+    });
+
+    // File Browse / Drop logic
+    document.getElementById('btn-browse-cover').addEventListener('click', () => {
+      document.getElementById('news-cover-file').click();
+    });
+
+    document.getElementById('news-cover-file').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const localUrl = URL.createObjectURL(file);
+        document.getElementById('news-cover-preview').src = localUrl;
+        document.getElementById('news-cover-url').value = localUrl;
+
+        // Upload to Supabase Storage if configured
+        if (isSupabaseConfigured() && supabase) {
+          showToast('Uploading news cover to Supabase Storage...', 'info');
+          const res = await uploadClubMedia(file, 'news');
+          if (res.ok && res.url) {
+            document.getElementById('news-cover-url').value = res.url;
+            document.getElementById('news-cover-preview').src = res.url;
+            showToast('News cover uploaded to Supabase Storage!', 'success');
+          } else {
+            showToast('Storage upload warning: ' + (res.error || 'Using local preview'), 'warning');
+          }
+        }
+      }
+    });
+
+    document.getElementById('news-cover-url').addEventListener('input', (e) => {
+      document.getElementById('news-cover-preview').src = e.target.value || '../assets/icons/image-placeholder.svg';
+    });
+
+    // Load News Data
+    async function loadNewsData() {
+      allNews = [];
+      let loadedFromDb = false;
+
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          const { data, error } = await supabase
+            .from('news_articles')
+            .select('*')
+            .order('published_at', { ascending: false });
+
+          if (!error && data && data.length > 0) {
+            allNews = data;
+            loadedFromDb = true;
+            statusIndicator.innerHTML = '🟢 Synced with Supabase (Live)';
+          }
+        } catch (err) {
+          console.warn('Supabase news fetch warning:', err);
+        }
+      }
+
+      if (!loadedFromDb) {
+        try {
+          const localStored = localStorage.getItem(STORAGE_KEY);
+          if (localStored) {
+            allNews = JSON.parse(localStored);
+            statusIndicator.innerHTML = '🟡 Working with Local Storage';
+          } else {
+            allNews = [];
+            statusIndicator.innerHTML = '⚪ Ready for Article Creation';
+          }
+        } catch (e) {
+          allNews = [];
+        }
+      }
+
+      renderTable();
+    }
+
+    // Render Table
+    function renderTable() {
+      const search = searchFilter.value.toLowerCase().trim();
+      const cat = catFilter.value;
+      const stat = statusFilter.value;
+
+      const filtered = allNews.filter(article => {
+        if (search) {
+          const title = (article.title || '').toLowerCase();
+          const summary = (article.summary || '').toLowerCase();
+          const author = (article.author_name || '').toLowerCase();
+          if (!title.includes(search) && !summary.includes(search) && !author.includes(search)) return false;
+        }
+        if (cat !== 'all' && article.category !== cat) return false;
+        if (stat !== 'all' && article.status !== stat) return false;
+        return true;
+      });
+
+      countLabel.textContent = `Articles List (${filtered.length} of ${allNews.length})`;
+
+      if (filtered.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align:center; padding:48px 20px; color:var(--color-text-secondary);">
+              <div style="font-size:1.8rem; margin-bottom:8px;">📰</div>
+              <div style="font-weight:700; margin-bottom:4px;">No Articles Located</div>
+              <div style="font-size:0.86rem; color:var(--color-text-muted);">Try adjusting your search criteria or click "+ Add New Article" to compose an editorial story.</div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tableBody.innerHTML = filtered.map(item => {
+        const cover = item.cover_image_url ? (item.cover_image_url.startsWith('http') || item.cover_image_url.startsWith('data:') ? item.cover_image_url : '../' + item.cover_image_url) : '../assets/icons/image-placeholder.svg';
+        const isFeatured = Boolean(item.is_featured);
+        const statusClass = `status-${item.status || 'published'}`;
+        const author = item.author_name || 'Communications Desk';
+        const pubDate = formatDate(item.published_at || item.created_at);
+
+        return `
+          <tr data-id="${sanitize(item.id)}">
+            <td>
+              <img src="${sanitize(cover)}" alt="Cover" class="admin-table-cover-thumb" onerror="this.src='../assets/icons/image-placeholder.svg'">
+            </td>
+            <td>
+              <div style="font-weight:700; color:var(--color-text); margin-bottom:2px;">${sanitize(item.title)}</div>
+              <div style="font-size:0.78rem; color:var(--color-text-muted); font-family:monospace;">${sanitize(item.slug)}</div>
+            </td>
+            <td>
+              <span class="badge badge-primary" style="font-size:0.74rem;">${sanitize(item.category || 'General')}</span>
+            </td>
+            <td>
+              <span style="font-size:0.86rem; color:var(--color-text);">${sanitize(author)}</span>
+            </td>
+            <td>
+              <span style="font-size:0.86rem; color:var(--color-text-secondary);">${sanitize(pubDate)}</span>
+            </td>
+            <td>
+              <span class="status-pill ${statusClass}">${sanitize(item.status || 'published')}</span>
+            </td>
+            <td>
+              ${isFeatured ? '<span class="badge badge-gold" style="font-size:0.72rem;">★ Featured</span>' : '<span style="color:#94A3B8;">&ndash;</span>'}
+            </td>
+            <td style="text-align:right;">
+              <div class="action-btn-group" style="justify-content:flex-end;">
+                <a href="../news-detail.html?slug=${encodeURIComponent(item.slug)}" target="_blank" class="btn-action-icon" title="View Public Article">
+                  👁️ View
+                </a>
+                <button type="button" class="btn-action-icon btn-edit" data-id="${sanitize(item.id)}" title="Edit Article">
+                  ✏️ Edit
+                </button>
+                <button type="button" class="btn-action-icon btn-action-danger btn-delete" data-id="${sanitize(item.id)}" title="Delete Article">
+                  🗑️
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Wire Edit & Delete buttons
+      tableBody.querySelectorAll('.btn-edit').forEach(btn => {
+        btn.addEventListener('click', () => openEditModal(btn.getAttribute('data-id')));
+      });
+
+      tableBody.querySelectorAll('.btn-delete').forEach(btn => {
+        btn.addEventListener('click', () => deleteArticle(btn.getAttribute('data-id')));
+      });
+    }
+
+    // Modal Operations
+    function openAddModal() {
+      document.getElementById('news-modal-title').textContent = 'Add New Article';
+      document.getElementById('news-edit-id').value = '';
+      form.reset();
+
+      const now = new Date();
+      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+      document.getElementById('news-published-at').value = now.toISOString().slice(0, 16);
+      document.getElementById('news-cover-url').value = '';
+      document.getElementById('news-cover-preview').src = '../assets/icons/image-placeholder.svg';
+      document.getElementById('news-status').value = 'published';
+
+      modal.classList.add('is-open');
+    }
+
+    function openEditModal(id) {
+      const article = allNews.find(n => String(n.id) === String(id));
+      if (!article) return;
+
+      document.getElementById('news-modal-title').textContent = 'Edit News Article';
+      document.getElementById('news-edit-id').value = article.id;
+      document.getElementById('news-title').value = article.title || '';
+      document.getElementById('news-slug').value = article.slug || '';
+      document.getElementById('news-category').value = article.category || 'Club Announcements';
+      document.getElementById('news-author').value = article.author_name || '';
+      document.getElementById('news-summary').value = article.summary || '';
+      document.getElementById('news-content').value = article.content || article.summary || '';
+      const coverUrl = article.cover_image_url || '';
+      document.getElementById('news-cover-url').value = coverUrl;
+      document.getElementById('news-cover-preview').src = coverUrl ? (coverUrl.startsWith('http') || coverUrl.startsWith('data:') ? coverUrl : `../${coverUrl}`) : '../assets/icons/image-placeholder.svg';
+      document.getElementById('news-status').value = article.status || 'published';
+      document.getElementById('news-is-featured').checked = Boolean(article.is_featured);
+
+      if (article.published_at) {
+        const d = new Date(article.published_at);
+        d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+        document.getElementById('news-published-at').value = d.toISOString().slice(0, 16);
+      }
+
+      modal.classList.add('is-open');
+    }
+
+    function closeModal() {
+      modal.classList.remove('is-open');
+    }
+
+    btnAdd.addEventListener('click', openAddModal);
+    btnClose.addEventListener('click', closeModal);
+    btnCancel.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+
+    // Form Save Handler
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const editId = document.getElementById('news-edit-id').value;
+      const title = document.getElementById('news-title').value.trim();
+      const slug = document.getElementById('news-slug').value.trim();
+      const category = document.getElementById('news-category').value;
+      const author = document.getElementById('news-author').value.trim();
+      const summary = document.getElementById('news-summary').value.trim();
+      const content = document.getElementById('news-content').value.trim();
+      const coverUrl = document.getElementById('news-cover-url').value.trim() || null;
+      const status = document.getElementById('news-status').value;
+      const isFeatured = document.getElementById('news-is-featured').checked;
+      const pubAtRaw = document.getElementById('news-published-at').value;
+      const publishedAt = pubAtRaw ? new Date(pubAtRaw).toISOString() : new Date().toISOString();
+
+      const articlePayload = {
+        title,
+        slug,
+        category,
+        author_name: author || 'Communications Desk',
+        summary,
+        content,
+        cover_image_url: coverUrl,
+        status,
+        is_featured: isFeatured,
+        published_at: publishedAt
+      };
+
+      let saveSuccess = false;
+      let dbError = null;
+
+      const isExistingUuid = editId && editId.length > 20 && !editId.startsWith('news-');
+
+      // 1. Save to Supabase
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          if (isExistingUuid) {
+            const { error } = await supabase.from('news_articles').update(articlePayload).eq('id', editId);
+            if (error) throw error;
+            saveSuccess = true;
+          } else {
+            const { data, error } = await supabase.from('news_articles').insert([articlePayload]).select('id').single();
+            if (error) throw error;
+            saveSuccess = true;
+            if (data?.id) {
+              articlePayload.id = data.id;
+            }
+          }
+        } catch (err) {
+          dbError = err;
+          console.error('Supabase news save issue:', err);
+        }
+      }
+
+      if (dbError) {
+        showToast('Supabase Error: ' + (dbError.message || 'Failed to save article to database'), 'error');
+        return;
+      }
+
+      // 2. Local fallback sync
+      if (editId) {
+        const idx = allNews.findIndex(n => String(n.id) === String(editId));
+        if (idx >= 0) {
+          allNews[idx] = { ...allNews[idx], ...articlePayload };
+        }
+      } else {
+        articlePayload.id = articlePayload.id || `news-${Date.now()}`;
+        allNews.unshift(articlePayload);
+      }
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(allNews));
+      } catch (_) {}
+
+      if (isSupabaseConfigured() && supabase) {
+        await loadNewsData();
+      } else {
+        renderTable();
+      }
+
+      closeModal();
+      showToast(isExistingUuid ? 'Article updated successfully in Supabase!' : 'Article published successfully to Supabase!', 'success');
+    });
+
+    // Delete handler
+    async function deleteArticle(id) {
+      if (!confirm('Are you sure you want to delete this news article? This cannot be undone.')) {
+        return;
+      }
+
+      if (isSupabaseConfigured() && supabase) {
+        try {
+          await supabase.from('news_articles').delete().eq('id', id);
+        } catch (err) {
+          console.warn('Supabase delete error:', err);
+        }
+      }
+
+      allNews = allNews.filter(n => String(n.id) !== String(id));
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(allNews));
+      } catch (_) {}
+
+      renderTable();
+      showToast('Article deleted.', 'info');
+    }
+
+    // Filter listeners
+    searchFilter.addEventListener('input', renderTable);
+    catFilter.addEventListener('change', renderTable);
+    statusFilter.addEventListener('change', renderTable);
+
+    loadNewsData();
   </script>
 </body>
 </html>

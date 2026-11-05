@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dubai Oasis Lions Club | Together We Can.</title>
+  <title>Dubai Oasis Lions Club | We Serve.</title>
   <meta name="description" content="Official website of Dubai Oasis Lions Club. United in humanitarian service across vision care, hunger relief, youth mentorship, and community wellness in Dubai.">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/variables.css">
@@ -11,16 +11,33 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- PRIVATE MEMBERS PORTAL SESSION GUARD (Mockup Phase) -->
+  <script>
+    (function() {
+      try {
+        const isAuthed = sessionStorage.getItem("dolc_member_active") === "true";
+        if (!isAuthed) {
+          window.location.replace("login.html");
+        }
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
 
-  <!-- SLIM, ELEGANT APPLE-INSPIRED GLOBAL HEADER -->
+  <!-- Persistent Stationary Background Canvas: Fixed Watermark Crest & Ambient Lighting -->
+  <div class="site-fixed-background" aria-hidden="true">
+    <div class="site-bg-ambient-mesh"></div>
+    <div class="site-bg-crest-stage">
+      <img src="assets/logos/dubai-oasis-lions-club.png" alt="" class="site-bg-crest-watermark" width="640" height="832">
+    </div>
+  </div>
+
+  <!-- SLIM, ELEGANT APPLE-INSPIRED GLOBAL HEADER (Single Official Club Logo) -->
   <header class="site-header">
     <div class="container header-inner">
-      <!-- Mandatory Logo Order: Lions International Left -> Dubai Oasis Right -->
       <a href="index.html" class="brand-pair" aria-label="Dubai Oasis Lions Club Home">
-        <img src="assets/logos/lions-international.png" alt="Lions Clubs International Emblem" class="logo-lions-intl" width="40" height="40">
-        <div class="brand-rule"></div>
+        <img src="assets/logos/dubai-oasis-lions-club.png" alt="Dubai Oasis Lions Club Official Crest" class="logo-club-crest" width="38" height="49">
         <div class="brand-titles">
           <span class="brand-club-name">DUBAI OASIS LIONS CLUB</span>
           <span class="brand-year">United Arab Emirates</span>
@@ -84,9 +101,13 @@
         </div>
       </nav>
 
-      <!-- Single Prominent Right Action -->
+      <!-- Header Right Actions: Member Identity Badge + Logout -->
       <div class="nav-actions">
-        <a href="contact.html" class="btn-header-cta">Get Involved</a>
+        <div class="member-identity-badge" title="Authenticated Member Session">
+          <span class="member-badge-dot" aria-hidden="true"></span>
+          <span class="member-badge-text">Lion Member</span>
+        </div>
+        <a href="login.html" class="btn-header-login btn-header-logout" id="btn-portal-logout" aria-label="Sign Out of Members Portal">Logout</a>
         <button class="mobile-toggle" aria-label="Open Navigation Menu">
           <span></span>
           <span></span>
@@ -98,65 +119,114 @@
   <!-- Mobile Slide-Over Navigation Drawer -->
   <div class="mobile-drawer-overlay"></div>
   <aside class="mobile-drawer" aria-label="Mobile Navigation">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:28px;">
-      <span class="brand-club-name">DUBAI OASIS LIONS CLUB</span>
-      <button class="drawer-close-btn" aria-label="Close Menu" style="font-size:1.6rem; line-height:1;">&times;</button>
+    <div class="mobile-drawer-header">
+      <div class="mobile-drawer-brand">
+        <img src="assets/logos/dubai-oasis-lions-club.png" alt="Dubai Oasis Lions Club Official Crest" class="drawer-club-crest" width="30" height="38">
+        <div class="drawer-brand-titles">
+          <span class="brand-club-name">DUBAI OASIS LIONS CLUB</span>
+          <span class="brand-year">United Arab Emirates</span>
+        </div>
+      </div>
+      <button class="drawer-close-btn" aria-label="Close Menu">&times;</button>
     </div>
-    <nav style="display:flex; flex-direction:column; gap:16px;">
-      <a href="index.html" style="font-size:1.05rem; font-weight:700; color:var(--color-primary);">Home</a>
-      <div style="font-size:0.75rem; font-weight:700; color:var(--color-text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:8px;">Our Club</div>
-      <a href="about.html" style="color:var(--color-text); font-weight:500;">About Us</a>
-      <a href="leadership.html" style="color:var(--color-text); font-weight:500;">Leadership</a>
-      <a href="members.html" style="color:var(--color-text); font-weight:500;">Meet Our Members</a>
-      <div style="font-size:0.75rem; font-weight:700; color:var(--color-text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:8px;">Our Impact</div>
-      <a href="projects.html" style="color:var(--color-text); font-weight:500;">Service Projects</a>
-      <a href="events.html" style="color:var(--color-text); font-weight:500;">Upcoming Events</a>
-      <div style="font-size:0.75rem; font-weight:700; color:var(--color-text-muted); text-transform:uppercase; letter-spacing:0.08em; margin-top:8px;">Stories</div>
-      <a href="news.html" style="color:var(--color-text); font-weight:500;">News & Announcements</a>
-      <a href="gallery.html" style="color:var(--color-text); font-weight:500;">Photo Gallery</a>
-      <a href="contact.html" style="color:var(--color-text); font-weight:500;">Contact</a>
+    <nav class="mobile-drawer-nav">
+      <a href="index.html" class="drawer-nav-link active">Home</a>
+      
+      <div class="drawer-nav-section-title">Our Club</div>
+      <a href="about.html" class="drawer-nav-link">About Us</a>
+      <a href="leadership.html" class="drawer-nav-link">Leadership</a>
+      <a href="members.html" class="drawer-nav-link">Meet Our Members</a>
+      
+      <div class="drawer-nav-section-title">Our Impact</div>
+      <a href="projects.html" class="drawer-nav-link">Service Projects</a>
+      <a href="events.html" class="drawer-nav-link">Upcoming Events</a>
+      
+      <div class="drawer-nav-section-title">Stories</div>
+      <a href="news.html" class="drawer-nav-link">News & Announcements</a>
+      <a href="gallery.html" class="drawer-nav-link">Photo Gallery</a>
+      <a href="contact.html" class="drawer-nav-link">Contact</a>
     </nav>
-    <div style="margin-top:auto; padding-top:24px;">
-      <a href="contact.html" class="btn btn-primary" style="width:100%;">Get Involved</a>
+    <div class="mobile-drawer-footer">
+      <a href="login.html" class="btn-drawer-logout" id="drawer-portal-logout" aria-label="Sign Out of Members Portal">Logout of Portal</a>
     </div>
   </aside>
 
-  <!-- SECTION 1 — HERO -->
-  <section class="hero-cinematic">
-    <img src="assets/images/hero-service.jpg" alt="Volunteers preparing community care packages in Dubai" class="hero-bg-media">
-    <div class="hero-scrim"></div>
-    <div class="container hero-content-wrap">
-      <span class="hero-eyebrow">Dubai Oasis Lions Club</span>
-      <h1 class="hero-headline">Together We Can.</h1>
-      <p class="hero-subline">
-        United in service across Dubai — advancing sight preservation, hunger relief, youth mentorship, and compassionate civic action.
-      </p>
-      <div class="hero-actions">
-        <a href="projects.html" class="btn-hero-primary">Explore Our Impact</a>
-        <a href="contact.html" class="btn-hero-secondary">Get Involved</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- SECTION 2 — MEET OUR LEADERSHIP -->
-  <section class="section-leadership-compact">
+  <!-- SECTION 1 — HERO (Official Club Logo Seamlessly Integrated into Hero Background) -->
+  <section class="hero-brand-logo-stage">
+    <div class="hero-ambient-backdrop" aria-hidden="true"></div>
     <div class="container">
-      <div class="leadership-split-stage">
-        <div class="leadership-intro-col">
-          <span class="eyebrow">Stewardship & Purpose</span>
-          <h2 class="leadership-intro-title">Meet Our Leadership</h2>
-          <p class="leadership-intro-sub">Meet the people guiding our commitment to service.</p>
-          <a href="leadership.html" class="btn-text-link">View All Leadership &rarr;</a>
+      <div class="hero-brand-grid">
+        <!-- Editorial Headline & Actions -->
+        <div>
+          <span class="hero-eyebrow" id="hero-eyebrow-text">Dubai Oasis Lions Club &bull; “We Serve”</span>
+          <h1 class="hero-headline" id="hero-headline-text">We Serve.</h1>
+          <p class="hero-subline" id="hero-subline-text">
+            United in humanitarian service across Dubai and the Emirates — advancing sight conservation, hunger relief, youth mentorship, and compassionate civic fellowship.
+          </p>
         </div>
-        <div class="leadership-portraits-grid" id="leadership-compact-mount">
-          <!-- Rendered dynamically from shared verified leadership module -->
+
+        <!-- Official Dubai Oasis Lions Club Crest Artwork Blended Directly into Hero Background -->
+        <div class="hero-logo-stage-art">
+          <div class="hero-logo-halo" aria-hidden="true"></div>
+          <img src="assets/logos/dubai-oasis-lions-club.png" alt="Official Dubai Oasis Lions Club Crest — We Serve" class="hero-club-crest-img" width="350" height="455">
         </div>
       </div>
     </div>
   </section>
 
-  <!-- SECTION 3 — LATEST NEWS & ANNOUNCEMENTS (Apple-Style Editorial Carousel) -->
-  <section class="section-carousel-showcase alt-bg">
+  <!-- SECTION 2 — WHO WE ARE (Concise Side-by-Side Editorial Introduction with Separate Logo Asset) -->
+  <section class="section-who-we-are reveal-on-scroll">
+    <div class="container">
+      <div class="who-we-are-split">
+        <!-- Left Side: Editorial Copy & Link -->
+        <div>
+          <span class="eyebrow" id="who-we-are-eyebrow">Our Identity & Purpose</span>
+          <h2 class="carousel-section-title" id="who-we-are-title" style="margin-bottom: 20px;">Who We Are</h2>
+          <p id="who-we-are-p1" style="font-size: 1.125rem; color: var(--color-text-secondary); line-height: 1.75; margin-bottom: 20px;">
+            Dubai Oasis Lions Club is a chartered humanitarian fellowship of Lions Clubs International, uniting dedicated professionals and community volunteers across the United Arab Emirates.
+          </p>
+          <p id="who-we-are-p2" style="font-size: 1.02rem; color: var(--color-text-secondary); line-height: 1.75; margin-bottom: 32px;">
+            Guided by the official motto <strong>“We Serve”</strong>, we collaborate with local institutions to deliver dignified, measurable support in vision care, nutritional outreach, youth empowerment, and environmental stewardship.
+          </p>
+          <a href="about.html" class="btn-text-link">Discover Our Club &rarr;</a>
+        </div>
+
+        <!-- Right Side: Separate Tri-Emblem Logo Asset Integrated Naturally Without Generic Box -->
+        <div class="who-we-are-visual-stage">
+          <div class="who-we-are-logo-composition">
+            <img src="assets/logos/who-we-are-logos.png" alt="Lions Clubs International, Unity in Service, and Dubai Oasis Lions Club Official Emblems" class="who-we-are-banner-logo" width="540" height="197">
+          </div>
+          <div class="who-we-are-pillars">
+            <div>
+              <div class="who-we-are-pillar-label">Global Affiliation</div>
+              <div class="who-we-are-pillar-val">Lions Clubs International</div>
+            </div>
+            <div>
+              <div class="who-we-are-pillar-label">Guiding Ethos</div>
+              <div class="who-we-are-pillar-val">“We Serve” &bull; Dubai, UAE</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3 — MEET OUR LEADERSHIP (Executive Leadership Showcase) -->
+  <section class="section-leadership-compact reveal-on-scroll" id="section-leadership">
+    <div class="container">
+      <div class="leadership-header-block">
+        <span class="eyebrow">Stewardship & Purpose</span>
+        <h2 class="leadership-intro-title">Meet Our Leadership</h2>
+        <p class="leadership-intro-sub">Meet the people who guide our club and lead our commitment to service.</p>
+      </div>
+      <div id="leadership-compact-mount">
+        <!-- Rendered dynamically from shared verified leadership module -->
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4 — LATEST NEWS (Preserved Apple-Style Editorial Carousel) -->
+  <section class="section-carousel-showcase alt-bg reveal-on-scroll" id="section-news">
     <div class="container">
       <div class="carousel-header-bar">
         <div>
@@ -172,177 +242,135 @@
     <div id="news-carousel-mount"></div>
   </section>
 
-  <!-- SECTION 4 — UPCOMING EVENTS -->
-  <section class="section-events-showcase">
+  <!-- SECTION 5 — UPCOMING EVENTS (Four Nearest Events First with Horizontal Editorial Banners) -->
+  <section class="section-events-showcase reveal-on-scroll" id="section-upcoming-events">
     <div class="container">
-      <div class="carousel-header-bar">
+      <div class="events-header-bar">
         <div>
           <span class="eyebrow">Community Calendar</span>
           <h2 class="carousel-section-title">Upcoming Events</h2>
-          <p class="carousel-section-sub">Scheduled humanitarian outreach drives and assemblies in Dubai (GST).</p>
+          <p class="carousel-section-sub">Discover upcoming gatherings, service initiatives, and opportunities to make a difference.</p>
         </div>
         <a href="events.html" class="btn-text-link">Full Event Schedule &rarr;</a>
       </div>
 
-      <div id="events-mount"></div>
-    </div>
-  </section>
-
-  <!-- SECTION 5 — WELCOME TO OUR CLUB -->
-  <section class="section-welcome-asymmetric">
-    <div class="container">
-      <div class="welcome-asymmetric-grid">
-        <div class="welcome-image-frame">
-          <img src="assets/images/project-food.jpg" alt="Community outreach volunteers in Dubai" loading="lazy">
-        </div>
-        <div>
-          <span class="eyebrow">Who We Are</span>
-          <h2 class="carousel-section-title" style="margin-bottom:20px;">A Community United by Service</h2>
-          <p style="font-size:1.125rem; color:var(--color-text-secondary); line-height:1.75; margin-bottom:24px;">
-            As a chartered club of Lions Clubs International, Dubai Oasis Lions Club brings together civic-minded professionals and volunteers committed to addressing vital humanitarian needs across the United Arab Emirates.
-          </p>
-          <p style="font-size:1.05rem; color:var(--color-text-secondary); line-height:1.75; margin-bottom:32px;">
-            Guided by our central motto, <strong>Together We Can</strong>, we focus on practical, dignified community service across sight conservation, nutritional care, youth development, and environmental stewardship.
-          </p>
-          <a href="about.html" class="btn-text-link">Discover Our Club &rarr;</a>
-        </div>
+      <div id="events-mount">
+        <!-- Rendered dynamically from verified events module (4 nearest upcoming events first) -->
       </div>
     </div>
   </section>
 
-  <!-- SECTION 6 — FEATURED SERVICE PROJECTS -->
-  <section class="section-projects-editorial">
+  <!-- SECTION 6 — MEET OUR MEMBERS (Fellowship & Public Member Directory) -->
+  <section class="section-members-directory reveal-on-scroll" id="section-members">
     <div class="container">
-      <div class="carousel-header-bar">
+      <div class="members-header-bar">
         <div>
-          <span class="eyebrow">Humanitarian Action</span>
-          <h2 class="carousel-section-title">Featured Service Projects</h2>
-          <p class="carousel-section-sub">Focused community initiatives aligned with Lions International global causes.</p>
-        </div>
-        <a href="projects.html" class="btn-text-link">Explore All Projects &rarr;</a>
-      </div>
-
-      <div id="projects-mount"></div>
-    </div>
-  </section>
-
-  <!-- SECTION 7 — OUR IMPACT -->
-  <section class="section-impact-editorial">
-    <div class="container">
-      <span class="eyebrow eyebrow-light">Our Commitment</span>
-      <h2 class="carousel-section-title" style="color:#FFFFFF; margin-bottom:16px;">Making a Difference Together</h2>
-      <p style="font-size:1.125rem; color:rgba(255,255,255,0.75); max-width:640px; line-height:1.6;">
-        True service is measured by the dignity, care, and lasting support we bring to individuals and families across our community.
-      </p>
-
-      <div id="impact-mount"></div>
-    </div>
-  </section>
-
-  <!-- SECTION 8 — MEET OUR MEMBERS -->
-  <section class="section-members-preview">
-    <div class="container">
-      <div class="carousel-header-bar">
-        <div>
-          <span class="eyebrow">Club Fellowship</span>
+          <span class="eyebrow">Fellowship & Dedication</span>
           <h2 class="carousel-section-title">Meet Our Members</h2>
-          <p class="carousel-section-sub">Dedicated professionals uniting expertise with compassionate community service.</p>
+          <p class="carousel-section-sub">Get to know the people who make our service and community work possible.</p>
         </div>
-        <a href="members.html" class="btn-text-link">Meet Our Members &rarr;</a>
+        <div class="members-search-wrapper">
+          <input type="search" id="member-search-input" class="members-search-input" placeholder="Search members by name or service interest..." aria-label="Search club members">
+        </div>
       </div>
 
-      <div class="members-portrait-grid" id="members-mount"></div>
+      <div id="members-mount">
+        <!-- Rendered dynamically from verified members module -->
+      </div>
     </div>
   </section>
 
-  <!-- SECTION 9 — MOMENTS OF SERVICE -->
-  <section class="section-moments-gallery">
+  <!-- SECTION 7 — JOIN OUR COMMUNITY & ENQUIRIES (Homepage Contact Card Hidden for Members Portal) -->
+  <section class="section-contact-showcase reveal-on-scroll" id="section-contact" style="display: none !important;" aria-hidden="true">
     <div class="container">
-      <div class="carousel-header-bar">
-        <div>
-          <span class="eyebrow">Visual Archive</span>
-          <h2 class="carousel-section-title">Moments of Service</h2>
-          <p class="carousel-section-sub">Capturing volunteer action and community partnerships across Dubai.</p>
-        </div>
-        <a href="gallery.html" class="btn-text-link">Open Photo Gallery &rarr;</a>
-      </div>
-
-      <div id="gallery-mount"></div>
-    </div>
-  </section>
-
-  <!-- SECTION 10 — GET INVOLVED -->
-  <section class="section-closing-cta">
-    <div class="container">
-      <div class="closing-cta-grid">
-        <div>
-          <span class="eyebrow eyebrow-light">Join Hands With Us</span>
-          <h2 class="carousel-section-title" style="color:#FFFFFF; margin-bottom:18px;">Be Part of Something Meaningful</h2>
-          <p style="font-size:1.15rem; color:rgba(255,255,255,0.82); line-height:1.65;">
-            Whether you wish to volunteer your time, enquire about club membership, or collaborate as a community partner in Dubai, we welcome your conversation.
-          </p>
-
-          <div class="closing-pathway-list">
-            <div class="closing-pathway-item">
-              <h4 style="font-size:1.05rem; font-weight:700; color:var(--color-accent); margin-bottom:4px;">Volunteering</h4>
-              <p style="font-size:0.9rem; color:rgba(255,255,255,0.8);">Participate in local vision screenings, food care drives, and conservation days.</p>
-            </div>
-            <div class="closing-pathway-item">
-              <h4 style="font-size:1.05rem; font-weight:700; color:var(--color-accent); margin-bottom:4px;">Membership Enquiries</h4>
-              <p style="font-size:0.9rem; color:rgba(255,255,255,0.8);">Connect with our membership committee to learn about joining our fellowship.</p>
-            </div>
-            <div class="closing-pathway-item">
-              <h4 style="font-size:1.05rem; font-weight:700; color:var(--color-accent); margin-bottom:4px;">Partnerships</h4>
-              <p style="font-size:0.9rem; color:rgba(255,255,255,0.8);">Collaborate as a healthcare provider, educational institution, or corporate sponsor.</p>
-            </div>
+      <div class="contact-layout-split">
+        <!-- Left Side: Brand, Who We Are Logo & Welcoming Introduction -->
+        <div class="contact-intro-card">
+          <div class="community-brand-wrap">
+            <img src="assets/logos/who we are logo.jpg" alt="Dubai Oasis Lions Club — Lions International, Unity, and Club Official Logos" class="community-brand-logo">
           </div>
+          <span class="eyebrow">Connect &amp; Involve</span>
+          <h2 class="contact-intro-title">Join Our Community</h2>
+          <p class="contact-intro-desc">
+            Connect with Dubai Oasis Lions Club to learn more about our community, our service initiatives, and opportunities to get involved.
+          </p>
+          <p class="contact-intro-subdesc">
+            Interested in becoming part of Dubai Oasis Lions Club? Connect with us to learn more about membership, community service, and opportunities to make a difference.
+          </p>
         </div>
 
-        <div class="closing-form-panel">
-          <h3 style="font-size:1.45rem; font-weight:800; margin-bottom:6px; color:var(--color-text);">Get in Touch</h3>
-          <p style="font-size:0.9rem; color:var(--color-text-secondary); margin-bottom:24px;">Submit an enquiry directly to our club administration.</p>
+        <!-- Right Side: Responsive Validated Enquiry Form -->
+        <div class="contact-form-card">
+          <div id="contact-form-feedback" class="contact-feedback-box" role="alert" aria-live="polite"></div>
 
-          <form class="supabase-contact-form">
-            <div class="form-group">
-              <label class="form-label" for="cta-type">Pathway</label>
-              <select class="form-control" id="cta-type" name="enquiry_type">
-                <option value="Volunteer Enquiry">Volunteering</option>
-                <option value="Membership Enquiry">Membership Enquiry</option>
-                <option value="Partnership Enquiry">Institutional Partnership</option>
-                <option value="General Contact">General Enquiry</option>
-              </select>
+          <form id="contact-enquiry-form" novalidate>
+            <!-- Anti-Spam Honeypot Field (Hidden from real users) -->
+            <div style="display:none !important;" aria-hidden="true">
+              <label for="enquiry-hp-field">Leave this field blank</label>
+              <input type="text" id="enquiry-hp-field" name="enquiry_hp" tabindex="-1" autocomplete="off">
             </div>
-            <div class="form-group">
-              <label class="form-label" for="cta-name">Full Name *</label>
-              <input type="text" class="form-control" id="cta-name" name="full_name" required placeholder="Your full name">
+
+            <div class="contact-form-grid-2">
+              <div class="contact-form-group">
+                <label for="enquiry-full-name" class="contact-form-label contact-form-label-required">Full Name</label>
+                <input type="text" id="enquiry-full-name" name="full_name" class="contact-form-input" required placeholder="e.g. Dr. Omar Al Nuaimi" autocomplete="name">
+              </div>
+
+              <div class="contact-form-group">
+                <label for="enquiry-email" class="contact-form-label contact-form-label-required">Email Address</label>
+                <input type="email" id="enquiry-email" name="email" class="contact-form-input" required placeholder="name@example.com" autocomplete="email">
+              </div>
             </div>
-            <div class="form-group">
-              <label class="form-label" for="cta-email">Email Address *</label>
-              <input type="email" class="form-control" id="cta-email" name="email" required placeholder="you@domain.com">
+
+            <div class="contact-form-grid-2">
+              <div class="contact-form-group">
+                <label for="enquiry-phone" class="contact-form-label contact-form-label-required">Phone Number</label>
+                <input type="tel" id="enquiry-phone" name="phone" class="contact-form-input" required placeholder="+971 50 123 4567" autocomplete="tel">
+              </div>
+
+              <div class="contact-form-group">
+                <label for="enquiry-type" class="contact-form-label contact-form-label-required">Enquiry Type</label>
+                <select id="enquiry-type" name="enquiry_type" class="contact-form-select" required>
+                  <option value="Membership Enquiry" selected>Membership Enquiry</option>
+                  <option value="General Enquiry">General Enquiry</option>
+                  <option value="Volunteering">Volunteering</option>
+                  <option value="Partnership or Collaboration">Partnership or Collaboration</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
             </div>
-            <div class="form-group">
-              <label class="form-label" for="cta-msg">Message *</label>
-              <textarea class="form-control" id="cta-msg" name="message" rows="3" required placeholder="How would you like to get involved?"></textarea>
+
+            <div class="contact-form-group">
+              <label for="enquiry-message" class="contact-form-label contact-form-label-required">Message</label>
+              <textarea id="enquiry-message" name="message" class="contact-form-textarea" required placeholder="Tell us a little about your interest in joining our community or the information you would like to know."></textarea>
             </div>
-            <button type="submit" class="btn btn-primary" style="width:100%;">Submit Official Enquiry</button>
+
+            <div style="display:flex; justify-content:flex-start; margin-top:8px;">
+              <button type="submit" class="btn-contact-submit" id="btn-submit-enquiry">
+                <span>Join Our Community</span> &rarr;
+              </button>
+            </div>
           </form>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- SECTION 11 — FOOTER -->
+  <!-- FOOTER (Three Official Logos: Lions International -> Dubai Oasis Lions Club -> Who We Are logo) -->
   <footer class="site-footer-editorial">
     <div class="container">
       <div class="footer-columns-grid">
         <div>
-          <!-- Mandatory Order: Lions International Left -> Dubai Oasis Right -->
-          <div class="brand-pair" style="margin-bottom:20px;">
-            <img src="assets/logos/lions-international.png" alt="Lions Clubs International" style="height:42px; width:auto;">
-            <div class="brand-rule" style="background:rgba(255,255,255,0.18);"></div>
-            <div>
-              <div style="color:#FFFFFF; font-weight:800; font-size:0.92rem;">DUBAI OASIS LIONS CLUB</div>
-              <div style="color:var(--color-accent); font-size:0.68rem; font-weight:600; letter-spacing:0.08em; text-transform:uppercase;">Together We Can</div>
+          <!-- Official Footer Brand Composition (Lions International -> Dubai Oasis Lions Club -> Who We Are logo) -->
+          <div class="footer-brand-composition">
+            <div class="footer-brand-trio">
+              <img src="assets/logos/lions-international.png" alt="Lions Clubs International" class="footer-logo-lions" width="44" height="41">
+              <img src="assets/logos/dubai-oasis-lions-club.png" alt="Dubai Oasis Lions Club Official Crest" class="footer-logo-club" width="42" height="55">
+              <img src="assets/logos/who-we-are-logo.png" alt="Dubai Oasis Lions Club — Who We Are Unity Emblem" class="footer-logo-whoweare" data-src-unprocessed="assets/logos/who we are logo.jpg" width="44" height="44">
+            </div>
+            <div class="footer-brand-text">
+              <div class="footer-brand-name">DUBAI OASIS LIONS CLUB</div>
+              <div class="footer-brand-tagline">WE SERVE</div>
             </div>
           </div>
           <p style="font-size:0.9rem; line-height:1.65; max-width:340px; color:#94A3B8;">
@@ -381,7 +409,7 @@
 
       <div class="footer-base-row">
         <div>&copy; Dubai Oasis Lions Club. All rights reserved.</div>
-        <div>Lions Year 2026–2027 &bull; Together We Can.</div>
+        <div>Lions Year 2026–2027 &bull; We Serve.</div>
       </div>
     </div>
   </footer>
